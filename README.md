@@ -54,7 +54,7 @@ python src/estimate_esp32_cost.py
 
 ## Authors
 - **Group 2 (SUPCOM 2026)**: Rihab HMAIED, Hamdi BENALI, Khaoula JRIDI, Mohamed Amine LAAGAB, Oussama AKIR.
-- **Supervisor**: Mme Rim Ben Romdhane.
+- **Supervisor**: Mme Manel Ben Romdhane.
 
 ## License
 Distributed under the **MIT License**. See `LICENSE` for more information.
