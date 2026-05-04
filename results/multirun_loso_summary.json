@@ -1,0 +1,53 @@
+{
+  "dataset": "SeizeIT2 multirun (sub-001, 032, 085, 096, 124, 125)",
+  "n_subjects": 6,
+  "n_windows": 33925,
+  "n_positives": 893,
+  "n_features": 80,
+  "validation": "Leave-One-Subject-Out",
+  "random_state": 42,
+  "models": {
+    "random_forest": {
+      "accuracy_mean": 0.9305614979487542,
+      "accuracy_std": 0.07045921935766976,
+      "precision_mean": 0.452991452991453,
+      "precision_std": 0.4556645850189264,
+      "recall_mean": 0.08909756833295063,
+      "recall_std": 0.1459982398090193,
+      "f1_mean": 0.13099292232912343,
+      "f1_std": 0.20455172442300323,
+      "fpr_mean": 0.00044898537942094827,
+      "fpr_std": 0.0005020523205061861,
+      "roc_auc_mean": 0.8012804873105615,
+      "roc_auc_std": 0.06824375145652027
+    },
+    "svm_rbf": {
+      "accuracy_mean": 0.9147029487296624,
+      "accuracy_std": 0.0644788870506831,
+      "precision_mean": 0.06697922968340392,
+      "precision_std": 0.14588235245414216,
+      "recall_mean": 0.030409795102448775,
+      "recall_std": 0.06061561641593095,
+      "f1_mean": 0.04071349470020566,
+      "f1_std": 0.08594292991433711,
+      "fpr_mean": 0.019961989213402857,
+      "fpr_std": 0.01687376897613628,
+      "roc_auc_mean": 0.4932592634800887,
+      "roc_auc_std": 0.08145808939551293
+    },
+    "decision_tree": {
+      "accuracy_mean": 0.895979547626423,
+      "accuracy_std": 0.06635254250977092,
+      "precision_mean": 0.19304306869989005,
+      "precision_std": 0.16484398659983326,
+      "recall_mean": 0.16713156234258617,
+      "recall_std": 0.1772815474590853,
+      "f1_mean": 0.1347887034705322,
+      "f1_std": 0.10302441226356648,
+      "fpr_mean": 0.044352941638035465,
+      "fpr_std": 0.03343383672394258,
+      "roc_auc_mean": 0.5613893103522754,
+      "roc_auc_std": 0.09372233399612619
+    }
+  }
+}

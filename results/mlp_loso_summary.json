@@ -1,0 +1,34 @@
+{
+  "model": "mlp_features_80_32_16_1",
+  "hidden": [
+    32,
+    16
+  ],
+  "n_parameters": 3137,
+  "fp32_kb": 12.254,
+  "int8_kb": 3.063,
+  "macs_per_inference": 3088,
+  "validation": "Leave-One-Subject-Out",
+  "subjects": [
+    1,
+    32,
+    85,
+    96,
+    124,
+    125
+  ],
+  "metrics_mean_std": {
+    "accuracy_mean": 0.8331618487470133,
+    "accuracy_std": 0.1273630692572919,
+    "precision_mean": 0.03915141830691303,
+    "precision_std": 0.04689004146741247,
+    "recall_mean": 0.07541418361468862,
+    "recall_std": 0.054947545690806496,
+    "f1_mean": 0.04509672840787824,
+    "f1_std": 0.04675739279815503,
+    "fpr_mean": 0.10865506861311171,
+    "fpr_std": 0.12464456605029779,
+    "roc_auc_mean": 0.583918736420726,
+    "roc_auc_std": 0.2034653704310118
+  }
+}

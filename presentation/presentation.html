@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raman & Velmurugan 2025 — IoMT, EEG et Edge AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Fira+Code:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script><style>
+        :root {
+            --primary: #1e40af;
+            --primary-dark: #1e3a8a;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-purple: #7c3aed;
+            --accent-cyan: #06b6d4;
+            --accent-red: #ef4444;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --border-light: #e2e8f0;
+            --glass-border: rgba(30, 64, 175, 0.08);
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-main);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        header {
+            position: fixed; top: 0; left: 0; right: 0; height: 60px;
+            background: rgba(255,255,255,0.98); backdrop-filter: blur(20px);
+            border-bottom: 2px solid rgba(30,64,175,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+            padding: 0 2.5rem; z-index: 100;
+        }
+        .header-left { justify-self: start; display: flex; align-items: center; }
+        .institution-logo { height: 45px; width: auto; object-fit: contain; }
+        .header-center { justify-self: center; text-align: center; }
+        .logo { font-family: 'Outfit'; font-weight: 700; font-size: 1.1rem; color: var(--text-main); }
+        .logo-sub { display: block; font-size: 0.7rem; font-weight: 400; color: var(--text-muted); letter-spacing: 0.5px; }
+        .header-right { justify-self: end; display: flex; align-items: center; }
+        .supervisor-badge { display: flex; align-items: center; padding: 0.5rem 1rem; background: rgba(255,255,255,0.5); border: 1px solid rgba(30,64,175,0.1); border-radius: 12px; }
+        .supervisor-info { line-height: 1.3; text-align: right; }
+        .supervisor-label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
+        .supervisor-name { font-family: 'Outfit'; font-size: 0.95rem; font-weight: 700; color: var(--primary); }
+
+        .slide {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(60px);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            padding: 1.5rem 3rem;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: all;
+        }
+
+        .slide.prev {
+            opacity: 0;
+            transform: translateX(-60px);
+        }
+
+        .content-single,
+        .content-full {
+            width: 100%;
+            max-width: 1100px;
+            transform-origin: center center;
+            transition: transform 0.3s ease;
+        }
+
+        .content-full {
+            max-width: 1200px;
+        }
+
+        .slide-header {
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid var(--glass-border);
+        }
+
+        .slide-title {
+            font-family: 'Outfit';
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+        }
+
+        .section-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(30, 64, 175, 0.08);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.5px;
+        }
+
+        .section-badge.knn {
+            background: rgba(16, 185, 129, 0.08);
+            color: var(--accent-green);
+        }
+
+        .section-badge.svm {
+            background: rgba(124, 58, 237, 0.08);
+            color: var(--accent-purple);
+        }
+
+        .section-badge.bayes {
+            background: rgba(245, 158, 11, 0.08);
+            color: var(--accent-orange);
+        }
+
+        .section-badge.synth {
+            background: rgba(6, 182, 212, 0.08);
+            color: var(--accent-cyan);
+        }
+
+        .hero-title {
+            font-family: 'Outfit';
+            font-weight: 900;
+            font-size: 3rem;
+            line-height: 1.1;
+            color: var(--text-main);
+            letter-spacing: -0.03em;
+        }
+
+        .hero-title .accent {
+            background: linear-gradient(135deg, var(--accent-green), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 1rem auto;
+            line-height: 1.6;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            padding: 1.2rem;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .card-title {
+            font-family: 'Outfit';
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .card-text {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-family: 'Fira Code';
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+        }
+
+        .metric-card.success {
+            border-color: var(--accent-green);
+        }
+
+        .metric-card.success .metric-value {
+            color: var(--accent-green);
+        }
+
+        .metric-card.warning {
+            border-color: var(--accent-orange);
+        }
+
+        .metric-card.warning .metric-value {
+            color: var(--accent-orange);
+        }
+
+        .metric-card.purple {
+            border-color: var(--accent-purple);
+        }
+
+        .metric-card.purple .metric-value {
+            color: var(--accent-purple);
+        }
+
+        .info-box,
+        .success-box,
+        .warning-box,
+        .formula-box {
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+
+        .info-box {
+            background: rgba(30, 64, 175, 0.05);
+            border-left: 4px solid var(--primary);
+        }
+
+        .info-box-title {
+            font-family: 'Outfit';
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--primary);
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .success-box {
+            background: rgba(16, 185, 129, 0.05);
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .success-box-title {
+            font-family: 'Outfit';
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--accent-green);
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .warning-box {
+            background: rgba(245, 158, 11, 0.05);
+            border-left: 4px solid var(--accent-orange);
+        }
+
+        .warning-box-title {
+            font-family: 'Outfit';
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--accent-orange);
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .formula-box {
+            background: rgba(124, 58, 237, 0.04);
+            border: 2px solid rgba(124, 58, 237, 0.15);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .formula-box .katex {
+            font-size: 1.3em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+
+        th,
+        td {
+            padding: 0.5rem 0.7rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        th {
+            font-family: 'Outfit';
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td.highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        tr.best {
+            background: rgba(16, 185, 129, 0.06);
+        }
+
+        .toc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem 2rem;
+        }
+
+        .toc-entry {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .toc-entry:hover {
+            background: rgba(30, 64, 175, 0.05);
+        }
+
+        .toc-num {
+            font-family: 'Fira Code';
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--primary);
+            min-width: 2rem;
+        }
+
+        .toc-num.green {
+            color: var(--accent-green);
+        }
+
+        .toc-num.purple {
+            color: var(--accent-purple);
+        }
+
+        .toc-num.orange {
+            color: var(--accent-orange);
+        }
+
+        .toc-num.cyan {
+            color: var(--accent-cyan);
+        }
+
+        .toc-content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .toc-title {
+            font-family: 'Outfit';
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        .toc-page {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .slide.active .toc-entry {
+            animation: tocSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        }
+
+        .slide.active .toc-entry:nth-child(1) {
+            animation-delay: 0.05s;
+        }
+
+        .slide.active .toc-entry:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .slide.active .toc-entry:nth-child(3) {
+            animation-delay: 0.15s;
+        }
+
+        .slide.active .toc-entry:nth-child(4) {
+            animation-delay: 0.2s;
+        }
+
+        .slide.active .toc-entry:nth-child(5) {
+            animation-delay: 0.25s;
+        }
+
+        @keyframes tocSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.7rem;
+            border-radius: 14px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 0.1rem;
+        }
+
+        .tag-blue {
+            background: rgba(30, 64, 175, 0.1);
+            color: var(--primary);
+        }
+
+        .tag-green {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+        }
+
+        .tag-orange {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent-orange);
+        }
+
+        .tag-red {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent-red);
+        }
+
+        .tag-purple {
+            background: rgba(124, 58, 237, 0.1);
+            color: var(--accent-purple);
+        }
+
+        .tag-cyan {
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--accent-cyan);
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 0.4rem 0;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list li::before {
+            content: '\2192';
+            color: var(--accent-green);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .dataflow-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .dataflow-box {
+            padding: 0.7rem 1rem;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            text-align: center;
+            min-width: 100px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .dataflow-box.highlight-box {
+            border-color: var(--accent-green);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+        }
+
+        .dataflow-arrow {
+            font-size: 1.5rem;
+            color: var(--accent-orange);
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(30, 64, 175, 0.1);
+            z-index: 200;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), var(--primary));
+            transition: width 0.4s ease;
+        }
+
+        .slide-counter {
+            font-family: 'Fira Code';
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        nav {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            z-index: 200;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            transition: all 0.2s ease;
+            font-size: 1.2rem;
+        }
+
+        .nav-btn:hover {
+            background: rgba(30, 64, 175, 0.08);
+            transform: scale(1.1);
+        }
+
+        .nav-separator {
+            width: 1px;
+            height: 20px;
+            background: rgba(30, 64, 175, 0.15);
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: rgba(30, 64, 175, 0.08);
+            padding: 0.15rem 0.35rem;
+            border-radius: 4px;
+            font-size: 0.82em;
+            color: var(--primary);
+        }
+
+        .code-block {
+            background: #1e293b;
+            border-radius: 10px;
+            padding: 0.9rem 1.1rem;
+            overflow-x: auto;
+            margin-top: 0.5rem;
+        }
+
+        .code-block pre {
+            color: #e2e8f0;
+            font-family: 'Fira Code';
+            font-size: 0.75rem;
+            margin: 0;
+            white-space: pre;
+            line-height: 1.5;
+        }
+
+        .code-block .kw {
+            color: #c084fc;
+        }
+
+        .code-block .fn {
+            color: #67e8f9;
+        }
+
+        .code-block .str {
+            color: #86efac;
+        }
+
+        .code-block .cm {
+            color: #64748b;
+        }
+
+        .code-block .num {
+            color: #fbbf24;
+        }
+
+        .pillar-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1.4rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pillar-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .pillar-card.p1::before {
+            background: var(--accent-green);
+        }
+
+        .pillar-card.p2::before {
+            background: var(--accent-purple);
+        }
+
+        .pillar-card.p3::before {
+            background: var(--accent-orange);
+        }
+
+        .pillar-num {
+            font-family: 'Fira Code';
+            font-size: 2.5rem;
+            font-weight: 800;
+            opacity: 0.15;
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+        }
+
+        .pillar-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pillar-title {
+            font-family: 'Outfit';
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .pillar-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .level-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .level-1 {
+            background: rgba(30, 64, 175, 0.1);
+            color: var(--primary);
+        }
+
+        .level-2 {
+            background: rgba(124, 58, 237, 0.1);
+            color: var(--accent-purple);
+        }
+
+        .level-3 {
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--accent-cyan);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide.active .card,
+        .slide.active .pillar-card {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        }
+
+        .slide.active .card:nth-child(1),
+        .slide.active .pillar-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .slide.active .card:nth-child(2),
+        .slide.active .pillar-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .slide.active .card:nth-child(3),
+        .slide.active .pillar-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .slide.active .card:nth-child(4) {
+            animation-delay: 0.35s;
+        }
+
+        .slide.active table {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+            animation-delay: 0.15s;
+        }
+
+        .slide.active .info-box,
+        .slide.active .success-box,
+        .slide.active .warning-box {
+            animation: slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+            animation-delay: 0.3s;
+        }
+
+        .slide.active .slide-header {
+            animation: slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        }
+
+        .slide.active .metric-card {
+            animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        }
+
+        .slide.active .formula-box {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+            animation-delay: 0.2s;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-1 {
+            margin-bottom: 0.5rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 1rem;
+        }
+
+        .mt-1 {
+            margin-top: 0.5rem;
+        }
+
+        .mt-2 {
+            margin-top: 1rem;
+        }
+
+        .comparison-row {
+            display: flex;
+            gap: 1rem;
+            align-items: stretch;
+        }
+
+        .comparison-col {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 2px solid var(--border-light);
+            background: var(--bg-card);
+        }
+
+        .comparison-col.vs {
+            flex: 0 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
+            font-family: 'Outfit';
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+        }
+
+        .step-row {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin: 0.4rem 0;
+        }
+
+        .step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fira Code';
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .step-num.green {
+            background: var(--accent-green);
+        }
+
+        .step-num.purple {
+            background: var(--accent-purple);
+        }
+
+        .step-num.orange {
+            background: var(--accent-orange);
+        }
+
+        .step-num.blue {
+            background: var(--primary);
+        }
+
+        .step-text {
+            font-size: 0.92rem;
+            line-height: 1.4;
+        }
+
+        @media print {
+            @page {
+                size: landscape;
+                margin: 0;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+
+            body {
+                overflow: visible;
+                height: auto;
+                background: white;
+            }
+
+            header {
+                display: none;
+            }
+
+            nav {
+                display: none !important;
+            }
+
+            .progress-bar {
+                display: none !important;
+            }
+
+            .pdf-btn {
+                display: none !important;
+            }
+
+            .slide {
+                position: relative !important;
+                top: auto !important;
+                left: auto !important;
+                right: auto !important;
+                bottom: auto !important;
+                opacity: 1 !important;
+                transform: none !important;
+                pointer-events: all !important;
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                width: 100vw;
+                height: 100vh;
+                padding: 1.5rem 2.5rem;
+                page-break-after: always;
+                page-break-inside: avoid;
+                break-after: page;
+                break-inside: avoid;
+            }
+
+            .slide:last-child {
+                page-break-after: auto;
+            }
+
+            .card,
+            .metric-card,
+            .pillar-card {
+                box-shadow: none;
+                border: 1px solid #e2e8f0;
+            }
+
+            .info-box,
+            .success-box,
+            .warning-box,
+            .formula-box,
+            .code-block,
+            table {
+                break-inside: avoid;
+            }
+
+            .slide::after {
+                content: counter(slide-counter);
+                counter-increment: slide-counter;
+                position: absolute;
+                bottom: 0.8rem;
+                right: 1.5rem;
+                font-family: 'Fira Code', monospace;
+                font-size: 0.75rem;
+                color: #94a3b8;
+            }
+
+            body {
+                counter-reset: slide-counter;
+            }
+
+            .slide .card,
+            .slide .pillar-card,
+            .slide table,
+            .slide .info-box,
+            .slide .success-box,
+            .slide .warning-box,
+            .slide .slide-header,
+            .slide .metric-card,
+            .slide .formula-box,
+            .slide .toc-entry {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <img src="https://www.supcom.tn/storage/app/public/coordonnees/April2025/aa8HeWk95QdtPlGED1ZY.png"
+                alt="Sup'Com" class="institution-logo" onerror="this.style.display='none'">
+        </div>
+        <div class="header-center">
+            <div class="logo">
+                IoT Devices Smart Sensors
+                <span class="logo-sub">École Doctorale SUPCOM Tunis — Groupe 2</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="supervisor-badge">
+                <div class="supervisor-info">
+                    <div class="supervisor-label">Enseignante</div>
+                    <div class="supervisor-name">Mme Rim Ben Romdhane</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="slides-container">
+        <!-- ===================== SLIDE 0: COVER ===================== -->
+        <div class="slide active">
+            <div class="content-full text-center">
+                <h1 class="hero-title">IoMT, épilepsie et <span class="accent">Edge AI</span><br>
+                    <span style="font-size: 0.46em; font-weight: 500;">Lecture critique de Raman &amp; Velmurugan 2025</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Paper étudié : <em>An Intelligent Internet of Medical Things-Based Wearable Device for Monitoring of Neurological Disorders</em>,
+                    <em>Engineering Proceedings</em> 2025, 106, 13 <small><em>(L.25-26)</em></small>.
+                </p>
+
+                <div class="grid-3 mt-2" style="max-width: 950px; margin-left: auto; margin-right: auto;">
+                    <div class="pillar-card p1">
+                        <div class="pillar-num">E1</div>
+                        <div class="pillar-title">Rihab HMAIED</div>
+                        <div class="pillar-desc">Contexte clinique et conclusion</div>
+                    </div>
+                    <div class="pillar-card p2">
+                        <div class="pillar-num">E2</div>
+                        <div class="pillar-title">Hamdi BENALI</div>
+                        <div class="pillar-desc">État de l'art Edge AI épilepsie</div>
+                    </div>
+                    <div class="pillar-card p3">
+                        <div class="pillar-num">E3</div>
+                        <div class="pillar-title">Khaoula JRIDI</div>
+                        <div class="pillar-desc">Méthodologie du paper</div>
+                    </div>
+                </div>
+                <div class="grid-2 mt-1" style="max-width: 650px; margin-left: auto; margin-right: auto;">
+                    <div class="pillar-card p2">
+                        <div class="pillar-num">E4</div>
+                        <div class="pillar-title">Mohamed Amine LAAGAB</div>
+                        <div class="pillar-desc">Résultats et critique méthodologique</div>
+                    </div>
+                    <div class="pillar-card p1">
+                        <div class="pillar-num">E5</div>
+                        <div class="pillar-title">Oussama AKIR</div>
+                        <div class="pillar-desc">Validation Edge AI sur SeizeIT2</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.2rem; color: var(--text-muted); font-size: 0.95rem;">
+                    École Doctorale SUPCOM Tunis — 4 mai 2026
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 1: SOMMAIRE ===================== -->
+        <div class="slide">
+            <div class="content-single">
+                <div class="slide-header" style="border-bottom: none; margin-bottom: 0.8rem;">
+                    <h2 class="slide-title" style="font-size: 2.2rem; letter-spacing: -0.03em;">
+                        <span style="color: var(--primary);">&mdash;</span> Sommaire
+                    </h2>
+                </div>
+                <p style="color: var(--text-muted); font-size: 1rem; margin-bottom: 1.5rem; font-style: italic;">
+                    20 slides en 6 sections : du contexte clinique à la validation embarquée.
+                </p>
+                <div class="toc-grid">
+                    <div class="toc-entry" onclick="goToSlide(2)">
+                        <div class="toc-num">1</div>
+                        <div class="toc-content"><div class="toc-title">Contexte clinique</div><div class="toc-page">Slides 2-3</div></div>
+                    </div>
+                    <div class="toc-entry" onclick="goToSlide(4)">
+                        <div class="toc-num green">2</div>
+                        <div class="toc-content"><div class="toc-title">État de l'art</div><div class="toc-page">Slides 4-7</div></div>
+                    </div>
+                    <div class="toc-entry" onclick="goToSlide(8)">
+                        <div class="toc-num purple">3</div>
+                        <div class="toc-content"><div class="toc-title">Méthodologie Raman</div><div class="toc-page">Slides 8-10</div></div>
+                    </div>
+                    <div class="toc-entry" onclick="goToSlide(11)">
+                        <div class="toc-num orange">4</div>
+                        <div class="toc-content"><div class="toc-title">Résultats et critique</div><div class="toc-page">Slides 11-13</div></div>
+                    </div>
+                    <div class="toc-entry" onclick="goToSlide(14)">
+                        <div class="toc-num cyan">5</div>
+                        <div class="toc-content"><div class="toc-title">Notre travail Edge AI</div><div class="toc-page">Slides 14-17</div></div>
+                    </div>
+                    <div class="toc-entry" onclick="goToSlide(18)">
+                        <div class="toc-num">6</div>
+                        <div class="toc-content"><div class="toc-title">Conclusion, références, Q&amp;A</div><div class="toc-page">Slides 18-19</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 2: CONTEXTE 1 ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge">Contexte clinique</span>
+                    <h2 class="slide-title">Épilepsie : urgence médicale et contrainte ambulatoire</h2>
+                </div>
+                <div class="grid-3 mb-2">
+                    <div class="metric-card warning">
+                        <div class="metric-value">60 M</div>
+                        <div class="metric-label">personnes concernées dans le monde <small><em>(L.19-20)</em></small></div>
+                    </div>
+                    <div class="metric-card purple">
+                        <div class="metric-value">EEG</div>
+                        <div class="metric-label">méthode la plus fiable selon les auteurs <small><em>(L.81-83)</em></small></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">IoMT</div>
+                        <div class="metric-label">surveillance continue hors hôpital <small><em>(L.98-105)</em></small></div>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">Le risque surveillé</div>
+                        <div class="card-text">
+                            Raman décrit les crises comme des épisodes soudains pouvant entraîner blessures, accidents et mort subite inattendue.
+                            La détection nocturne est présentée comme difficile, car les crises peuvent survenir pendant le sommeil.
+                            <small><em>(L.17-21, L.67-73)</em></small>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Le verrou du gold standard</div>
+                        <div class="card-text">
+                            Le paper cite l'EEG, le CT, l'IRM, la SPECT, la TEP et le MEG, mais indique que le monitoring EEG continu n'est pas possible en temps réel pour l'usage ambulatoire visé.
+                            <small><em>(L.75-86, L.98-101)</em></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-box mt-2">
+                    <div class="info-box-title">Positionnement de la problématique</div>
+                    <p>La question n'est pas de remplacer le diagnostic clinique, mais de produire une alerte portable, confortable et assez fiable pour un monitoring à domicile.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 3: CONTEXTE 2 ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge">Contexte Edge AI</span>
+                    <h2 class="slide-title">Ce que doit prouver un dispositif Edge AI médical</h2>
+                </div>
+                <div class="grid-2">
+                    <div>
+                        <div class="dataflow-container">
+                            <div class="dataflow-box">Capteur porté</div>
+                            <div class="dataflow-arrow">&rarr;</div>
+                            <div class="dataflow-box">MCU local</div>
+                            <div class="dataflow-arrow">&rarr;</div>
+                            <div class="dataflow-box highlight-box">Alerte WiFi</div>
+                        </div>
+                        <div class="info-box mt-1">
+                            <div class="info-box-title">Chaîne IoMT annoncée par Raman</div>
+                            <p>Le prototype combine ESP32-Cam, WiFi/Bluetooth, MicroPython et notification aux soignants en cas de crise détectée. <small><em>(L.184-191, L.245-248)</em></small></p>
+                        </div>
+                        <div class="formula-box mt-1">
+                            $\mathrm{Recall}=\frac{TP}{TP+FN}$ &nbsp;&nbsp; $\mathrm{FPR}=\frac{FP}{FP+TN}$<br>
+                            <small><em>Formules données par les auteurs (L.272-286)</em></small>
+                        </div>
+                    </div>
+                    <div>
+                        <table>
+                            <thead><tr><th>KPI</th><th>Cible de conception</th><th>Statut chez Raman</th></tr></thead>
+                            <tbody>
+                                <tr><td>Recall</td><td>&ge; 95 % <small>(estimation typique)</small></td><td>mesuré, mais sur données mimées</td></tr>
+                                <tr><td>FPR par heure</td><td>&lt; 1 fausse alarme/h <small>(estimation typique)</small></td><td>non précisé par les auteurs</td></tr>
+                                <tr><td>Latence</td><td>sub-seconde <small>(estimation typique)</small></td><td>non précisé par les auteurs</td></tr>
+                                <tr><td>Autonomie</td><td>24 h+ <small>(estimation typique)</small></td><td>non précisé par les auteurs</td></tr>
+                                <tr><td>Empreinte mémoire</td><td>&lt; 100 KB <small>(estimation typique)</small></td><td>non précisé par les auteurs</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 4: SOTA 1 ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge knn">État de l'art</span>
+                    <h2 class="slide-title">Taxonomie : quatre familles de détection</h2>
+                </div>
+                <div class="grid-4">
+                    <div class="card">
+                        <div class="card-title">1. Clinique</div>
+                        <div class="card-text">EEG, MEG, IRM, CT, PET/SPECT. Forte interprétabilité médicale, mais faible compatibilité ambulatoire. Références [5][6].</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">2. Inertiel</div>
+                        <div class="card-text">Accéléromètre, seuils ou ML léger. Pertinent pour crises convulsives à forte signature motrice. Références [11][17].</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">3. ML classique</div>
+                        <div class="card-text">Features puis DT, SVM, RF, Naive Bayes ou algorithmes comparatifs sur EEG. Références [12][13][16].</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">4. DL-TinyML</div>
+                        <div class="card-text">CNN et réseaux compacts. Potentiel élevé, mais besoin de grands jeux de données et gestion du bruit. Référence [14].</div>
+                    </div>
+                </div>
+                <div class="warning-box mt-2">
+                    <div class="warning-box-title">Règle anti-hallucination appliquée</div>
+                    <p>Les performances chiffrées des travaux [11] à [17] ne sont pas détaillées dans Raman ; elles ne sont donc pas inventées ici.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 5: SOTA 2 ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge knn">État de l'art</span>
+                    <h2 class="slide-title">Méthodes cliniques : précision du signal, faible portabilité</h2>
+                </div>
+                <div class="grid-3">
+                    <div class="metric-card">
+                        <div class="metric-value">EEG</div>
+                        <div class="metric-label">méthode la plus fiable pour observer des patterns anormaux <small><em>(L.81-83)</em></small></div>
+                    </div>
+                    <div class="metric-card purple">
+                        <div class="metric-value">MEG</div>
+                        <div class="metric-label">résolution temporelle milliseconde <small><em>(L.84-86)</em></small></div>
+                    </div>
+                    <div class="metric-card warning">
+                        <div class="metric-value">IRM</div>
+                        <div class="metric-label">citée parmi les outils de neuroimagerie <small><em>(L.75-80)</em></small></div>
+                    </div>
+                </div>
+                <div class="grid-2 mt-2">
+                    <div class="card">
+                        <div class="card-title">Ce que les références [5][6] apportent au cadrage</div>
+                        <ul class="feature-list">
+                            <li>[5] : revue clinique sur les crises épileptiques.</li>
+                            <li>[6] : vue d'ensemble neuroscientifique sur crises et épilepsie.</li>
+                            <li>Raman mobilise ces références pour justifier EEG, neuroimagerie et MEG. <small><em>(L.75-86, L.422-425)</em></small></li>
+                        </ul>
+                    </div>
+                    <div class="warning-box">
+                        <div class="warning-box-title">Limite pour IoMT</div>
+                        <p>Le paper reconnaît que le monitoring EEG continu n'est pas possible en temps réel dans le scénario ambulatoire visé. Les coûts, l'encombrement et la pose d'électrodes ne sont pas quantifiés par les auteurs. <small><em>(L.98-101)</em></small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 6: SOTA 3 ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge knn">État de l'art</span>
+                    <h2 class="slide-title">ML classique et Deep Learning : apports cités, métriques absentes</h2>
+                </div>
+                <table>
+                    <thead><tr><th>Réf.</th><th>Signal / modèle</th><th>Ce que Raman rapporte</th><th>Performance chiffrée</th></tr></thead>
+                    <tbody>
+                        <tr><td>[11] Kusmakar</td><td>Accéléromètre wearable + SVDD</td><td>Détection GTCS et distinction CPS / PNES <small><em>(L.118-123)</em></small></td><td>non précisé par les auteurs</td></tr>
+                        <tr><td>[12] Davidson</td><td>EEG + Naive Bayes + algorithme génétique</td><td>Amélioration de la classification EEG <small><em>(L.125-127)</em></small></td><td>non précisé par les auteurs</td></tr>
+                        <tr><td>[13] Roy</td><td>EEG + benchmark ML</td><td>Comparaison d'algorithmes pour types de crises <small><em>(L.127-129)</em></small></td><td>non précisé par les auteurs</td></tr>
+                        <tr><td>[14] Liu</td><td>CNN multi-biosignal</td><td>Besoin d'un grand dataset et bruit du signal <small><em>(L.131-134)</em></small></td><td>non précisé par les auteurs</td></tr>
+                    </tbody>
+                </table>
+                <div class="info-box mt-2">
+                    <div class="info-box-title">Lecture SOTA</div>
+                    <p>Raman se positionne surtout comme démonstrateur Edge complet ; le paper ne fournit pas de comparaison numérique détaillée avec les travaux cités.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 7: SOTA 4 ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge knn">État de l'art</span>
+                    <h2 class="slide-title">Tableau comparatif et verrous scientifiques</h2>
+                </div>
+                <div class="grid-2">
+                    <div>
+                        <table>
+                            <thead><tr><th>Famille</th><th>Force</th><th>Limite pour l'Edge</th></tr></thead>
+                            <tbody>
+                                <tr><td>Clinique EEG/MEG</td><td>signal proche du mécanisme neurologique</td><td>ambulatoire difficile <small><em>(L.98-101)</em></small></td></tr>
+                                <tr><td>Inertiel wearable</td><td>capteur léger, compatible MCU</td><td>crises non motrices moins couvertes, non quantifié par Raman</td></tr>
+                                <tr><td>ML classique</td><td>features explicables, coût réduit</td><td>généralisation inter-patients fragile, non quantifiée</td></tr>
+                                <tr><td>DL-TinyML</td><td>apprentissage de motifs complexes</td><td>grand dataset et bruit signalés pour CNN <small><em>(L.131-134)</em></small></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="warning-box">
+                        <div class="warning-box-title">Verrous à retenir</div>
+                        <ul class="feature-list">
+                            <li>Absence de patients épileptiques réels dans Raman. <small><em>(L.160-165)</em></small></li>
+                            <li>Faux positifs par heure non précisés par les auteurs.</li>
+                            <li>Budget mémoire, latence et énergie non précisés par les auteurs.</li>
+                            <li>Domain shift iPhone vers LSM9DS1 non quantifié.</li>
+                            <li>Comparaison numérique avec le SOTA non fournie.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 8: METHODO PAPER 1 ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge svm">Méthodologie Raman</span>
+                    <h2 class="slide-title">Architecture hardware annoncée</h2>
+                </div>
+                <div class="grid-4">
+                    <div class="metric-card purple">
+                        <div class="metric-value">9-DoF</div>
+                        <div class="metric-label">LSM9DS1 : accéléromètre, gyroscope, magnétomètre <small><em>(L.175-181)</em></small></div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">160 MHz</div>
+                        <div class="metric-label">ESP32-Cam basse consommation <small><em>(L.184-186)</em></small></div>
+                    </div>
+                    <div class="metric-card warning">
+                        <div class="metric-value">520 KB</div>
+                        <div class="metric-label">SRAM intégrée, plus PSRAM externe <small><em>(L.186-188)</em></small></div>
+                    </div>
+                    <div class="metric-card success">
+                        <div class="metric-value">1500 mAh</div>
+                        <div class="metric-label">batterie LiPo 3,7 V <small><em>(L.194-196)</em></small></div>
+                    </div>
+                </div>
+                <div class="dataflow-container mt-2">
+                    <div class="dataflow-box">LSM9DS1</div>
+                    <div class="dataflow-arrow">&rarr;</div>
+                    <div class="dataflow-box">I2C, 3,3 V</div>
+                    <div class="dataflow-arrow">&rarr;</div>
+                    <div class="dataflow-box highlight-box">ESP32-Cam</div>
+                    <div class="dataflow-arrow">&rarr;</div>
+                    <div class="dataflow-box">WiFi / BLE</div>
+                </div>
+                <div class="grid-2 mt-1">
+                    <div class="info-box"><div class="info-box-title">Port corporel</div><p>Le dispositif est fixé sur la zone tibiale de la jambe inférieure, avec boîtier et sangle. <small><em>(L.154-155, L.206-208)</em></small></p></div>
+                    <div class="info-box"><div class="info-box-title">Recharge</div><p>Le module TP4056 est cité pour la charge d'une cellule LiPo 3,7 V avec protection court-circuit. <small><em>(L.200-202)</em></small></p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 9: METHODO PAPER 2 ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge svm">Méthodologie Raman</span>
+                    <h2 class="slide-title">Pipeline data : de la fenêtre au modèle</h2>
+                </div>
+                <div class="dataflow-container">
+                    <div class="dataflow-box">Acquisition</div>
+                    <div class="dataflow-arrow">&rarr;</div>
+                    <div class="dataflow-box">Filtrage</div>
+                    <div class="dataflow-arrow">&rarr;</div>
+                    <div class="dataflow-box">Fenêtrage</div>
+                    <div class="dataflow-arrow">&rarr;</div>
+                    <div class="dataflow-box">6 features</div>
+                    <div class="dataflow-arrow">&rarr;</div>
+                    <div class="dataflow-box highlight-box">DT / SVM / RF</div>
+                </div>
+                <div class="grid-3 mt-2">
+                    <div class="card">
+                        <div class="card-title">Signal et fenêtrage</div>
+                        <div class="card-text">Accélération et gyroscope à 50 Hz ; fenêtres fixes de 2,56 s ; 50 % d'overlap ; 128 lectures par fenêtre. <small><em>(L.223-229)</em></small></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Prétraitement</div>
+                        <div class="card-text">Filtres de bruit puis Butterworth passe-bas pour séparer gravité et accélération corporelle. <small><em>(L.231-232)</em></small></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Features</div>
+                        <div class="card-text">Variance, skewness, MFL, entropie spectrale, fréquence moyenne, fréquence médiane. <small><em>(L.233-235)</em></small></div>
+                    </div>
+                </div>
+                <div class="grid-2 mt-2">
+                    <div class="info-box"><div class="info-box-title">Validation rapportée</div><p>Split 80/20 : 240 signaux entraînement, 60 test, dont 30 normaux et 30 seizure-mimicking. <small><em>(L.256-261)</em></small></p></div>
+                    <div class="info-box"><div class="info-box-title">Validation croisée</div><p>k-fold avec k = 5 pour DT, RF et SVM. <small><em>(L.303-305)</em></small></p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 10: METHODO PAPER 3 ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge svm">Méthodologie Raman</span>
+                    <h2 class="slide-title">Encadré critique : domain shift iPhone vers ESP32</h2>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-col">
+                        <h3 class="card-title">Domaine d'entraînement</h3>
+                        <ul class="feature-list">
+                            <li>Apple iPhone 11 utilisé pour acquérir les signaux. <small><em>(L.253-256)</em></small></li>
+                            <li>Volontaires sains, activités mimées sous supervision médicale. <small><em>(L.160-165)</em></small></li>
+                            <li>CSV, accéléromètre et gyroscope du smartphone. <small><em>(L.253-256)</em></small></li>
+                        </ul>
+                    </div>
+                    <div class="comparison-col vs">VS</div>
+                    <div class="comparison-col">
+                        <h3 class="card-title">Domaine de déploiement</h3>
+                        <ul class="feature-list">
+                            <li>LSM9DS1 décrit comme capteur du wearable. <small><em>(L.175-181)</em></small></li>
+                            <li>ESP32-Cam reçoit les valeurs capteur et prédit les crises. <small><em>(L.184-191)</em></small></li>
+                            <li>RF codé en MicroPython dans le dispositif IoMT. <small><em>(L.381-382)</em></small></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="warning-box mt-2">
+                    <div class="warning-box-title">Conséquence méthodologique</div>
+                    <p>Le transfert entre capteur smartphone et LSM9DS1 tibial n'est ni mesuré, ni validé, ni discuté. La validité externe du prototype reste donc non démontrée par les auteurs.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 11: RESULTATS PAPER 1 ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge bayes">Résultats Raman</span>
+                    <h2 class="slide-title">Table 1 reproduite : RF gagne le recall, pas le FPR</h2>
+                </div>
+                <table>
+                    <thead><tr><th>Modèle</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>FPR</th><th>Lecture critique</th></tr></thead>
+                    <tbody>
+                        <tr><td>Decision Trees</td><td>85 %</td><td>86 %</td><td>83 %</td><td>0,13</td><td>Simple, mais recall plus faible</td></tr>
+                        <tr class="best"><td>Random Forest</td><td class="highlight">95 %</td><td>93 %</td><td class="highlight">100 %</td><td>0,15</td><td>Meilleur recall, FPR le plus élevé</td></tr>
+                        <tr><td>SVM</td><td>90 %</td><td>90,9 %</td><td>90,9 %</td><td class="highlight">0,11</td><td>FPR le plus bas</td></tr>
+                    </tbody>
+                </table>
+                <div class="grid-2 mt-2">
+                    <div class="info-box"><div class="info-box-title">Source tableau</div><p>Toutes les valeurs de Table 1 proviennent du paper et de l'audit de lecture critique. <small><em>(L.292-300, L.340-356)</em></small></p></div>
+                    <div class="formula-box">$\mathrm{FPR}=0{,}15$ pour le RF<br><small><em>Le meilleur recall n'implique pas le meilleur taux de faux positifs.</em></small></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 12: RESULTATS PAPER 2 ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge bayes">Résultats Raman</span>
+                    <h2 class="slide-title">Quatre contradictions internes à défendre à l'oral</h2>
+                </div>
+                <div class="grid-2">
+                    <div class="warning-box">
+                        <div class="warning-box-title">1. Capteur : trois versions</div>
+                        <p>MPU6500 dans l'abstract, LSM9DS1 dans la méthodologie, iPhone 11 dans les résultats. <small><em>(L.26-27, L.175-176, L.253-256)</em></small></p>
+                    </div>
+                    <div class="warning-box">
+                        <div class="warning-box-title">2. FPR inférieur à 4 %</div>
+                        <p>L'abstract annonce &lt; 4 %, alors que la Table 1 donne au mieux 0,11, soit 11 %. <small><em>(L.38-39, L.292-300)</em></small></p>
+                    </div>
+                    <div class="warning-box">
+                        <div class="warning-box-title">3. Domain shift non traité</div>
+                        <p>Les données d'entraînement viennent d'un iPhone ; le déploiement vise ESP32 + LSM9DS1. Aucune expérience de transfert n'est rapportée. <small><em>(L.253-256, L.175-181, L.381-382)</em></small></p>
+                    </div>
+                    <div class="warning-box">
+                        <div class="warning-box-title">4. RF « without any FPR »</div>
+                        <p>La discussion affirme que le RF détecte sans FPR, alors que le RF a FPR = 0,15, le plus élevé des trois modèles. <small><em>(L.347-348, L.355-357)</em></small></p>
+                    </div>
+                </div>
+                <div class="info-box mt-2">
+                    <div class="info-box-title">Message de jury</div>
+                    <p>La critique ne porte pas sur l'idée IoMT, mais sur la cohérence expérimentale nécessaire avant toute prétention clinique.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 13: RESULTATS PAPER 3 ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge bayes">Résultats Raman</span>
+                    <h2 class="slide-title">Limites méthodologiques : ce qui manque pour conclure</h2>
+                </div>
+                <div class="grid-3">
+                    <div class="metric-card warning"><div class="metric-value">300</div><div class="metric-label">signaux au total <small><em>(L.256-261)</em></small></div></div>
+                    <div class="metric-card warning"><div class="metric-value">30</div><div class="metric-label">positifs dans le test <small><em>(L.260-261)</em></small></div></div>
+                    <div class="metric-card purple"><div class="metric-value">IRB</div><div class="metric-label">déclaré Not applicable <small><em>(L.397-399)</em></small></div></div>
+                </div>
+                <div class="grid-2 mt-2">
+                    <div class="card">
+                        <div class="card-title">Échantillon et population</div>
+                        <ul class="feature-list">
+                            <li>150 normaux et 150 seizure-mimicking, pas de patients épileptiques réels. <small><em>(L.256-261, L.160-165)</em></small></li>
+                            <li>Pas d'intervalle de confiance, pas de p-value, pas d'analyse de puissance dans le paper.</li>
+                            <li>Données disponibles sur demande, pas de dépôt public cité. <small><em>(L.401-402)</em></small></li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Métriques Edge et clinique absentes</div>
+                        <ul class="feature-list">
+                            <li>F1-score, spécificité, AUC-ROC et matrice de confusion complète : non précisés par les auteurs.</li>
+                            <li>Latence d'inférence : non précisée par les auteurs.</li>
+                            <li>Autonomie et consommation énergétique : non précisées par les auteurs.</li>
+                            <li>Empreinte RAM du modèle RF : non précisée par les auteurs.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 14: NOTRE TRAVAIL 1 ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge synth">Notre travail Edge AI</span>
+                    <h2 class="slide-title">SeizeIT2 : test patient-réaliste en Leave-One-Subject-Out</h2>
+                </div>
+                <div class="grid-4">
+                    <div class="metric-card"><div class="metric-value">6</div><div class="metric-label">sujets SeizeIT2</div></div>
+                    <div class="metric-card warning"><div class="metric-value">33 925</div><div class="metric-label">fenêtres</div></div>
+                    <div class="metric-card purple"><div class="metric-value">893</div><div class="metric-label">fenêtres positives</div></div>
+                    <div class="metric-card success"><div class="metric-value">80</div><div class="metric-label">features</div></div>
+                </div>
+                <div class="grid-2 mt-2">
+                    <div class="card">
+                        <div class="card-title">Dataset et validation</div>
+                        <div class="card-text">OpenNeuro ds005873, SeizeIT2, validation LOSO : un sujet est tenu hors entraînement à chaque fold. <strong>(mesure interne, repo iot-edge-ai-seizeit2)</strong></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Pipeline aligné Edge</div>
+                        <div class="card-text">Butterworth low-pass 20 Hz, resampling 50 Hz, fenêtres 2,56 s, overlap 50 %, 2 canaux EEG et 6 canaux MOV. <strong>(mesure interne, repo iot-edge-ai-seizeit2)</strong></div>
+                    </div>
+                </div>
+                <div class="info-box mt-2">
+                    <div class="info-box-title">Pourquoi LOSO ?</div>
+                    <p>LOSO mesure la généralisation inter-sujet ; c'est précisément le verrou absent du protocole Raman fondé sur mouvements mimés.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 15: NOTRE TRAVAIL 2 ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge synth">Notre travail Edge AI</span>
+                    <h2 class="slide-title">Résultats LOSO : l'accuracy ne suffit pas</h2>
+                </div>
+                <table>
+                    <thead><tr><th>Modèle</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th><th>FPR</th><th>AUC</th></tr></thead>
+                    <tbody>
+                        <tr class="best"><td>RF</td><td>0,931</td><td>0,453</td><td class="highlight">0,089</td><td>0,131</td><td>0,00045</td><td>0,801</td></tr>
+                        <tr><td>DT</td><td>non précisé</td><td>non précisé</td><td>0,167</td><td>non précisé</td><td>non précisé</td><td>0,561</td></tr>
+                        <tr><td>SVM RBF</td><td>non précisé</td><td>non précisé</td><td>0,030</td><td>non précisé</td><td>non précisé</td><td>0,493</td></tr>
+                        <tr><td>MLP</td><td>0,833</td><td>non précisé</td><td>0,075</td><td>0,045</td><td>non précisé</td><td>0,584</td></tr>
+                    </tbody>
+                </table>
+                <div class="warning-box mt-2">
+                    <div class="warning-box-title">Constat E5</div>
+                    <p>Sur patients réels en LOSO, le RF garde une accuracy élevée, mais le recall chute à 0,089. <strong>(mesure interne, repo iot-edge-ai-seizeit2)</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 16: NOTRE TRAVAIL 3 ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge synth">Notre travail Edge AI</span>
+                    <h2 class="slide-title">Estimation ESP32 : faisabilité mémoire avant performance</h2>
+                </div>
+                <div class="info-box mb-2">
+                    <div class="info-box-title">Hypothèse de calcul</div>
+                    <p>ESP32 : 160 MHz, 520 KB SRAM, 70 mW. Estimation analytique uniquement, pas une mesure hardware. <strong>(mesure interne, repo iot-edge-ai-seizeit2)</strong></p>
+                </div>
+                <table>
+                    <thead><tr><th>Modèle embarqué</th><th>RAM estimée</th><th>% SRAM</th><th>Latence</th><th>Énergie</th><th>Statut</th></tr></thead>
+                    <tbody>
+                        <tr><td>RF FP32</td><td>1427 KB</td><td>274 %</td><td>non retenu</td><td>non retenu</td><td>non viable</td></tr>
+                        <tr class="best"><td>RF INT8</td><td>357 KB</td><td>68,66 %</td><td>18,47 µs</td><td>1,29 µJ</td><td>viable mais lourd</td></tr>
+                        <tr><td>MLP INT8</td><td>6,439 KB</td><td>1,24 %</td><td>19,3 µs</td><td>1,35 µJ</td><td>viable et compact</td></tr>
+                    </tbody>
+                </table>
+                <div class="formula-box mt-2">MLP INT8 ≈ 56× plus léger que RF INT8<br><small><strong>(mesure interne, repo iot-edge-ai-seizeit2)</strong></small></div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 17: NOTRE TRAVAIL 4 ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge synth">Notre travail Edge AI</span>
+                    <h2 class="slide-title">Le résultat qui change la discussion</h2>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-col">
+                        <h3 class="card-title">Raman 2025</h3>
+                        <div class="metric-card success mt-1"><div class="metric-value">100 %</div><div class="metric-label">recall RF sur 30 positifs mimés <small><em>(L.260-261, L.292-300)</em></small></div></div>
+                        <p class="card-text mt-1">Contexte : volontaires sains et signaux mimant des crises, avec acquisition iPhone 11.</p>
+                    </div>
+                    <div class="comparison-col vs">VS</div>
+                    <div class="comparison-col">
+                        <h3 class="card-title">Notre validation LOSO</h3>
+                        <div class="metric-card warning mt-1"><div class="metric-value">8,9 %</div><div class="metric-label">recall RF sur SeizeIT2 patients réels</div></div>
+                        <p class="card-text mt-1"><strong>(mesure interne, repo iot-edge-ai-seizeit2)</strong></p>
+                    </div>
+                </div>
+                <div class="grid-2 mt-2">
+                    <div class="info-box">
+                        <div class="info-box-title">Compromis RF</div>
+                        <p>RF INT8 reste possible en SRAM, mais consomme 357 KB, soit 68,66 % de la SRAM estimée. <strong>(mesure interne, repo iot-edge-ai-seizeit2)</strong></p>
+                    </div>
+                    <div class="success-box">
+                        <div class="success-box-title">Compromis MLP</div>
+                        <p>MLP INT8 est environ 56× plus léger que RF INT8, mais son recall LOSO reste 0,075 : il résout la mémoire, pas encore la sensibilité clinique. <strong>(mesure interne, repo iot-edge-ai-seizeit2)</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 18: CONCLUSION ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge synth">Conclusion</span>
+                    <h2 class="slide-title">Contribution utile, validation clinique insuffisante</h2>
+                </div>
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title">Ce que Raman apporte</div>
+                        <ul class="feature-list">
+                            <li>Un prototype IoMT cohérent comme démonstrateur pédagogique : ESP32, IMU, WiFi, MicroPython. <small><em>(L.184-191)</em></small></li>
+                            <li>Une chaîne complète : acquisition, features, DT/SVM/RF, comparaison, déploiement. <small><em>(L.216-236, L.292-300)</em></small></li>
+                            <li>Un résultat RF fort sur données mimées : 95 % accuracy et 100 % recall. <small><em>(L.340-348)</em></small></li>
+                        </ul>
+                    </div>
+                    <div class="warning-box">
+                        <div class="warning-box-title">Ce qui empêche une conclusion clinique</div>
+                        <ul class="feature-list">
+                            <li>Absence de patients épileptiques réels dans le protocole Raman. <small><em>(L.160-165)</em></small></li>
+                            <li>Domain shift iPhone vers LSM9DS1 non quantifié.</li>
+                            <li>FPR abstract contredit par Table 1. <small><em>(L.38-39, L.292-300)</em></small></li>
+                            <li>Latence, énergie, autonomie et RAM modèle non précisées par les auteurs.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="success-box mt-2">
+                    <div class="success-box-title">Recommandations</div>
+                    <p>Reprendre l'acquisition avec le capteur réellement déployé, valider en LOSO sur patients réels, publier F1/AUC/matrice de confusion et mesurer RAM, latence et énergie sur hardware.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== SLIDE 19: BIBLIOGRAPHIE ===================== -->
+        <div class="slide">
+            <div class="content-full">
+                <div class="slide-header">
+                    <span class="section-badge synth">Bibliographie et trace</span>
+                    <h2 class="slide-title">Références, traçabilité et Q&amp;A</h2>
+                </div>
+                <div class="grid-2" style="gap: 1rem;">
+                    <div class="card" style="padding: 0.9rem;">
+                        <div class="card-title">Références [1]-[9]</div>
+                        <p style="font-size: 0.68rem; line-height: 1.35; color: var(--text-muted);">
+                            [1] Giourou 2015, introduction to epilepsy and related brain disorders.<br>
+                            [2] Sarmast 2020, current classification of seizures and epilepsies.<br>
+                            [3] Roliz 2022, interaction between sleep and epilepsy.<br>
+                            [4] Nobili 2021, sleep-related epilepsies procedures.<br>
+                            [5] Anwar 2020, epileptic seizures.<br>
+                            [6] Stafstrom 2015, seizures and epilepsy overview.<br>
+                            [7] Sun 2024, conducting polymer hydrogels for wearable sensors.<br>
+                            [8] Guo 2023, multidimensional motion sensor for AI-enhanced VR sports.<br>
+                            [9] Wu 2023, nanostructured conductive polypyrrole for flexible wearable devices.
+                        </p>
+                    </div>
+                    <div class="card" style="padding: 0.9rem;">
+                        <div class="card-title">Références [10]-[17]</div>
+                        <p style="font-size: 0.68rem; line-height: 1.35; color: var(--text-muted);">
+                            [10] Amengual-Gual 2019, patterns of epileptic seizure occurrence.<br>
+                            [11] Kusmakar 2018, convulsive seizure detection using wearable accelerometer.<br>
+                            [12] Davidson 2022, epileptic seizure classification using combined labels and genetic algorithm.<br>
+                            [13] Roy 2020, seizure type classification using EEG and ML.<br>
+                            [14] Liu 2020, epileptic seizure detection using CNN multi-biosignal.<br>
+                            [15] Zabler 2024, seizure self-reporting with an app diary.<br>
+                            [16] Komal 2024, systematic review of remote monitoring seizure detection devices.<br>
+                            [17] Yadav 2008, dual-stage classifier for automatic seizure detection.
+                        </p>
+                    </div>
+                </div>
+                <div class="grid-3 mt-2">
+                    <div class="info-box" style="padding: 0.75rem 0.9rem;"><div class="info-box-title">Source refs</div><p style="font-size: 0.78rem;">Les 17 références correspondent à la section F de la lecture critique et aux lignes bibliographiques du paper. <small><em>(L.408-464)</em></small></p></div>
+                    <div class="success-box" style="padding: 0.75rem 0.9rem;"><div class="success-box-title">Trace IA</div><p style="font-size: 0.78rem;">Aucun chiffre externe ajouté ; chiffres paper ancrés par lignes, chiffres E5 marqués comme mesures internes.</p></div>
+                    <div class="warning-box" style="padding: 0.75rem 0.9rem;"><div class="warning-box-title">Repo</div><p style="font-size: 0.78rem;">Travail E5 : repo iot-edge-ai-seizeit2. Questions attendues : LOSO, domain shift, SRAM, FPR.</p></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Navigation -->
+    <nav>
+        <button class="nav-btn" onclick="prevSlide()" title="Précédent">&#8592;</button>
+        <div class="nav-separator"></div>
+        <span class="slide-counter"><span id="current-slide">1</span> / <span id="total-slides">20</span></span>
+        <div class="nav-separator"></div>
+        <button class="nav-btn" onclick="nextSlide()" title="Suivant">&#8594;</button>
+        <div class="nav-separator"></div>
+        <button class="nav-btn pdf-btn" onclick="exportPDF()" title="Télécharger PDF"
+            style="font-size: 0.85rem; width: auto; padding: 0 0.8rem; border-radius: 20px; background: rgba(30,64,175,0.08); gap: 0.3rem;">
+            PDF
+        </button>
+    </nav>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+    </div>
+<script>
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
+
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function autoFitSlide(slideEl) {
+            const content = slideEl.querySelector('.content-single, .content-full');
+            if (!content) return;
+            content.style.transform = '';
+            content.style.transformOrigin = 'center center';
+            requestAnimationFrame(() => {
+                const headerH = 60;
+                const navH = 80;
+                const padV = 60;
+                const padH = 120;
+                const availH = window.innerHeight - headerH - navH - padV;
+                const availW = window.innerWidth - padH;
+                const contentH = content.scrollHeight;
+                const contentW = content.scrollWidth;
+                const scaleH = availH / contentH;
+                const scaleW = availW / contentW;
+                let scale = Math.min(scaleH, scaleW);
+                scale = Math.max(0.6, Math.min(1.25, scale));
+                if (Math.abs(scale - 1) > 0.03) {
+                    content.style.transform = `scale(${scale.toFixed(3)})`;
+                }
+            });
+        }
+
+        function autoFitAll() {
+            slides.forEach(s => autoFitSlide(s));
+        }
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev');
+                if (index === currentSlide) slide.classList.add('active');
+                else if (index < currentSlide) slide.classList.add('prev');
+            });
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            document.getElementById('progress-fill').style.width = ((currentSlide + 1) / totalSlides * 100) + '%';
+            setTimeout(() => autoFitSlide(slides[currentSlide]), 100);
+        }
+
+        function nextSlide() { if (currentSlide < totalSlides - 1) { currentSlide++; updateSlide(); } }
+        function prevSlide() { if (currentSlide > 0) { currentSlide--; updateSlide(); } }
+        function goToSlide(index) { if (index >= 0 && index < totalSlides) { currentSlide = index; updateSlide(); } }
+
+        window.addEventListener('resize', () => autoFitSlide(slides[currentSlide]));
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+            else if (e.key === 'Home') { e.preventDefault(); goToSlide(0); }
+            else if (e.key === 'End') { e.preventDefault(); goToSlide(totalSlides - 1); }
+        });
+
+        let touchStartX = 0;
+        document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+        document.addEventListener('touchend', (e) => {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
+        });
+
+        function exportPDF() {
+            document.title = 'Classification Supervisée — SupCom 2026';
+            autoFitAll();
+            setTimeout(() => window.print(), 200);
+        }
+
+        updateSlide();
+        window.addEventListener('load', () => {
+            autoFitAll();
+            setTimeout(() => autoFitSlide(slides[currentSlide]), 300);
+        });
+    </script>
+</body>
+
+</html>
