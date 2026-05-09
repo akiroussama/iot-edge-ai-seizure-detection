@@ -17,13 +17,19 @@ We reproduce and critically analyze the workflow described in:
 
 ## Results Summary
 
-| Model | Regime | Recall | RAM (ESP32 INT8) | Latency |
-|---|---|---|---|---|
-| **Random Forest** | Intra-patient | ~50% | 357 KB (69%) | -- |
-| **Random Forest** | **LOSO (Real)** | **8.9%** | 357 KB (69%) | -- |
-| **MLP TinyML** | **LOSO (Real)** | **7.5%** | **6.4 KB (1.2%)** | **19.3 µs** |
+Recall reported as **pooled (micro)** = ΣTP / ΣN_positives across 6 LOSO folds (n=893 seizure windows). This answers the clinical question "out of all real seizure windows, how many did the system detect?" — see `VERIFICATION_RECALL_RF.md` for the methodological discussion (macro-vs-pooled aggregation).
 
-**Conclusion**: While Random Forest shows better intra-patient performance, it fails to generalize in a cross-subject deployment (LOSO). The MLP TinyML model provides a viable path for true on-device inference with minimal memory footprint.
+| Model | Regime | Recall (pooled) | TP / N_pos | Accuracy (pooled) | RAM (ESP32 INT8) | Latency |
+|---|---|---|---|---|---|---|
+| **Random Forest** | Intra-patient | ~50 % (macro) | -- | 99.8 % | 357 KB (69 %) | 18.5 µs |
+| Random Forest | **LOSO (real)** | **3.3 %** | 29 / 893 | 97.4 % * | 357 KB (69 %) | 18.5 µs |
+| **MLP TinyML** | **LOSO (real)** | **8.7 %** | 78 / 893 | 91.6 % | **6.4 KB (1.2 %)** | **19.3 µs** |
+| Decision Tree | LOSO (real) | 11.0 % | 98 / 893 | 94.5 % | -- | -- |
+| SVM RBF | LOSO (real) | 6.5 % | 58 / 893 | 96.2 % | -- | -- |
+
+\* RF pooled accuracy (97.4 %) ≡ trivial dummy baseline (1 - prevalence = 1 - 893/33925 = 97.37 %). The RF degenerates to "predict all negative" on cross-subject data.
+
+**Conclusion**: Random Forest's intra-patient performance does not transfer to cross-subject (LOSO) deployment, where it collapses to the dummy classifier baseline. The MLP TinyML model — 56× smaller in memory — actually achieves higher pooled recall (8.7 % vs 3.3 %) than the RF, while remaining far below clinically acceptable sensitivity. Both confirm that the reference paper's 100 % recall claim is an artefact of its 30-sample simulated dataset and does not generalize.
 
 ## Repository Structure
 

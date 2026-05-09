@@ -66,9 +66,9 @@ L'échec de A2 a déclenché une adaptation : un script Python stdlib (zipfile +
 
 Décisions clés prises par l'auteur après avoir lu les synthèses Codex :
 1. Refaire les sections E2/E3/E4 from scratch plutôt que polir les drafts étudiants jugés insuffisants.
-2. Utiliser le résultat empirique LOSO (recall 9 % sur patients réels) comme contribution scientifique principale, plutôt que le minimiser.
+2. Utiliser le résultat empirique LOSO (recall pooled 3,25 % RF / 8,74 % MLP sur patients réels) comme contribution scientifique principale, plutôt que le minimiser.
 3. Catcher les contradictions internes du paper Raman comme axe critique central.
-4. Adopter le narratif : « Le paper annonce 95 % en simulation, nous obtenons 9 % de recall en LOSO sur patients réels — et nous expliquons pourquoi. »
+4. Adopter le narratif : « Le paper annonce 100 % en simulation, nous obtenons 3,25 % de recall pooled RF en LOSO sur patients réels — et nous expliquons pourquoi. »
 
 ### Phase C — Production de contenu
 
@@ -125,6 +125,22 @@ Lors de la phase de réflexion, l'orchestrateur (Claude Code) avait identifié u
 
 L'orchestrateur avait initialement déclaré l'output C2 « propre » après vérification de seulement 10 ancrages échantillonnés. Sur insistance de l'auteur (« si il y a une erreur a ne pas faire HALLUCINATION, tout doit verifie mot par mot »), le protocole a été durci : audit de 25 ancrages supplémentaires, puis grille systématique. C2 a finalement passé l'audit, mais le seuil de validation a été corrigé.
 
+### 5.4 Erreur méthodologique d'agrégation du recall (détectée par Mme Manel)
+
+Après envoi du draft à la prof, Mme Manel a relevé : « Pour Recall du RF, je pense qu'il y a une erreur dans votre calcul. Revérifiez SVP. »
+
+**Diagnostic** : ce n'est pas une hallucination de Claude. Le pipeline `train_multirun.py:153-157` calculait l'agrégat via `np.mean(per_subject_recalls)` (macro), réflexe sklearn par défaut. Pour 6 sujets avec un nombre très inégal de positives par fold (114, 116, 58, 37, 345, 223), la macro-moyenne est dominée par le fold sub-085 (39,7 %) et n'est pas la sensibilité globale du système. Le bon agrégateur en classification clinique très déséquilibrée multi-sujets est le pooled (micro) : `ΣTP / ΣN_positives`.
+
+**Recalcul** : RF macro = 8,9 % ± 14,6 → RF pooled = 29 / 893 = 3,25 %. MLP macro = 7,5 % → MLP pooled = 78 / 893 = 8,74 %.
+
+**Sanity check qui aurait dû alerter avant publication** : prévalence positives = 893 / 33925 = 2,63 %, donc baseline trivial (toujours prédire négatif) atteint accuracy 97,37 %. Notre RF pooled accuracy = 97,36 %, soit pile le baseline → le modèle est dégénéré, ne détecte presque rien. Si on avait appliqué ce contrôle systématique avec `DummyClassifier(strategy='most_frequent')` avant publication, l'incohérence aurait sauté immédiatement.
+
+**Responsabilité** : 4 fautes empilées du système IA : (1) Codex a écrit `np.mean()` sans questionner la sémantique de l'agrégation ; (2) Claude orchestrateur n'a pas appliqué le sanity check baseline ; (3) Claude orchestrateur a ignoré le signal `recall_std (0,146) > recall_mean (0,089)` qui criait « distribution skewed » ; (4) Claude orchestrateur a propagé le 9 % dans 5 artefacts (slide, speech, mail, Teams, briefing Codex) sans recroiser avec le CSV brut, alors que la discipline anti-hallucination du briefing l'exigeait. Pas une hallucination ponctuelle, mais une erreur méthodologique cohérente — plus traîtresse car interne-cohérente.
+
+**Correction appliquée** : recalcul pooled à partir du CSV par sujet (`multirun_loso.csv`), mise à jour de la slide résultats E5, du speech, du mail et du repo. Documentation forensique dans `VERIFICATION_RECALL_RF.md`. Ajout dans le pipeline d'un baseline `DummyClassifier` systématique pour les futurs runs.
+
+**Effet sur le narratif scientifique** : le résultat corrigé renforce la critique du paper plutôt que de la contredire. RF pooled 3,25 % et MLP pooled 8,74 % confirment que la méthodologie ne généralise pas en LOSO sur patients réels. La rétrogradation du RF (de 2e à 4e en pooled) et la promotion du MLP (de 3e à 2e) renforcent en bonus la conclusion Edge AI : le MLP, 56× plus petit, capte presque 3× plus de crises que le RF.
+
 ---
 
 ## 6. Décisions humaines vs IA
@@ -134,7 +150,7 @@ L'orchestrateur avait initialement déclaré l'output C2 « propre » après vé
 | Choix du paper de référence | Étudiants Groupe 2 (humain) | Brief de cours |
 | Choix du dataset SeizeIT2 pour la réplication | Étudiant 5 (humain) | Le paper Raman manque de patients réels |
 | Choix de l'architecture MLP 80→32→16→1 | Étudiant 5 (humain) | Compromis taille/performance pour ESP32 INT8 |
-| Choix du narratif « négatif honnête » (recall 9 %) | Étudiant 5 + Claude Code | Maturité scientifique École Doctorale |
+| Choix du narratif « négatif honnête » (recall pooled 3,25 %) | Étudiant 5 + Claude Code | Maturité scientifique École Doctorale |
 | Choix de catcher les contradictions du paper | Étudiant 5 (humain, après lecture par Claude) | Différenciateur pour viser 19,5/20 |
 | Choix de figer l'état local (Choix A') au lieu de pull `f67ff0fd` | Étudiant 5 (humain) | Stabilité et cohérence |
 | Lecture critique détaillée du paper | Codex (sous supervision) | Tâche d'extraction/synthèse |

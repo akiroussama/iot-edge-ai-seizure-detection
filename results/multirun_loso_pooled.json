@@ -1,0 +1,66 @@
+{
+  "dataset": "SeizeIT2 multirun (sub-001, 032, 085, 096, 124, 125)",
+  "validation": "Leave-One-Subject-Out, pooled metrics",
+  "aggregation": "micro (sum TP/FP/FN/TN across folds, then derive)",
+  "rationale": "Replaces the macro-average per-subject aggregation in multirun_loso_summary.json (recall_mean, etc.). For imbalanced multi-subject clinical detection, the pooled (micro) recall answers the actually-relevant question: 'out of all the real seizure windows in the dataset, what fraction did the system detect?'. Macro mean is dominated by single subjects (e.g. RF sub-085 recall 39.7%) and overstates global sensitivity.",
+  "trivial_baseline_dummy_classifier": {
+    "strategy": "predict majority class (always negative if n_neg > n_pos)",
+    "accuracy_baseline": 0.9736772291820192,
+    "recall_baseline": 0.0
+  },
+  "models": {
+    "decision_tree": {
+      "tp": 98,
+      "fn": 795,
+      "fp": 1080,
+      "tn": 31952,
+      "n_positives": 893,
+      "n_negatives": 33032,
+      "n_total": 33925,
+      "recall_pooled": 0.10974244120940649,
+      "precision_pooled": 0.0831918505942275,
+      "fpr_pooled": 0.03269556793412449,
+      "accuracy_pooled": 0.9447310243183493
+    },
+    "svm_rbf": {
+      "tp": 58,
+      "fn": 835,
+      "fp": 441,
+      "tn": 32591,
+      "n_positives": 893,
+      "n_negatives": 33032,
+      "n_total": 33925,
+      "recall_pooled": 0.06494960806270997,
+      "precision_pooled": 0.11623246492985972,
+      "fpr_pooled": 0.013350690239767498,
+      "accuracy_pooled": 0.9623876197494473
+    },
+    "random_forest": {
+      "tp": 29,
+      "fn": 864,
+      "fp": 30,
+      "tn": 33002,
+      "n_positives": 893,
+      "n_negatives": 33032,
+      "n_total": 33925,
+      "recall_pooled": 0.032474804031354984,
+      "precision_pooled": 0.4915254237288136,
+      "fpr_pooled": 0.0009082102203923468,
+      "accuracy_pooled": 0.9736477523949889
+    },
+    "mlp_80_32_16_1": {
+      "tp": 78,
+      "fn": 815,
+      "fp": 2039,
+      "tn": 30993,
+      "n_positives": 893,
+      "n_negatives": 33032,
+      "n_total": 33925,
+      "recall_pooled": 0.08734602463605823,
+      "precision_pooled": 0.03684459140292867,
+      "fpr_pooled": 0.061728021312666505,
+      "accuracy_pooled": 0.9158732498157701
+    }
+  },
+  "trigger": "feedback Mme Manel 2026-05-09 \u2014 RF recall recheck request"
+}

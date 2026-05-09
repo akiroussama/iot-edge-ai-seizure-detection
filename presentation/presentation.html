@@ -1589,17 +1589,18 @@
                     <h2 class="slide-title">Résultats LOSO : l'accuracy ne suffit pas</h2>
                 </div>
                 <table>
-                    <thead><tr><th>Modèle</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th><th>FPR</th><th>AUC</th></tr></thead>
+                    <thead><tr><th>Modèle</th><th>Accuracy (pooled)</th><th>Recall (pooled)</th><th>TP / N_pos</th><th>FPR (pooled)</th><th>AUC (macro)</th></tr></thead>
                     <tbody>
-                        <tr class="best"><td>RF</td><td>0,931</td><td>0,453</td><td class="highlight">0,089</td><td>0,131</td><td>0,00045</td><td>0,801</td></tr>
-                        <tr><td>DT</td><td>non précisé</td><td>non précisé</td><td>0,167</td><td>non précisé</td><td>non précisé</td><td>0,561</td></tr>
-                        <tr><td>SVM RBF</td><td>non précisé</td><td>non précisé</td><td>0,030</td><td>non précisé</td><td>non précisé</td><td>0,493</td></tr>
-                        <tr><td>MLP</td><td>0,833</td><td>non précisé</td><td>0,075</td><td>0,045</td><td>non précisé</td><td>0,584</td></tr>
+                        <tr><td>DT</td><td>0,945</td><td class="highlight">0,110</td><td>98 / 893</td><td>0,033</td><td>0,561</td></tr>
+                        <tr><td class="best">MLP</td><td>0,916</td><td class="highlight">0,087</td><td>78 / 893</td><td>0,062</td><td>0,584</td></tr>
+                        <tr><td>SVM RBF</td><td>0,962</td><td>0,065</td><td>58 / 893</td><td>0,013</td><td>0,493</td></tr>
+                        <tr><td>RF</td><td>0,974</td><td>0,033</td><td>29 / 893</td><td>0,001</td><td>0,801</td></tr>
                     </tbody>
                 </table>
+                <p class="card-text" style="font-size:0.78rem;margin-top:0.5rem;">Note méthodologique — recall pooled = ΣTP / ΣN_positives sur les 6 folds LOSO. La macro-moyenne par sujet (RF 0,089 ± 0,146 ; MLP 0,075 ± 0,055) est dominée par un seul fold à 39,7 % et n'est pas la sensibilité globale du système. Correction post-feedback Mme Manel.</p>
                 <div class="warning-box mt-2">
                     <div class="warning-box-title">Constat E5</div>
-                    <p>Sur patients réels en LOSO, le RF garde une accuracy élevée, mais le recall chute à 0,089. <strong>(mesure interne, repo iot-edge-ai-seizeit2)</strong></p>
+                    <p>Sur 893 fenêtres de crise réelles, le RF n'en détecte que 29 (recall 3,3 %). Son accuracy 97,4 % égale le baseline trivial « tout négatif » (97,37 %) : le modèle se comporte comme un classifieur idiot. Le MLP, malgré sa taille 56× plus petite, capte presque 3× plus de crises (78 / 893 = 8,7 %). <strong>(mesure interne, repo iot-edge-ai-seizure-detection)</strong></p>
                 </div>
             </div>
         </div>
@@ -1643,8 +1644,8 @@
                     <div class="comparison-col vs">VS</div>
                     <div class="comparison-col">
                         <h3 class="card-title">Notre validation LOSO</h3>
-                        <div class="metric-card warning mt-1"><div class="metric-value">8,9 %</div><div class="metric-label">recall RF sur SeizeIT2 patients réels</div></div>
-                        <p class="card-text mt-1"><strong>(mesure interne, repo iot-edge-ai-seizeit2)</strong></p>
+                        <div class="metric-card warning mt-1"><div class="metric-value">3,25 %</div><div class="metric-label">recall pooled RF sur SeizeIT2 patients réels (29 crises détectées sur 893)</div></div>
+                        <p class="card-text mt-1"><strong>(mesure interne, repo iot-edge-ai-seizure-detection)</strong></p>
                     </div>
                 </div>
                 <div class="grid-2 mt-2">
@@ -1654,7 +1655,7 @@
                     </div>
                     <div class="success-box">
                         <div class="success-box-title">Compromis MLP</div>
-                        <p>MLP INT8 est environ 56× plus léger que RF INT8, mais son recall LOSO reste 0,075 : il résout la mémoire, pas encore la sensibilité clinique. <strong>(mesure interne, repo iot-edge-ai-seizeit2)</strong></p>
+                        <p>MLP INT8 est environ 56× plus léger que RF INT8, et son recall pooled (0,087, 78 / 893) reste supérieur à celui du RF pooled (0,033) : il résout la mémoire et améliore la sensibilité, sans atteindre l'utilité clinique. <strong>(mesure interne, repo iot-edge-ai-seizure-detection)</strong></p>
                     </div>
                 </div>
             </div>

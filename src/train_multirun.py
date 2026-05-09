@@ -158,6 +158,27 @@ def aggregate(rows: list[dict]) -> dict:
             else:
                 agg[f"{k}_mean"] = float("nan")
                 agg[f"{k}_std"] = float("nan")
+        # Pooled (micro) aggregation: sum confusion-matrix cells across folds, then derive.
+        # For very imbalanced multi-subject clinical detection the macro mean above is
+        # dominated by single folds and overstates global sensitivity. Reported alongside
+        # so the reader picks the right aggregator for the question being asked.
+        tp = sum(int(r["tp"]) for r in sub)
+        fn = sum(int(r["fn"]) for r in sub)
+        fp = sum(int(r["fp"]) for r in sub)
+        tn = sum(int(r["tn"]) for r in sub)
+        n_pos = tp + fn
+        n_neg = tn + fp
+        n_total = n_pos + n_neg
+        agg["recall_pooled"] = (tp / n_pos) if n_pos else 0.0
+        agg["precision_pooled"] = (tp / (tp + fp)) if (tp + fp) else 0.0
+        agg["fpr_pooled"] = (fp / n_neg) if n_neg else 0.0
+        agg["accuracy_pooled"] = ((tp + tn) / n_total) if n_total else 0.0
+        agg["tp_total"] = tp
+        agg["fn_total"] = fn
+        agg["fp_total"] = fp
+        agg["tn_total"] = tn
+        agg["n_positives"] = n_pos
+        agg["n_negatives"] = n_neg
         summary[model_name] = agg
     return summary
 
