@@ -307,11 +307,10 @@ la lecture** pour voir le drame se dérouler.
     progress = st.progress(0.0)
 
     def render_state(step: int):
+        step = max(0, min(step, n_test - 1))
         with counters.container():
             cols = st.columns(4)
             for i, (m, d) in enumerate(model_data.items()):
-                tp_so_far = int(timelines[m][:step + 1].sum() - (timelines[m][:step + 1] & ~np.isin(np.arange(step + 1), pos_idx)).sum())
-                # simpler: tp seen so far = predictions==1 AND index in pos_idx
                 seen = np.arange(step + 1)
                 fired = timelines[m][:step + 1] == 1
                 pos_mask = np.isin(seen, pos_idx)
@@ -361,7 +360,7 @@ la lecture** pour voir le drame se dérouler.
         chunk = max(1, n_test // 200)
         for step in range(0, n_test, chunk):
             render_state(step)
-            progress.progress((step + chunk) / n_test)
+            progress.progress(min(1.0, (step + chunk) / n_test))
             if sleep_per_step:
                 time.sleep(sleep_per_step)
         render_state(n_test - 1)
