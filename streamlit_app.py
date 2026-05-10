@@ -353,7 +353,7 @@ la lecture** pour voir le drame se dérouler.
             title=f"Sensibilité courante — fenêtre {step + 1} / {n_test}",
             plot_bgcolor="#fafafa", paper_bgcolor="#ffffff", showlegend=False,
         )
-        bars.plotly_chart(bar_fig, use_container_width=True)
+        bars.plotly_chart(bar_fig, use_container_width=True, key=f"arena_bars_{subj}_{step}")
 
     if play:
         # Step in chunks for speed
