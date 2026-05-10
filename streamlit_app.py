@@ -610,6 +610,556 @@ contient les modèles **physiquement non-déployables** sur ESP32.
 
 
 # ------------------------------------------------------------- tab 5 view
+def tab_wizard(pooled: dict, classical: pd.DataFrame, mlp: pd.DataFrame, cost: dict):
+    st.header("5 — Pipeline complet : du paper à l'ESP32")
+    st.caption(
+        "Visite guidée du travail réalisé, étape par étape. Chaque étape précise "
+        "ce qu'on a fait, pourquoi, et le fichier du repo qui l'implémente."
+    )
+
+    if "wizard_step" not in st.session_state:
+        st.session_state.wizard_step = 0
+
+    steps = [
+        ("Problématique",            _wiz_problem),
+        ("Dataset SeizeIT2",         _wiz_dataset),
+        ("Préprocessing",            _wiz_preproc),
+        ("Fenêtrage + étiquetage",   _wiz_windowing),
+        ("Features (80 par fenêtre)", _wiz_features),
+        ("Modèles testés",           _wiz_models),
+        ("Méthodologie LOSO",        _wiz_loso),
+        ("Métriques (et leurs pièges)", _wiz_metrics),
+        ("Résultats LOSO",           _wiz_results),
+        ("Coût ESP32",               _wiz_esp32),
+        ("Conclusion + perspectives", _wiz_conclusion),
+    ]
+    total = len(steps)
+    cur = max(0, min(st.session_state.wizard_step, total - 1))
+    title, render_fn = steps[cur]
+
+    st.progress((cur + 1) / total, text=f"Étape {cur + 1} / {total} — {title}")
+
+    col_prev, _, col_jump, _, col_next = st.columns([1.4, 0.4, 2, 0.4, 1.4])
+    with col_prev:
+        if st.button("◀  Précédent", disabled=cur == 0, key="wiz_prev", use_container_width=True):
+            st.session_state.wizard_step = cur - 1
+            st.rerun()
+    with col_jump:
+        target = st.selectbox(
+            "Aller à",
+            options=list(range(total)),
+            format_func=lambda i: f"{i + 1}. {steps[i][0]}",
+            index=cur,
+            key="wiz_jump",
+            label_visibility="collapsed",
+        )
+        if target != cur:
+            st.session_state.wizard_step = target
+            st.rerun()
+    with col_next:
+        if st.button("Suivant  ▶", disabled=cur == total - 1, key="wiz_next", use_container_width=True):
+            st.session_state.wizard_step = cur + 1
+            st.rerun()
+
+    st.markdown("---")
+    render_fn(pooled, classical, mlp, cost)
+
+
+def _wiz_problem(pooled, classical, mlp, cost):
+    st.subheader("Question scientifique")
+    st.markdown(
+        """
+**Paper de référence** : Raman & Velmurugan 2025 — *An Intelligent IoMT Wearable
+Device for Monitoring of Neurological Disorders*, Engineering Proceedings 106(1) 13.
+
+**Promesse du paper** : un bracelet ESP32 + IMU sur le tibia, ML embarqué
+(Decision Tree, SVM, Random Forest), détecte les crises tonico-cloniques avec
+**95 % d'accuracy** et **100 % de recall**.
+
+**Notre question** : si on prend leur chaîne de traitement telle quelle et qu'on
+la teste sur des patients épileptiques réels (vs des sujets sains qui miment),
+est-ce que la performance tient ?
+"""
+    )
+
+    st.subheader("4 contradictions internes du paper qu'on a identifiées")
+    contradictions = [
+        ("Capteur", "Abstract dit MPU6500, §3.1 dit LSM9DS1, §4 dit iPhone 11. Trois capteurs pour un même prototype."),
+        ("FPR", "Abstract annonce < 4 %. Table 1 donne 11-15 %. Le RF déployé est même à 15 %."),
+        ("Domain shift", "Entraînement sur iPhone, déploiement annoncé sur LSM9DS1 tibial. Aucune validation du transfert."),
+        ("Discussion vs Table 1", "La discussion affirme « RF sans FPR ». Or Table 1 attribue au RF le FPR le plus élevé."),
+    ]
+    for label, body in contradictions:
+        st.markdown(f"**{label}** — {body}")
+
+    st.subheader("Approche choisie")
+    st.markdown(
+        """
+1. **Repartir des sources** : prendre un dataset hospitalier de patients épileptiques réels.
+2. **Reproduire le pipeline** : DT, SVM, RF avec features statistiques sur fenêtres glissantes.
+3. **Évaluer en LOSO inter-patient** : entraîner sur 5 patients, tester sur le 6ᵉ que le modèle n'a jamais vu.
+4. **Mesurer le coût Edge AI** : RAM, latence, énergie pour les 4 modèles sur ESP32.
+5. **Proposer une amélioration** : MLP TinyML quantifié INT8 vs RF du paper.
+"""
+    )
+
+
+def _wiz_dataset(pooled, classical, mlp, cost):
+    st.subheader("SeizeIT2 — pourquoi ce dataset")
+    st.markdown(
+        """
+- **Source officielle** : OpenNeuro `ds005873` ([DOI 10.18112/openneuro.ds005873.v1.1.0](https://openneuro.org/datasets/ds005873)).
+- **Producteur** : KU Leuven Hospital, Belgique.
+- **Licence** : CC0 (domaine public).
+- **Format** : BIDS 1.8.0 standard.
+- **Pourquoi celui-là** : seul dataset public à combiner **IMU + 2 EEG** sur **patients épileptiques réels** — ce que demande explicitement le syllabus du cours.
+"""
+    )
+
+    st.subheader("Caractéristiques techniques")
+    st.dataframe(
+        pd.DataFrame(
+            [
+                ["Patients disponibles", "125"],
+                ["Patients utilisés (PoC)", "6 (sub-001, 032, 085, 096, 124, 125)"],
+                ["Critère de sélection", "Présence de crises focal-to-bilateral tonico-cloniques"],
+                ["IMU", "12 canaux @ 25 Hz (3 ACC + 3 GYRO × 2 SensorDots : cou + poitrine)"],
+                ["EEG", "2 canaux behind-the-ear @ 256 Hz"],
+                ["ECG + EMG", "Présents, non utilisés ici"],
+                ["Hardware capture", "Byteflies SensorDot (basse consommation)"],
+                ["Annotations", "events.tsv BIDS — onset, duration, eventType, lateralization"],
+                ["Durée par run", "~18 heures"],
+                ["Accès", "S3 public, sans login"],
+            ],
+            columns=["Élément", "Valeur"],
+        ),
+        use_container_width=True,
+        hide_index=True,
+    )
+
+    st.subheader("Exemple d'annotation crise (events.tsv)")
+    st.code(
+        "onset\tduration\teventType\tlateralization\n"
+        "5421.32\t87.5\tsz_foc_f2b\tleft\n"
+        "...",
+        language="text",
+    )
+    st.caption("`sz_foc_f2b` = focal-to-bilateral seizure. C'est le code utilisé par les neurologues du KU Leuven Hospital pour étiqueter les fenêtres de crise.")
+
+    st.subheader("Fichier du repo")
+    st.code("src/load_data.py", language="text")
+    st.markdown("Indexe les EDF et events.tsv via l'API OpenNeuro S3, charge en mémoire via `mne.io.read_raw_edf`.")
+
+
+def _wiz_preproc(pooled, classical, mlp, cost):
+    st.subheader("Pré-traitement du signal")
+    st.markdown(
+        """
+Le signal brut contient du bruit haute-fréquence (60 Hz secteur, parasites moteurs,
+gel d'électrodes) qu'il faut supprimer avant l'extraction de features.
+"""
+    )
+
+    st.subheader("Filtre Butterworth passe-bas")
+    col_a, col_b = st.columns(2)
+    with col_a:
+        st.markdown("**EEG**")
+        st.markdown("- Coupure : **20 Hz**")
+        st.markdown("- Ordre : 4")
+        st.markdown("- Justification : la bande utile pour les crises est 0,5–13 Hz (thêta + alpha). Au-delà de 20 Hz = bruit musculaire et secteur.")
+    with col_b:
+        st.markdown("**IMU (accéléromètre + gyroscope)**")
+        st.markdown("- Coupure : **10 Hz**")
+        st.markdown("- Ordre : 4")
+        st.markdown("- Justification : la marche est à 1–3 Hz, les secousses myocloniques à 4–7 Hz. Au-delà de 10 Hz = vibrations parasites.")
+
+    st.subheader("Downsampling EEG")
+    st.markdown(
+        """
+- EEG natif : 256 Hz. IMU natif : 25 Hz.
+- On **resample l'EEG à 25 Hz** pour aligner les deux modalités sur la même horloge.
+- C'est un **choix volontairement différent du paper Raman** (qui travaille à 50 Hz) : on s'aligne sur le hardware basse-consommation Byteflies, pas sur l'iPhone.
+"""
+    )
+
+    st.subheader("Fichier du repo")
+    st.code("src/preprocess.py", language="text")
+    st.markdown("`scipy.signal.butter` + `scipy.signal.filtfilt` (filtrage zéro-phase) + downsampling polyphasique via `scipy.signal.resample_poly`.")
+
+
+def _wiz_windowing(pooled, classical, mlp, cost):
+    st.subheader("Découpage en fenêtres glissantes")
+    st.markdown(
+        """
+Le ML supervisé classifie une **fenêtre temporelle**, pas un signal continu. On
+découpe donc chaque enregistrement en petites tranches.
+"""
+    )
+
+    col_a, col_b, col_c = st.columns(3)
+    col_a.metric("Durée fenêtre", "2,56 s", "= 64 samples @ 25 Hz")
+    col_b.metric("Recouvrement", "50 %", "= pas de 1,28 s")
+    col_c.metric("Canaux", "8", "= 6 IMU + 2 EEG après alignement")
+
+    st.subheader("Étiquetage : crise ou pas crise ?")
+    st.markdown(
+        """
+On consulte le fichier `events.tsv` du dataset. Pour chaque fenêtre `[t, t+2,56s]` :
+
+- Si l'intervalle **chevauche** un `(onset, onset+duration)` annoté comme crise → étiquette **1**.
+- Sinon → étiquette **0**.
+"""
+    )
+
+    st.subheader("Volume final sur les 6 patients")
+    rf = pooled["models"]["random_forest"]
+    col_x, col_y, col_z = st.columns(3)
+    col_x.metric("Fenêtres totales", f"{rf['n_total']:,}".replace(",", " "))
+    col_y.metric("Fenêtres-crise (positives)", f"{rf['n_positives']}")
+    col_z.metric("Prévalence", f"{100 * rf['n_positives'] / rf['n_total']:.2f} %")
+
+    st.info(
+        "Lecture : **2,63 % des fenêtres** contiennent un morceau de crise. C'est ce "
+        "déséquilibre qui rend l'accuracy trompeuse et oblige à regarder le recall et le F1."
+    )
+
+    st.subheader("Fichier du repo")
+    st.code("src/pipeline_multirun.py", language="text")
+    st.markdown("Boucle sur les 6 patients, applique le fenêtrage 2,56 s × 50 % overlap, génère les paires `(X_features, y_label)`.")
+
+
+def _wiz_features(pooled, classical, mlp, cost):
+    st.subheader("10 features statistiques par canal")
+    st.markdown(
+        """
+Chaque fenêtre est transformée en un **vecteur de 80 features** (10 features × 8
+canaux : 6 IMU + 2 EEG). C'est ce vecteur qui sert d'entrée aux modèles ML.
+"""
+    )
+
+    features_df = pd.DataFrame(
+        [
+            ["mean", "Moyenne temporelle", "Centre du signal — varie pendant une crise"],
+            ["variance", "Dispersion autour de la moyenne", "Amplitude des oscillations — explose en crise"],
+            ["skewness", "Asymétrie de la distribution", "Asymétrie temporelle — discrimine secousses"],
+            ["kurtosis", "Aplatissement / queue lourde", "Pics extrêmes — typiques des secousses myocloniques"],
+            ["RMS", "Root Mean Square (énergie)", "Énergie globale — crise = énergie élevée"],
+            ["Higuchi fractal dim.", "Complexité du signal", "Régularité — décroît en crise"],
+            ["spectral entropy", "Entropie du spectre de Fourier", "Désordre fréquentiel — crise = plus régulier"],
+            ["mean frequency", "Fréquence moyenne FFT", "Centre de masse spectral"],
+            ["median frequency", "Fréquence médiane FFT", "Robuste aux pics — discrimine bandes thêta vs delta"],
+            ["band power 4–13 Hz", "Énergie dans thêta + alpha", "Signature directe des crises tonico-cloniques"],
+        ],
+        columns=["Feature", "Définition", "Pourquoi pertinent en détection de crise"],
+    )
+    st.dataframe(features_df, use_container_width=True, hide_index=True)
+
+    st.subheader("Reproduction des 6 features du paper Raman")
+    st.markdown(
+        """
+Les 6 premiers features (variance, skewness, fractal dim, spectral entropy, mean
+freq, median freq) sont **strictement ceux du paper**. On a ajouté 4 features
+classiques de la communauté HAR (mean, kurtosis, RMS, band power) pour comparer
+honnêtement et garder une base d'analyse en cas de défaillance des 6 originaux.
+"""
+    )
+
+    st.subheader("Fichier du repo")
+    st.code("src/features.py", language="text")
+    st.markdown("`numpy` + `scipy.stats` pour les features temporelles, `scipy.fft` pour les fréquentielles, implémentation manuelle de la Higuchi fractal dimension (algorithme O(N log N)).")
+
+
+def _wiz_models(pooled, classical, mlp, cost):
+    st.subheader("4 modèles évalués en parallèle")
+    st.markdown(
+        "Trois modèles **issus du paper** + un **modèle Edge AI** qu'on propose comme amélioration."
+    )
+
+    models_df = pd.DataFrame(
+        [
+            ["Decision Tree", "Référence Raman", "max_depth=40, sklearn.tree", "Interprétable, baseline rapide"],
+            ["SVM RBF", "Référence Raman", "kernel='rbf', C=1.0, sklearn.svm", "Bon classifieur dense, mais lourd en SRAM"],
+            ["Random Forest", "Référence Raman + modèle champion du paper", "n_estimators=100, max_depth≈30, sklearn.ensemble", "Robuste mais énorme en mémoire"],
+            ["MLP TinyML", "Notre proposition Edge AI", "80 → 32 → 16 → 1 (3 137 params), tensorflow.keras", "Compromis taille / sensibilité ; quantifiable INT8 trivialement"],
+        ],
+        columns=["Modèle", "Origine", "Architecture", "Justification"],
+    )
+    st.dataframe(models_df, use_container_width=True, hide_index=True)
+
+    st.subheader("Pourquoi un MLP plutôt qu'un CNN 1D ou un Transformer ?")
+    st.markdown(
+        """
+- **Contrainte hardware** : ESP32 a 520 KB de SRAM. Un CNN 1D simple (16 filtres × 3 couches) dépasse déjà 50-100 KB ; un Transformer plus de 200 KB.
+- **Contrainte data** : 6 patients d'entraînement, c'est peu. Un modèle profond risque le sur-paramétrage.
+- **MLP 80→32→16→1** : 3 137 paramètres, comparable au RF en surface mais 56× plus compact en INT8. Et il prend directement les **mêmes 80 features** que les baselines (pas de feature engineering séparé).
+- CNN 1D / LSTM / Transformer sont dans les **perspectives** une fois le dataset étendu à 30-50 patients.
+"""
+    )
+
+    st.subheader("Fichiers du repo")
+    st.code("src/train_multirun.py  ←  DT, SVM, RF\nsrc/train_mlp.py        ←  MLP TinyML", language="text")
+
+
+def _wiz_loso(pooled, classical, mlp, cost):
+    st.subheader("Leave-One-Subject-Out (LOSO)")
+    st.markdown(
+        """
+**Principe** : pour chaque patient `i` du jeu, on entraîne le modèle sur les **5 autres patients**, et on **teste sur `i`** que le modèle n'a jamais vu. On répète 6 fois.
+
+C'est la seule méthodologie qui **simule le déploiement réel** d'un wearable médical : quand le bracelet arrive chez un nouveau patient, il doit fonctionner *sans avoir été entraîné sur ses propres crises*.
+"""
+    )
+
+    fold_df = pd.DataFrame(
+        [
+            ["Fold 1", "sub-032, sub-085, sub-096, sub-124, sub-125", "sub-001"],
+            ["Fold 2", "sub-001, sub-085, sub-096, sub-124, sub-125", "sub-032"],
+            ["Fold 3", "sub-001, sub-032, sub-096, sub-124, sub-125", "sub-085"],
+            ["Fold 4", "sub-001, sub-032, sub-085, sub-124, sub-125", "sub-096"],
+            ["Fold 5", "sub-001, sub-032, sub-085, sub-096, sub-125", "sub-124"],
+            ["Fold 6", "sub-001, sub-032, sub-085, sub-096, sub-124", "sub-125"],
+        ],
+        columns=["Fold", "Patients d'entraînement (5)", "Patient de test (1)"],
+    )
+    st.dataframe(fold_df, use_container_width=True, hide_index=True)
+
+    st.subheader("Pourquoi pas une k-fold classique ?")
+    st.markdown(
+        """
+La cross-validation 5-fold standard (comme dans le paper Raman) mélange les
+**fenêtres de tous les sujets** dans train et test. Conséquence : le modèle voit
+en entraînement des fenêtres du sujet sur lequel il sera testé → il apprend la
+**signature individuelle** plutôt que la signature **générique** de crise.
+
+Sur un wearable médical, c'est **trompeur** : un nouveau patient n'aura jamais
+été vu en entraînement. LOSO élimine ce biais.
+"""
+    )
+
+    st.subheader("Paramètres figés pour reproductibilité")
+    st.code("random_state = 42  # partout\nStratifiedKFold à l'intérieur d'un fold (si k-fold intra-train est utilisé)\nrequirements-pipeline.txt pinned versions", language="text")
+
+    st.subheader("Fichier du repo")
+    st.code("src/train_multirun.py  →  boucle LOSO 6 folds × 3 modèles", language="text")
+
+
+def _wiz_metrics(pooled, classical, mlp, cost):
+    st.subheader("Quelles métriques on calcule, et pourquoi celles-là")
+
+    st.markdown(
+        """
+On rapporte **5 métriques** pour les 4 modèles. Voici les formules canoniques
+et leur sens clinique.
+"""
+    )
+
+    formula_df = pd.DataFrame(
+        [
+            ["Accuracy", "(TP + TN) / Total", "Fraction de prédictions correctes. ⚠ Trompeuse sous déséquilibre."],
+            ["Recall (sensibilité)", "TP / (TP + FN)", "Fraction de crises réelles détectées. **Critère médical principal**."],
+            ["Precision", "TP / (TP + FP)", "Fraction des alertes qui sont de vraies crises. Inverse de la nuisance."],
+            ["F1", "2·P·R / (P + R)", "Moyenne harmonique. Compromis honnête sous déséquilibre."],
+            ["FPR", "FP / (FP + TN)", "Fraction de fenêtres-non-crise faussement signalées. Lié à FAR/h."],
+        ],
+        columns=["Métrique", "Formule", "Lecture clinique"],
+    )
+    st.dataframe(formula_df, use_container_width=True, hide_index=True)
+
+    st.subheader("Le piège du déséquilibre : pourquoi l'accuracy est trompeuse")
+    rf = pooled["models"]["random_forest"]
+    baseline = pooled["trivial_baseline_dummy_classifier"]["accuracy_baseline"]
+    rf_acc = (rf["tp"] + rf["tn"]) / rf["n_total"]
+    st.markdown(
+        f"""
+- Prévalence des positives = **{100 * rf['n_positives'] / rf['n_total']:.2f} %**.
+- Un **classifieur idiot** qui prédit toujours « pas de crise » atteint **{100 * baseline:.2f} %** d'accuracy.
+- Notre RF a **{100 * rf_acc:.2f} %** d'accuracy → **pile le baseline trivial** (±0,01 point). Le modèle est dégénéré.
+- C'est pour ça qu'on regarde le **recall** et le **F1**, pas l'accuracy.
+"""
+    )
+
+    st.subheader("Pourquoi pooled (micro) plutôt que macro ?")
+    st.markdown(
+        """
+- **Macro** : moyenne arithmétique des recalls par patient. Chaque patient pèse 1/6, peu importe le nombre de crises.
+- **Pooled (micro)** : `Σ TP / Σ (TP+FN)`. Chaque fenêtre-crise pèse pareil.
+
+Sur nos 6 patients, sub-124 a 345 fenêtres-crise (38 % du total) et sub-085 en a
+58 (6 %). Si on prend la macro, sub-085 (avec son 39,7 % de recall) tire la
+moyenne vers le haut artificiellement. Pooled, c'est sub-124 qui domine — et
+c'est lui qui reflète vraiment la sensibilité globale du système.
+
+> **Correction post-feedback Mme Manel BEN ROMDHANE** : on rapportait initialement le macro (8,9 %). Elle a flaggé l'erreur, on a recalculé en pooled (3,25 %).
+"""
+    )
+
+    st.subheader("Fichier du repo")
+    st.code("src/compute_pooled_metrics.py", language="text")
+
+
+def _wiz_results(pooled, classical, mlp, cost):
+    st.subheader("Résultats LOSO pooled sur les 4 modèles")
+
+    rows = []
+    for m_key, m_data in pooled["models"].items():
+        tp = m_data["tp"]
+        fn = m_data["fn"]
+        fp = m_data["fp"]
+        tn = m_data["tn"]
+        recall = m_data["recall_pooled"]
+        precision = m_data["precision_pooled"]
+        accuracy = m_data["accuracy_pooled"]
+        f1 = (2 * tp) / (2 * tp + fp + fn) if (2 * tp + fp + fn) > 0 else 0.0
+        rows.append(
+            {
+                "Modèle": MODEL_LABELS.get(m_key, m_key),
+                "Accuracy": f"{100 * accuracy:.2f} %",
+                "Recall": f"{100 * recall:.2f} %",
+                "Precision": f"{100 * precision:.2f} %",
+                "F1": f"{100 * f1:.2f} %",
+                "TP": tp,
+                "FN": fn,
+                "FP": fp,
+            }
+        )
+    st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+
+    st.subheader("Détail par patient (Random Forest)")
+    rf_per_subject = (
+        classical[classical["model"] == "random_forest"][
+            ["held_out_subject", "tp", "fn", "fp", "tn", "n_test_pos", "recall"]
+        ]
+        .copy()
+    )
+    rf_per_subject["recall_%"] = (rf_per_subject["recall"] * 100).round(2)
+    rf_per_subject = rf_per_subject[["held_out_subject", "tp", "fn", "fp", "tn", "n_test_pos", "recall_%"]]
+    rf_per_subject.columns = ["Patient", "TP", "FN", "FP", "TN", "n_positives", "Recall (%)"]
+    sum_row = pd.DataFrame(
+        [["Σ", rf_per_subject["TP"].sum(), rf_per_subject["FN"].sum(),
+          rf_per_subject["FP"].sum(), rf_per_subject["TN"].sum(),
+          rf_per_subject["n_positives"].sum(),
+          round(100 * rf_per_subject["TP"].sum() / rf_per_subject["n_positives"].sum(), 2)]],
+        columns=rf_per_subject.columns,
+    )
+    st.dataframe(pd.concat([rf_per_subject, sum_row], ignore_index=True), use_container_width=True, hide_index=True)
+
+    st.subheader("Le constat scientifique majeur")
+    st.markdown(
+        """
+- Le RF du paper annonce **100 % de recall** sur 30 cas mimés.
+- Notre RF en LOSO inter-patient sur patients réels : **3,25 % de recall** (29 / 893).
+- Effondrement de facteur ~30. Et **F1 < 10 %** pour les 4 modèles.
+- **Conclusion** : la méthodologie du paper ne généralise pas en conditions cliniques. Le 100 % est un artefact du test set artificiellement équilibré.
+"""
+    )
+
+
+def _wiz_esp32(pooled, classical, mlp, cost):
+    st.subheader("Estimation analytique du coût ESP32")
+    st.markdown(
+        """
+On ne déploie pas physiquement sur ESP32 (PoC, pas de hardware), mais on
+**estime analytiquement** RAM / latence / énergie à partir du nombre de paramètres,
+du nombre de MACs et des spec constructeur (160 MHz, 520 KB SRAM, 70 mW actif).
+"""
+    )
+
+    rows = []
+    for m_key, info in cost["models"].items():
+        d_fp = info["fp32"]
+        d_q = info["int8"]
+        rows.append({
+            "Modèle": MODEL_LABELS.get(m_key, m_key),
+            "Params": d_fp["params"],
+            "RAM FP32": f"{d_fp['ram_kb_total']:.1f} KB ({d_fp['ram_pct_esp32']:.1f}%)",
+            "RAM INT8": f"{d_q['ram_kb_total']:.1f} KB ({d_q['ram_pct_esp32']:.1f}%)",
+            "Latence INT8": f"{d_q['latency_us']:.1f} µs",
+            "Énergie INT8": f"{d_q['energy_uj']:.2f} µJ",
+            "INT8 tient ?": "OUI" if d_q["ram_pct_esp32"] <= 100 else "NON",
+        })
+    st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+
+    st.subheader("Les 2 enseignements")
+    col_a, col_b = st.columns(2)
+    with col_a:
+        st.error(
+            "**Random Forest FP32 = 1 427 KB** sur ESP32 (520 KB SRAM).\n\n"
+            "Soit **274 %** de la mémoire physique. **Ne tient pas**, même quantifié INT8 il prend 69 %."
+        )
+    with col_b:
+        st.success(
+            "**MLP TinyML INT8 = 6,4 KB** sur ESP32.\n\n"
+            "Soit **1,2 %** de la mémoire. **56× plus léger que RF INT8**, latence et énergie comparables."
+        )
+
+    st.subheader("Limite assumée")
+    st.markdown(
+        """
+C'est une **estimation analytique**, pas une mesure sur hardware réel. Sources
+d'erreur possibles : (1) overhead MicroPython ~100 KB non capturé, (2) latence
+MicroPython 5-10× plus lente que C natif, (3) énergie radio (WiFi alerte)
+dominant en pratique. À mesurer en perspective.
+"""
+    )
+
+    st.subheader("Fichier du repo")
+    st.code("src/estimate_esp32_cost.py", language="text")
+
+
+def _wiz_conclusion(pooled, classical, mlp, cost):
+    st.subheader("Ce qu'on retient en 4 points")
+    col_a, col_b = st.columns(2)
+    with col_a:
+        st.markdown(
+            """
+**Contribution scientifique**
+- Quantification de l'écart simulation/réalité : 100 % → 3,25 % de recall.
+- Identification de 4 contradictions internes dans le paper.
+- Premier benchmark public DT/SVM/RF/MLP sur SeizeIT2 LOSO.
+
+**Contribution Edge AI**
+- MLP TinyML INT8 viable sur ESP32 (1,2 % SRAM).
+- 56× plus léger que RF tout en captant plus de crises en LOSO.
+"""
+        )
+    with col_b:
+        st.markdown(
+            """
+**Limites assumées**
+- 6 patients d'entraînement, c'est peu.
+- Estimation ESP32 analytique, pas mesurée.
+- Pas de mesure FAR/h ni de recall event-level.
+- Pipeline reste fidèle au protocole Raman — pas de techniques classe minoritaire.
+
+**Perspectives**
+- Extension à 30-50 patients sur les 125 disponibles dans SeizeIT2.
+- Class weighting, focal loss, SMOTE, ou approche anomalie.
+- Recall event-level (1 fenêtre détectée sur 30 = alerte clinique).
+- Mesure hardware réelle sur ESP32-S3 + LSM6DSO.
+"""
+        )
+
+    st.subheader("Reproductibilité")
+    st.markdown(
+        """
+- **Repo public** : [github.com/akiroussama/iot-edge-ai-seizure-detection](https://github.com/akiroussama/iot-edge-ai-seizure-detection)
+- **Données brutes** : OpenNeuro `ds005873` (téléchargement S3 public).
+- **Versions pinées** : `requirements-pipeline.txt`.
+- **Random state fixé** : 42 partout.
+- **5 scripts à lancer en séquence** : `load_data.py` → `preprocess.py` → `pipeline_multirun.py` → `train_multirun.py` (et `train_mlp.py`) → `compute_pooled_metrics.py` → `estimate_esp32_cost.py`.
+
+Le pipeline complet tourne en ~10 min sur une machine standard une fois les
+données téléchargées.
+"""
+    )
+
+    st.success(
+        "**Bravo, vous avez parcouru le pipeline complet.** Onglets 1-4 disponibles pour "
+        "explorer la donnée brute (signal, model arena, coût ESP32, scatter Pareto)."
+    )
+
+
+# ------------------------------------------------------------- legacy tab 5 (paper vs reality, kept dormant)
 def tab_paper_vs_reality(pooled: dict):
     st.header("5 — Paper vs Réalité : la promesse vs le déploiement")
     st.markdown(
@@ -781,7 +1331,7 @@ def main():
             "2 — Model arena (live)",
             "3 — ESP32 cost dashboard",
             "4 — Trade-off explorer",
-            "5 — Paper vs Réalité (démo soutenance)",
+            "5 — Pipeline complet (wizard A → Z)",
         ]
     )
 
@@ -794,7 +1344,7 @@ def main():
     with tab4:
         tab_pareto(pooled, cost)
     with tab5:
-        tab_paper_vs_reality(pooled)
+        tab_wizard(pooled, classical, mlp, cost)
 
 
 if __name__ == "__main__":
