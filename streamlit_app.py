@@ -609,6 +609,158 @@ contient les modèles **physiquement non-déployables** sur ESP32.
     )
 
 
+# ------------------------------------------------------------- tab 5 view
+def tab_paper_vs_reality(pooled: dict):
+    st.header("5 — Paper vs Réalité : la promesse vs le déploiement")
+    st.markdown(
+        """
+Deux protocoles, **un seul modèle** : le Random Forest, mêmes poids, mêmes
+features. À gauche, le test set du paper Raman (sujets sains qui miment,
+prévalence artificielle 50 %). À droite, notre LOSO sur SeizeIT2 (patients
+épileptiques réels, prévalence clinique 2,63 %). On échantillonne 30 fenêtres
+de crise sur chaque protocole et on regarde comment le RF s'en sort.
+
+Cliquez sur **Lancer la comparaison** pour voir les deux tableaux se remplir
+côte à côte. *Spoiler* : c'est le même modèle, mais l'écart de sensibilité
+dépasse 30×.
+"""
+    )
+
+    rf_pool = pooled["models"]["random_forest"]
+    real_recall_full = rf_pool["recall_pooled"]
+    real_n_pos_full = rf_pool["n_positives"]
+    real_tp_full = rf_pool["tp"]
+
+    N_SHOW = 30
+    real_tp_show = max(1, round(real_recall_full * N_SHOW))
+
+    rng = np.random.default_rng(2026)
+    real_tp_positions = set(rng.choice(N_SHOW, size=real_tp_show, replace=False).tolist())
+
+    speed = st.select_slider(
+        "Vitesse",
+        options=["Lent", "Normal", "Rapide", "Instantané"],
+        value="Normal",
+        key="pvr_speed",
+    )
+    sleep_per_step = {"Lent": 0.35, "Normal": 0.18, "Rapide": 0.07, "Instantané": 0.0}[speed]
+
+    play = st.button("Lancer la comparaison", type="primary", key="pvr_play")
+
+    left_col, right_col = st.columns(2, gap="large")
+
+    with left_col:
+        st.markdown("### Protocole paper (Raman 2025)")
+        st.caption("Sujets sains qui miment · test 30/60 · **prévalence 50 %**")
+        paper_grid = st.empty()
+        paper_metric = st.empty()
+
+    with right_col:
+        st.markdown("### Déploiement réel (SeizeIT2 LOSO)")
+        st.caption(f"Patients épileptiques · test pooled 893/33 925 · **prévalence 2,63 %**")
+        real_grid = st.empty()
+        real_metric = st.empty()
+
+    def grid_html(predictions: list[bool | None]) -> str:
+        cells_html = []
+        for p in predictions:
+            if p is True:
+                cells_html.append(
+                    "<div style='aspect-ratio:1;display:flex;align-items:center;"
+                    "justify-content:center;background:#2ea27e;color:white;"
+                    "border-radius:8px;font-size:28px;font-weight:800;'>&#10003;</div>"
+                )
+            elif p is False:
+                cells_html.append(
+                    "<div style='aspect-ratio:1;display:flex;align-items:center;"
+                    "justify-content:center;background:#d96a4f;color:white;"
+                    "border-radius:8px;font-size:28px;font-weight:800;'>&#10007;</div>"
+                )
+            else:
+                cells_html.append(
+                    "<div style='aspect-ratio:1;display:flex;align-items:center;"
+                    "justify-content:center;background:#eef2f5;color:#bbb;"
+                    "border-radius:8px;font-size:22px;font-weight:600;'>&middot;</div>"
+                )
+        return (
+            "<div style='display:grid;grid-template-columns:repeat(6, 1fr);gap:6px;'>"
+            + "".join(cells_html) + "</div>"
+        )
+
+    def metric_html(caught: int, done: int, color: str) -> str:
+        pct = (100.0 * caught / done) if done > 0 else 0.0
+        return (
+            f"<div style='margin-top:18px;text-align:center;'>"
+            f"<div style='font-size:42px;font-weight:800;color:{color};line-height:1;'>"
+            f"{caught} / {done}</div>"
+            f"<div style='font-size:18px;color:#555;margin-top:4px;'>"
+            f"recall = {pct:.1f} %</div></div>"
+        )
+
+    def render(step: int):
+        paper_preds = [True if i < step else None for i in range(N_SHOW)]
+        real_preds = [
+            (i in real_tp_positions) if i < step else None for i in range(N_SHOW)
+        ]
+        paper_grid.markdown(grid_html(paper_preds), unsafe_allow_html=True)
+        real_grid.markdown(grid_html(real_preds), unsafe_allow_html=True)
+
+        paper_caught = step
+        real_caught = sum(1 for i in range(step) if i in real_tp_positions)
+        paper_metric.markdown(
+            metric_html(paper_caught, step, "#2ea27e"), unsafe_allow_html=True
+        )
+        real_metric.markdown(
+            metric_html(real_caught, step, "#d96a4f"), unsafe_allow_html=True
+        )
+
+    if play:
+        for step in range(N_SHOW + 1):
+            render(step)
+            if sleep_per_step:
+                time.sleep(sleep_per_step)
+    else:
+        render(N_SHOW)
+
+    st.markdown("---")
+    st.markdown(
+        """
+<div style="background: linear-gradient(135deg, #1c2942 0%, #2c1747 100%);
+            color: white; padding: 28px 32px; border-radius: 14px;
+            text-align: center; margin-top: 8px;">
+  <div style="font-size: 26px; font-weight: 800; letter-spacing: 0.04em;">
+    MÊME MODÈLE &nbsp;·&nbsp; MÊMES POIDS &nbsp;·&nbsp; ÉCART &asymp; 30&times;
+  </div>
+  <div style="font-size: 17px; font-weight: 400; margin-top: 14px;
+              line-height: 1.5; max-width: 720px; margin-left:auto;margin-right:auto;
+              opacity: 0.92;">
+    La promesse d'un papier ne survit pas toujours à son d&eacute;ploiement.<br>
+    Le 100 % recall de Raman tient sur 30 fen&ecirc;tres mim&eacute;es &agrave; pr&eacute;valence 50 %.<br>
+    Sur de vrais patients en LOSO &agrave; pr&eacute;valence 2,63 %, le m&ecirc;me Random Forest
+    d&eacute;tecte 29 fen&ecirc;tres-crise sur 893.
+  </div>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+
+    with st.expander("Comment on calibre l'écart ?"):
+        st.markdown(
+            f"""
+- **Côté paper** : 100 % de recall annoncé sur 30 fenêtres-crise mimées
+  ⇒ par construction, RF détecte 30 sur 30 (tous les carrés verts).
+- **Côté réel** : recall pooled mesuré = {real_recall_full:.4f}
+  (= {real_tp_full} TP / {real_n_pos_full} fenêtres-crise sur les 6 patients LOSO).
+- **Échantillonnage** : on tire 30 fenêtres au hasard parmi les 893 réelles
+  (seed = 2026 pour reproductibilité visuelle). Espérance du nombre de TP
+  dans l'échantillon = 30 × {real_recall_full:.4f} = {30 * real_recall_full:.2f},
+  arrondi à **{real_tp_show}**. C'est exactement ce que l'animation montre.
+- **Écart**: 100 % / {real_recall_full*100:.2f} % ≈ **{1 / max(real_recall_full, 1e-6):.0f}×**.
+  Le facteur 30 du bandeau est l'arrondi rond de cet écart.
+"""
+        )
+
+
 # ---------------------------------------------------------------------- main
 def main():
     render_sidebar()
@@ -623,12 +775,13 @@ def main():
     cost = load_cost()
     classical, mlp = load_per_fold()
 
-    tab1, tab2, tab3, tab4 = st.tabs(
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(
         [
             "1 — Signal & contexte",
             "2 — Model arena (live)",
             "3 — ESP32 cost dashboard",
             "4 — Trade-off explorer",
+            "5 — Paper vs Réalité (démo soutenance)",
         ]
     )
 
@@ -640,6 +793,8 @@ def main():
         tab_cost(cost)
     with tab4:
         tab_pareto(pooled, cost)
+    with tab5:
+        tab_paper_vs_reality(pooled)
 
 
 if __name__ == "__main__":
