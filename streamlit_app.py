@@ -420,10 +420,23 @@ analytique pour les 4 modèles, en précision pleine (FP32) et quantifiés en
                 }
             )
     df_cost = pd.DataFrame(rows)
-    st.dataframe(
-        df_cost.style.background_gradient(subset=["% SRAM"], cmap="RdYlGn_r", vmin=0, vmax=300),
-        use_container_width=True, hide_index=True,
-    )
+
+    def _color_sram_pct(val: float) -> str:
+        # Manual gradient (no matplotlib dependency): green → amber → red.
+        try:
+            v = float(val)
+        except (TypeError, ValueError):
+            return ""
+        if v > 100:
+            return "background-color: #d96a4f; color: white;"
+        if v > 50:
+            return "background-color: #f59e0b; color: white;"
+        if v > 10:
+            return "background-color: #f7c873; color: #333;"
+        return "background-color: #2ea27e; color: white;"
+
+    styler = df_cost.style.map(_color_sram_pct, subset=["% SRAM"])
+    st.dataframe(styler, use_container_width=True, hide_index=True)
 
     st.markdown("---")
     st.subheader("Vue visuelle : barre de remplissage SRAM")
