@@ -617,9 +617,6 @@ def tab_wizard(pooled: dict, classical: pd.DataFrame, mlp: pd.DataFrame, cost: d
         "ce qu'on a fait, pourquoi, et le fichier du repo qui l'implémente."
     )
 
-    if "wizard_step" not in st.session_state:
-        st.session_state.wizard_step = 0
-
     steps = [
         ("Problématique",            _wiz_problem),
         ("Dataset SeizeIT2",         _wiz_dataset),
@@ -634,32 +631,54 @@ def tab_wizard(pooled: dict, classical: pd.DataFrame, mlp: pd.DataFrame, cost: d
         ("Conclusion + perspectives", _wiz_conclusion),
     ]
     total = len(steps)
+
+    if "wizard_step" not in st.session_state:
+        st.session_state.wizard_step = 0
+
+    def _go_prev():
+        new = max(0, st.session_state.wizard_step - 1)
+        st.session_state.wizard_step = new
+        st.session_state.wiz_jump = new
+
+    def _go_next():
+        new = min(total - 1, st.session_state.wizard_step + 1)
+        st.session_state.wizard_step = new
+        st.session_state.wiz_jump = new
+
+    def _on_jump():
+        st.session_state.wizard_step = st.session_state.wiz_jump
+
     cur = max(0, min(st.session_state.wizard_step, total - 1))
+    if "wiz_jump" not in st.session_state:
+        st.session_state.wiz_jump = cur
     title, render_fn = steps[cur]
 
     st.progress((cur + 1) / total, text=f"Étape {cur + 1} / {total} — {title}")
 
     col_prev, _, col_jump, _, col_next = st.columns([1.4, 0.4, 2, 0.4, 1.4])
-    with col_prev:
-        if st.button("◀  Précédent", disabled=cur == 0, key="wiz_prev", use_container_width=True):
-            st.session_state.wizard_step = cur - 1
-            st.rerun()
+    col_prev.button(
+        "◀  Précédent",
+        disabled=cur == 0,
+        key="wiz_prev",
+        use_container_width=True,
+        on_click=_go_prev,
+    )
     with col_jump:
-        target = st.selectbox(
+        st.selectbox(
             "Aller à",
             options=list(range(total)),
             format_func=lambda i: f"{i + 1}. {steps[i][0]}",
-            index=cur,
             key="wiz_jump",
             label_visibility="collapsed",
+            on_change=_on_jump,
         )
-        if target != cur:
-            st.session_state.wizard_step = target
-            st.rerun()
-    with col_next:
-        if st.button("Suivant  ▶", disabled=cur == total - 1, key="wiz_next", use_container_width=True):
-            st.session_state.wizard_step = cur + 1
-            st.rerun()
+    col_next.button(
+        "Suivant  ▶",
+        disabled=cur == total - 1,
+        key="wiz_next",
+        use_container_width=True,
+        on_click=_go_next,
+    )
 
     st.markdown("---")
     render_fn(pooled, classical, mlp, cost)
@@ -705,6 +724,31 @@ est-ce que la performance tient ?
 
 
 def _wiz_dataset(pooled, classical, mlp, cost):
+    rf = pooled["models"]["random_forest"]
+    n_pos = rf["n_positives"]
+    n_neg = rf["n_total"] - n_pos
+    fig = go.Figure(
+        data=[
+            go.Pie(
+                labels=["Fenêtres hors-crise", "Fenêtres-crise"],
+                values=[n_neg, n_pos],
+                hole=0.55,
+                marker_colors=["#cdd5df", "#d96a4f"],
+                textinfo="label+percent",
+                textposition="outside",
+                pull=[0, 0.06],
+            )
+        ]
+    )
+    fig.update_layout(
+        title=f"Prévalence sur 6 patients : {n_pos} crises sur {rf['n_total']:,} fenêtres".replace(",", " "),
+        height=360,
+        margin=dict(t=60, b=20, l=20, r=20),
+        showlegend=False,
+        annotations=[dict(text=f"{100*n_pos/rf['n_total']:.2f}%<br><span style='font-size:11px;color:#666'>positives</span>", x=0.5, y=0.5, font_size=20, showarrow=False)],
+    )
+    st.plotly_chart(fig, use_container_width=True, key="wiz_fig_prevalence")
+
     st.subheader("SeizeIT2 — pourquoi ce dataset")
     st.markdown(
         """
@@ -752,6 +796,28 @@ def _wiz_dataset(pooled, classical, mlp, cost):
 
 
 def _wiz_preproc(pooled, classical, mlp, cost):
+    fs = 25
+    rng = np.random.default_rng(42)
+    t = np.arange(fs * 8) / fs
+    base = 0.45 * np.sin(2 * np.pi * 2 * t)
+    high_freq = 0.20 * np.sin(2 * np.pi * 18 * t)
+    noise = 0.25 * rng.standard_normal(len(t))
+    noisy = base + high_freq + noise
+    w = 5
+    filtered = np.convolve(noisy, np.ones(w) / w, mode="same")
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=t, y=noisy, name="Signal brut (bruité)", line=dict(color="#a0a8b1", width=1.2)))
+    fig.add_trace(go.Scatter(x=t, y=filtered, name="Après passe-bas", line=dict(color="#2ea27e", width=2.4)))
+    fig.update_layout(
+        title="Effet du filtre passe-bas : élimination du bruit > 10 Hz, conservation de la composante 0–5 Hz",
+        xaxis_title="Temps (s)",
+        yaxis_title="Accélération normalisée (g)",
+        height=340,
+        margin=dict(t=60, b=40, l=40, r=20),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    )
+    st.plotly_chart(fig, use_container_width=True, key="wiz_fig_filter")
+
     st.subheader("Pré-traitement du signal")
     st.markdown(
         """
@@ -788,6 +854,46 @@ gel d'électrodes) qu'il faut supprimer avant l'extraction de features.
 
 
 def _wiz_windowing(pooled, classical, mlp, cost):
+    fs = 25
+    rng = np.random.default_rng(7)
+    t = np.arange(fs * 16) / fs
+    sig = 0.04 * rng.standard_normal(len(t))
+    crisis_start, crisis_end = 6.0, 12.0
+    mask = (t >= crisis_start) & (t <= crisis_end)
+    env = np.where(mask, np.sin(np.pi * (t - crisis_start) / (crisis_end - crisis_start)) ** 2, 0)
+    sig += 0.55 * env * np.sin(2 * np.pi * 5.5 * t)
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=t, y=sig, name="Signal accel (ex.)", line=dict(color="#1c7ed6", width=1.4)))
+    fig.add_vrect(
+        x0=crisis_start, x1=crisis_end,
+        fillcolor="#d96a4f", opacity=0.18, line_width=0,
+        annotation_text="Crise (events.tsv)",
+        annotation_position="top left",
+        annotation_font_color="#a13b1f",
+    )
+    win_size = 2.56
+    step = 1.28
+    win_starts = np.arange(0, t.max() - win_size + 1e-9, step)
+    for i, ws in enumerate(win_starts):
+        we = ws + win_size
+        overlaps_crisis = (we > crisis_start) and (ws < crisis_end)
+        color = "rgba(217,106,79,0.65)" if overlaps_crisis else "rgba(150,162,170,0.4)"
+        fig.add_shape(
+            type="rect", x0=ws, x1=we, y0=-1.05, y1=-0.92,
+            line=dict(color=color, width=0), fillcolor=color,
+        )
+    fig.add_annotation(x=t.max() / 2, y=-1.18, text="fenêtres 2,56 s (rose = label 1, gris = label 0)", showarrow=False, font_size=11, font_color="#555")
+    fig.update_layout(
+        title="Étiquetage par chevauchement : une fenêtre est positive si elle touche un intervalle de crise",
+        xaxis_title="Temps (s)",
+        yaxis_title="Accélération (g, normalisée)",
+        yaxis_range=[-1.35, 0.95],
+        height=400,
+        margin=dict(t=60, b=40, l=40, r=20),
+        showlegend=False,
+    )
+    st.plotly_chart(fig, use_container_width=True, key="wiz_fig_window")
+
     st.subheader("Découpage en fenêtres glissantes")
     st.markdown(
         """
@@ -901,6 +1007,34 @@ def _wiz_models(pooled, classical, mlp, cost):
 
 
 def _wiz_loso(pooled, classical, mlp, cost):
+    subjects_short = ["sub-001", "sub-032", "sub-085", "sub-096", "sub-124", "sub-125"]
+    n = len(subjects_short)
+    matrix = np.zeros((n, n), dtype=int)
+    for i in range(n):
+        matrix[i, i] = 1
+    cell_text = [["TEST" if c == 1 else "train" for c in row] for row in matrix]
+    fig = go.Figure(
+        data=go.Heatmap(
+            z=matrix,
+            x=subjects_short,
+            y=[f"Fold {i + 1}" for i in range(n)],
+            colorscale=[[0, "#2ea27e"], [1, "#d96a4f"]],
+            showscale=False,
+            text=cell_text,
+            texttemplate="%{text}",
+            textfont=dict(size=12, color="white"),
+            xgap=2, ygap=2,
+        )
+    )
+    fig.update_layout(
+        title="Matrice LOSO : à chaque fold, un seul patient est mis en test",
+        xaxis_title="Patient (colonne)",
+        yaxis_title="Fold (ligne)",
+        height=380,
+        margin=dict(t=60, b=40, l=40, r=20),
+    )
+    st.plotly_chart(fig, use_container_width=True, key="wiz_fig_loso")
+
     st.subheader("Leave-One-Subject-Out (LOSO)")
     st.markdown(
         """
@@ -944,6 +1078,42 @@ Sur un wearable médical, c'est **trompeur** : un nouveau patient n'aura jamais
 
 
 def _wiz_metrics(pooled, classical, mlp, cost):
+    rows_metric = []
+    for m_key in ["decision_tree", "svm_rbf", "random_forest", "mlp_80_32_16_1"]:
+        m = pooled["models"][m_key]
+        tp, fn, fp = m["tp"], m["fn"], m["fp"]
+        f1_v = (2 * tp) / (2 * tp + fp + fn) if (2 * tp + fp + fn) > 0 else 0.0
+        rows_metric.append({
+            "Modèle": MODEL_LABELS[m_key],
+            "Accuracy (%)": 100 * m["accuracy_pooled"],
+            "Recall (%)": 100 * m["recall_pooled"],
+            "F1 (%)": 100 * f1_v,
+        })
+    df_m = pd.DataFrame(rows_metric)
+    fig = go.Figure()
+    fig.add_trace(go.Bar(name="Accuracy", x=df_m["Modèle"], y=df_m["Accuracy (%)"], marker_color="#7e8a96",
+                         text=[f"{v:.1f}" for v in df_m["Accuracy (%)"]], textposition="outside"))
+    fig.add_trace(go.Bar(name="Recall (pooled)", x=df_m["Modèle"], y=df_m["Recall (%)"], marker_color="#d96a4f",
+                         text=[f"{v:.1f}" for v in df_m["Recall (%)"]], textposition="outside"))
+    fig.add_trace(go.Bar(name="F1 (pooled)", x=df_m["Modèle"], y=df_m["F1 (%)"], marker_color="#2ea27e",
+                         text=[f"{v:.1f}" for v in df_m["F1 (%)"]], textposition="outside"))
+    fig.add_hline(
+        y=100 * pooled["trivial_baseline_dummy_classifier"]["accuracy_baseline"],
+        line_dash="dash", line_color="#c92a2a", line_width=1.5,
+        annotation_text="baseline trivial (predict always negative) = 97,37 %",
+        annotation_position="top right",
+        annotation_font_color="#c92a2a",
+    )
+    fig.update_layout(
+        title="Le paradoxe d'accuracy : très élevée pour tous, mais c'est le baseline trivial",
+        yaxis_title="%",
+        barmode="group",
+        height=420,
+        margin=dict(t=60, b=40, l=40, r=20),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    )
+    st.plotly_chart(fig, use_container_width=True, key="wiz_fig_metrics")
+
     st.subheader("Quelles métriques on calcule, et pourquoi celles-là")
 
     st.markdown(
@@ -998,6 +1168,36 @@ c'est lui qui reflète vraiment la sensibilité globale du système.
 
 
 def _wiz_results(pooled, classical, mlp, cost):
+    rf_pf = classical[classical["model"] == "random_forest"].copy()
+    rf_pf["recall_pct"] = rf_pf["recall"] * 100
+    rf_pooled = pooled["models"]["random_forest"]["recall_pooled"] * 100
+    fig = go.Figure()
+    fig.add_trace(
+        go.Bar(
+            x=rf_pf["held_out_subject"],
+            y=rf_pf["recall_pct"],
+            marker_color="#d96a4f",
+            text=[f"{r:.1f} %<br><span style='font-size:10px'>{int(tp)}/{int(np_)}</span>"
+                  for r, tp, np_ in zip(rf_pf["recall_pct"], rf_pf["tp"], rf_pf["n_test_pos"])],
+            textposition="outside",
+        )
+    )
+    fig.add_hline(
+        y=rf_pooled, line_dash="dash", line_color="black", line_width=1.5,
+        annotation_text=f"pooled global = {rf_pooled:.2f} %",
+        annotation_position="right",
+    )
+    fig.update_layout(
+        title="Random Forest LOSO : recall par patient held-out — sub-085 sauve l'honneur, les 5 autres s'effondrent",
+        xaxis_title="Patient en held-out",
+        yaxis_title="Recall (%)",
+        yaxis_range=[0, max(50.0, rf_pf["recall_pct"].max() * 1.25)],
+        height=420,
+        margin=dict(t=60, b=40, l=40, r=20),
+        showlegend=False,
+    )
+    st.plotly_chart(fig, use_container_width=True, key="wiz_fig_results")
+
     st.subheader("Résultats LOSO pooled sur les 4 modèles")
 
     rows = []
@@ -1055,6 +1255,32 @@ def _wiz_results(pooled, classical, mlp, cost):
 
 
 def _wiz_esp32(pooled, classical, mlp, cost):
+    model_order = ["decision_tree", "svm_rbf", "random_forest", "mlp_80_32_16_1"]
+    labels = [MODEL_LABELS[k] for k in model_order]
+    ram_fp32 = [cost["models"][k]["fp32"]["ram_kb_total"] for k in model_order]
+    ram_int8 = [cost["models"][k]["int8"]["ram_kb_total"] for k in model_order]
+    fig = go.Figure()
+    fig.add_trace(go.Bar(name="FP32", x=labels, y=ram_fp32, marker_color="#d96a4f",
+                         text=[f"{v:.1f}" for v in ram_fp32], textposition="outside"))
+    fig.add_trace(go.Bar(name="INT8", x=labels, y=ram_int8, marker_color="#2ea27e",
+                         text=[f"{v:.1f}" for v in ram_int8], textposition="outside"))
+    fig.add_hline(
+        y=520, line_dash="dash", line_color="#c92a2a", line_width=2,
+        annotation_text="Plafond ESP32 = 520 KB SRAM",
+        annotation_position="top right",
+        annotation_font_color="#c92a2a",
+    )
+    fig.update_layout(
+        title="Empreinte RAM (échelle log) : RF FP32 déborde, MLP INT8 utilise 1,2 % de la SRAM",
+        yaxis_title="RAM totale (KB) — log",
+        yaxis_type="log",
+        barmode="group",
+        height=420,
+        margin=dict(t=60, b=40, l=40, r=20),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    )
+    st.plotly_chart(fig, use_container_width=True, key="wiz_fig_ram")
+
     st.subheader("Estimation analytique du coût ESP32")
     st.markdown(
         """
