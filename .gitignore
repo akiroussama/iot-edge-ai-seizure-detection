@@ -50,3 +50,6 @@ Thumbs.db
 # Internal probes and test artefacts
 _gitdir_probe/
 git-metadata/
+
+# Streamlit Cloud build/runtime logs (downloaded for debugging)
+logs-*.txt
