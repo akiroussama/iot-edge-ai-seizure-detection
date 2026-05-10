@@ -130,7 +130,10 @@ Après envoi du draft à l'enseignante, Mme Manel BEN ROMDHANE a relevé : « Po
 
 **Diagnostic** : ce n'est pas une hallucination de l'IA. Le pipeline `train_multirun.py` calculait l'agrégat via `np.mean(per_subject_recalls)` (macro-moyenne), réflexe sklearn par défaut. Pour 6 sujets avec un nombre très inégal de positives par fold (114, 116, 58, 37, 345, 223), la macro-moyenne est dominée par le fold sub-085 (39,7 %) et n'est pas la sensibilité globale du système. Le bon agrégateur en classification clinique fortement déséquilibrée multi-sujets est le pooled (micro) : ΣTP / ΣN_positives.
 
-**Recalcul** : RF macro = 8,9 % ± 14,6 → RF pooled = 29 / 893 = 3,25 %. MLP macro = 7,5 % → MLP pooled = 78 / 893 = 8,74 %.
+**Recalcul** (formule canonique Recall = TP / (TP + FN), pooled = somme sur les folds avant division) :
+- RF : ΣTP = 29, ΣFN = 864, donc Recall = 29 / (29 + 864) = 29 / 893 = **3,25 %** (vs 8,9 % ± 14,6 en macro).
+- MLP : ΣTP = 78, ΣFN = 815, donc Recall = 78 / (78 + 815) = 78 / 893 = **8,73 %** (vs 7,5 % en macro).
+ΣTP + ΣFN = ΣN_positives = 893 par définition, puisque toute fenêtre réellement positive est soit détectée (TP) soit manquée (FN).
 
 **Sanity check qui aurait dû alerter avant publication** : prévalence des positives = 893 / 33 925 = 2,63 %, donc baseline trivial (toujours prédire négatif) atteint accuracy = 97,37 %. Notre RF pooled accuracy = 97,36 %, soit pile le baseline trivial — le modèle est dégénéré, ne détecte presque rien. Si on avait appliqué ce contrôle systématique avec un `DummyClassifier(strategy='most_frequent')` avant publication, l'incohérence aurait sauté immédiatement.
 

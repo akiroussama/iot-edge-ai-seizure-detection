@@ -17,7 +17,7 @@ We reproduce and critically analyze the workflow described in:
 
 ## Results Summary
 
-Recall reported as **pooled (micro)** = ΣTP / ΣN_positives across 6 LOSO folds (n=893 seizure windows). This answers the clinical question "out of all real seizure windows, how many did the system detect?" — pooled aggregation is used throughout (macro per-subject mean is rejected as it overweights small folds in this imbalanced clinical setting).
+Recall reported as **pooled (micro)** = ΣTP / (ΣTP + ΣFN) across 6 LOSO folds (n=893 seizure windows). This is the standard `Recall = TP / (TP + FN)` definition with TP and FN summed across folds before division (equivalently, ΣTP / ΣN_positives since N_positives = TP + FN by definition). It answers the clinical question "out of all real seizure windows, how many did the system detect?". Pooled aggregation is preferred over the macro per-subject mean because the latter overweights folds with few positives in this strongly imbalanced clinical setting.
 
 | Model | Regime | Recall (pooled) | TP / N_pos | Accuracy (pooled) | RAM (ESP32 INT8) | Latency |
 |---|---|---|---|---|---|---|
