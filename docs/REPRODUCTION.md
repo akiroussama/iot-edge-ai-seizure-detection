@@ -29,10 +29,16 @@ The project uses the **SeizeIT2** dataset (OpenNeuro `ds005873`). Due to licensi
 python -m venv .venv
 source .venv/bin/activate
 
-# Install dependencies
+# Install pipeline dependencies (mne, scipy, scikit-learn, matplotlib + the demo)
 pip install --upgrade pip
-pip install -r requirements.txt
+pip install -r requirements-pipeline.txt
 ```
+
+> Note: `requirements.txt` at the repo root contains only the lightweight
+> dependencies needed by `streamlit_app.py` (the interactive demo). It is
+> kept minimal so Streamlit Cloud can deploy it without compiling scientific
+> libraries from source. Use `requirements-pipeline.txt` for the full
+> reproduction stack.
 
 ## 4. Execution Pipeline
 

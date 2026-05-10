@@ -1,0 +1,20 @@
+# Full pipeline reproduction (offline, with SeizeIT2 data on disk).
+# These are the dependencies for src/ — the scripts that read .edf files,
+# extract features, train models, and produce the artefacts in results/.
+#
+# For the interactive Streamlit demo only, see requirements.txt instead
+# (it is intentionally lighter so the app deploys cleanly on Streamlit Cloud).
+#
+# Usage:
+#     pip install -r requirements-pipeline.txt
+
+mne>=1.6,<2.0
+numpy>=1.24,<2.0
+scipy>=1.11,<2.0
+scikit-learn>=1.3,<2.0
+pandas>=2.0
+matplotlib>=3.7
+
+# Demo dependencies are also useful for local validation of the dashboard.
+streamlit>=1.30
+plotly>=5.18
