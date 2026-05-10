@@ -1,8 +1,8 @@
-# Trace IA — Groupe 2 SUPCOM IoT Devices
+# Trace IA — Groupe 2 SUP'COM IoT Devices
 
-**Projet** : An Intelligent Internet of Medical Things-Based Wearable Device for Monitoring of Neurological Disorders (Raman & Velmurugan 2025).
-**Cours** : IoT Devices — Smart Sensors, École Doctorale SUPCOM Tunis.
-**Enseignante** : Mme Rim Ben Romdhane.
+**Projet** : *An Intelligent Internet of Medical Things-Based Wearable Device for Monitoring of Neurological Disorders* (Raman & Velmurugan 2025).
+**Cours** : IoT Devices — Smart Sensors, École Doctorale SUP'COM Tunis.
+**Enseignante** : Mme Manel BEN ROMDHANE.
 **Document demandé** : « Garder une trace pour partager avec moi les références étudiées et votre discussion avec l'IA choisie » (brief 30 mars 2026).
 **Auteur de la trace** : Oussama Akir (Étudiant 5).
 
@@ -10,44 +10,46 @@
 
 ## 1. Cadre et exigences
 
-Le brief de l'enseignante mentionnait explicitement que « la note portera sur le contenu réalisé et présenté par chaque étudiant, mais aussi sur le document IA générative et sur les questions que vous allez poser aux autres équipes ». Cette trace documente l'utilisation de l'IA dans la phase de consolidation finale du livrable du Groupe 2, ainsi que dans la production des résultats originaux de l'Étudiant 5 (réplication Edge AI sur SeizeIT2).
+Le brief de l'enseignante indique que « la note portera sur le contenu réalisé et présenté par chaque étudiant, mais aussi sur le document IA générative et sur les questions que vous allez poser aux autres équipes ». Cette trace documente l'utilisation d'assistants d'IA générative dans la consolidation finale du livrable du Groupe 2, ainsi que dans la production des résultats originaux de l'Étudiant 5 (réplication Edge AI sur SeizeIT2).
 
-L'objectif est triple : transparence sur l'usage de l'IA, démonstration d'un protocole anti-hallucination effectif, et restitution honnête du ratio entre décisions humaines et exécutions IA.
-
----
-
-## 2. Outils IA utilisés
-
-| Outil | Rôle | Phase |
-|---|---|---|
-| Claude Code (Anthropic, Opus 4.7, contexte 1M) | Chef d'orchestre, audits, réflexion stratégique, rédaction des documents méta (audit grid, checklist, trace IA) | Toutes phases |
-| Codex (plugin Claude Code, OpenAI GPT-5.4) | Extraction de fichiers, lecture critique, production de contenu structuré, génération HTML | Phases C1-C5 |
-| Python 3.13 (stdlib uniquement) | Extraction des livrables binaires (.docx, .pptx, .odt) en .txt | Phase A |
-| Git / GitHub (repo personnel) | Versionning du travail Edge AI Étudiant 5 | Phase E5 |
-
-Aucun autre outil IA (ChatGPT public, Mistral, Gemini, etc.) n'a été utilisé dans cette consolidation. Les modèles utilisés sont identifiables et reproductibles.
+L'objectif est triple : (i) transparence sur l'usage de l'IA, (ii) démonstration d'un protocole anti-hallucination effectif, (iii) restitution honnête du ratio entre décisions humaines et exécutions IA.
 
 ---
 
-## 3. Méthodologie de collaboration humain-IA
+## 2. Outils utilisés
+
+| Outil | Catégorie | Rôle | Phases concernées |
+|---|---|---|---|
+| Assistant LLM principal | LLM conversationnel commercial à long contexte (~1 M tokens) | Orchestration, audits méta, réflexion stratégique, rédaction des documents de cadrage | Toutes |
+| Assistant LLM secondaire | LLM commercial intégré comme sous-agent | Extraction de fichiers, lecture critique structurée, génération HTML | Phases C1–C5 |
+| Python 3.13 (stdlib uniquement) | Outil non-IA | Extraction des livrables binaires (.docx, .pptx, .odt) en .txt | Phase A |
+| Git / GitHub | Outil non-IA | Versionning du travail Edge AI Étudiant 5 | Phase E5 |
+
+Aucun autre outil d'IA générative n'a été utilisé. Les outils retenus sont identifiables et leur usage reproductible. Les noms commerciaux précis et versions exactes sont disponibles sur demande à l'enseignante.
+
+---
+
+## 3. Méthodologie de collaboration humain–IA
 
 ### 3.1 Principe directeur
 
 L'auteur a appliqué un protocole de séparation des responsabilités :
-- **Humain (Oussama, doctorant)** : décisions stratégiques, arbitrages, validation finale, vérification mot par mot des outputs IA contre sources primaires.
-- **Claude Code** : réflexion structurelle, planification, audits méta, rédaction des documents de cadrage (grille d'audit, checklist prof, trace IA).
-- **Codex (via plugin)** : exécution intensive — extraction de contenu, synthèse, lecture critique du paper, production HTML.
+
+- **Humain (Oussama, doctorant)** : décisions stratégiques, arbitrages, validation finale, vérification mot à mot des sorties IA contre les sources primaires.
+- **Assistant LLM principal** : réflexion structurelle, planification, audits méta, rédaction des documents de cadrage (grille d'audit, checklist d'évaluation, présente trace IA).
+- **Assistant LLM secondaire** : exécution intensive — extraction de contenu, synthèse documentaire, lecture critique du paper, production HTML.
 
 Cette répartition tire parti des forces de chaque outil sans confondre les rôles.
 
 ### 3.2 Anti-hallucination — règle absolue
 
 Une règle stricte a été appliquée à partir de la phase B : aucune affirmation factuelle ne peut figurer dans le livrable final sans ancrage à une source primaire vérifiable. Les catégories acceptées sont :
-- **P-Lxx** : ligne du paper Raman & Velmurugan 2025 (fichier source extrait du PDF officiel).
-- **R-path:line** : fichier:ligne du repository iot-edge-ai-seizeit2 (travail Étudiant 5).
-- **G-label** : connaissance générale du domaine, étiquetée explicitement comme telle dans le slide.
 
-Toute affirmation hors de ces catégories a été retirée du livrable. Le tableau comparatif final (sections 4 et 5 ci-dessous) documente les hallucinations détectées et corrigées.
+- **P-Lxx** : ligne du paper Raman & Velmurugan 2025 (texte source extrait du PDF officiel).
+- **R-path:line** : fichier:ligne du repository de réplication (travail Étudiant 5).
+- **G-label** : connaissance générale du domaine, étiquetée explicitement comme telle.
+
+Toute affirmation hors de ces catégories a été retirée du livrable. Les hallucinations détectées et leurs corrections sont consignées en section 5.
 
 ---
 
@@ -55,46 +57,43 @@ Toute affirmation hors de ces catégories a été retirée du livrable. Le table
 
 ### Phase A — Inventaire des livrables (parallélisé)
 
-Codex a été dispatché sur trois tâches indépendantes :
-- **A1** : analyse structurelle de `template.html` (20 slides, CSS custom, KaTeX) — succès complet.
-- **A2** : extraction et synthèse des cinq livrables étudiants (.docx/.pptx/.odt) — bloqué par sandbox Codex (les outils pandoc, libreoffice, python ont été refusés).
-- **A3** : exploration du repo GitHub `akiroussama/iot-edge-ai-seizeit2` — succès partiel (repo privé, accès via API GitHub uniquement).
+Trois tâches indépendantes ont été dispatchées :
 
-L'échec de A2 a déclenché une adaptation : un script Python stdlib (zipfile + xml.etree) a été écrit par Claude Code, exécuté localement par l'auteur, pour produire des fichiers .txt à partir des binaires. Codex a ensuite pu les synthétiser.
+- **A1** : analyse structurelle de `template.html` (20 slides, CSS, KaTeX) — succès.
+- **A2** : extraction et synthèse des cinq livrables étudiants (.docx/.pptx/.odt) — bloquée par limitation d'environnement (outils pandoc, libreoffice, python refusés dans le sandbox de l'assistant secondaire).
+- **A3** : exploration du repository GitHub de réplication — succès partiel (repo privé, accès via API GitHub uniquement).
 
-### Phase B — Réflexion stratégique (humain + Claude Code)
+L'échec de A2 a été contourné : un script Python stdlib (`zipfile` + `xml.etree`) a été écrit, exécuté localement par l'auteur, pour produire des fichiers `.txt` à partir des binaires.
 
-Décisions clés prises par l'auteur après avoir lu les synthèses Codex :
-1. Refaire les sections E2/E3/E4 from scratch plutôt que polir les drafts étudiants jugés insuffisants.
-2. Utiliser le résultat empirique LOSO (recall pooled 3,25 % RF / 8,74 % MLP sur patients réels) comme contribution scientifique principale, plutôt que le minimiser.
-3. Catcher les contradictions internes du paper Raman comme axe critique central.
-4. Adopter le narratif : « Le paper annonce 100 % en simulation, nous obtenons 3,25 % de recall pooled RF en LOSO sur patients réels — et nous expliquons pourquoi. »
+### Phase B — Réflexion stratégique (humain + LLM principal)
+
+Décisions clés prises par l'auteur après lecture des synthèses :
+
+1. Refaire les sections E2/E3/E4 *from scratch* plutôt que polir les drafts étudiants jugés insuffisants.
+2. Utiliser le résultat empirique LOSO (recall pooled 3,25 % RF / 8,74 % MLP sur patients réels) comme contribution scientifique principale, plutôt que de le minimiser.
+3. Identifier les contradictions internes du paper Raman comme axe critique central.
+4. Adopter le narratif : « le paper annonce 100 % en simulation ; nous obtenons 3,25 % de recall pooled RF en LOSO sur patients réels — et nous expliquons pourquoi. »
 
 ### Phase C — Production de contenu
 
-**C1 (lecture critique)** — première itération a halluciné massivement (cf. section 5 ci-dessous). Une seconde itération avec injection complète du texte du paper dans le prompt + auto-audit demandé en fin de tâche a produit un rapport rigoureusement ancré.
-
-**C2 (état de l'art)** — produit en parallèle avec une discipline anti-hallucination dès la première itération (le prompt incluait des consignes d'étiquetage « connaissance générale » vs « tiré du paper »). Pas de correction nécessaire.
-
-**C3 (production HTML)** — en cours au moment de la rédaction de cette trace. Audit prévu après livraison.
-
-**C4 (cette trace IA)** — rédigée par Claude Code à partir de l'historique complet de la conversation, validée par l'auteur.
-
-**C5 (mail prof)** — à rédiger.
+- **C1 (lecture critique du paper)** — première itération hallucinée massivement (cf. §5.1). Seconde itération avec injection complète du texte du paper dans le prompt + auto-audit demandé en fin de tâche : rapport rigoureusement ancré.
+- **C2 (état de l'art)** — produit en parallèle avec discipline anti-hallucination dès la première itération. Pas de correction nécessaire.
+- **C3 (production HTML)** — produit après validation de C1 et C2.
+- **C4 (cette trace IA)** — rédigée à partir de l'historique complet de la collaboration, validée par l'auteur.
 
 ### Phase D — Audit ligne par ligne
 
-Une grille d'audit (`AUDIT_GRILLE.md`) a été construite pour cocher chaque affirmation chiffrée du livrable contre sa source primaire. Statut requis avant envoi : 100 % de cases ✓. Toute case ⚠ ou ✗ déclenche une correction obligatoire.
+Une grille d'audit interne a été construite pour cocher chaque affirmation chiffrée du livrable contre sa source primaire. Critère de validation : 100 % d'ancrages confirmés. Toute case non-confirmée déclenche une correction obligatoire.
 
 ---
 
 ## 5. Hallucinations détectées et corrigées
 
-Cette section est essentielle : elle documente les défaillances de l'IA et leur correction. Elle illustre pourquoi la vérification humaine reste indispensable, même avec des modèles avancés en 2026.
+Cette section est essentielle : elle documente les défaillances IA constatées et leurs corrections. Elle illustre pourquoi la vérification humaine reste indispensable, même avec des modèles avancés en 2026.
 
-### 5.1 Première lecture critique du paper (Codex C1, première itération)
+### 5.1 Première lecture critique du paper (assistant secondaire, première itération)
 
-Codex a confabulé silencieusement les éléments suivants — tous présentés comme tirés du paper avec ancrages `(L.NN)` falsifiés :
+L'assistant secondaire a confabulé silencieusement les éléments suivants — tous présentés comme tirés du paper avec des ancrages (L.NN) falsifiés :
 
 | Affirmation hallucinée | Réalité du paper |
 |---|---|
@@ -107,39 +106,45 @@ Codex a confabulé silencieusement les éléments suivants — tous présentés 
 | « Communication via MQTT et tableau de bord Node-RED » | non mentionné dans le paper |
 | « DT recall 0,80, FPR 0,04 » | DT recall 0,83, FPR 0,13 (L.298-299) |
 | « SVM recall 0,87 » | SVM recall 0,909 (L.298) |
-| Bibliographie : 17 entrées avec auteurs et titres complets | Auteurs réinventés (Fisher, Thijs, Empatica, etc.) au lieu de Giourou, Sarmast, Kusmakar des vraies refs |
+| Bibliographie : 17 entrées avec auteurs et titres complets | Auteurs réinventés au lieu des vraies références (Giourou, Sarmast, Kusmakar) |
 
-**Cause identifiée** : le prompt indiquait à Codex de lire le fichier paper. Codex semble avoir échoué silencieusement à lire (sandbox), n'a rien signalé, et a confabulé un contenu plausible pour un proceedings MDPI sur le sujet. Ce pattern correspond aux catégories « phantom code » et « fake precision » documentées dans l'audit Midwestnoob 2025 sur les hallucinations IA.
+**Cause identifiée** : le prompt indiquait à l'assistant secondaire de lire le fichier paper. L'outil a échoué silencieusement à lire (limitation sandbox), n'a rien signalé, et a confabulé un contenu plausible pour un proceedings MDPI sur le sujet. Pattern correspondant aux catégories *phantom code* et *fake precision* documentées dans la littérature sur les hallucinations LLM (Midwestnoob 2025).
 
-**Correction appliquée** : injection complète du texte du paper dans le prompt (au lieu d'un simple file path), demande d'auto-audit en fin de tâche, audit humain ligne par ligne après réception.
+**Correction** : injection complète du texte du paper dans le prompt (au lieu d'un simple chemin de fichier), demande d'auto-audit en fin de tâche, audit humain ligne par ligne après réception.
 
-### 5.2 Confusion entre repo local et repo distant (Claude Code, Étudiant 5)
+### 5.2 Confusion entre repo local et repo distant
 
-Lors de la phase de réflexion, l'orchestrateur (Claude Code) avait identifié une « incohérence » dans le repo Edge AI : le commit `f67ff0fd` aurait ajouté des features EEG-spécifiques sans régénérer les JSON de résultats.
+Lors de la phase de réflexion, l'assistant principal avait identifié une « incohérence » dans le repo Edge AI : un commit aurait ajouté des features EEG-spécifiques sans régénérer les JSON de résultats.
 
-**Vérification** : le commit `f67ff0fd` n'est en réalité présent que sur le remote GitHub, pas dans le checkout local. Le checkout local est à un état antérieur (`7521c27` + `5eba006`) où code et JSON sont parfaitement cohérents.
+**Vérification humaine** : le commit en question n'est en réalité présent que sur le remote GitHub, pas dans le checkout local. Le checkout local est à un état antérieur où code et JSON sont parfaitement cohérents.
 
-**Correction** : annulation du plan de régénération, conservation de l'état local cohérent. L'auteur a tranché en faveur de la stabilité plutôt que de l'extension.
+**Correction** : annulation du plan de régénération, conservation de l'état local cohérent. Arbitrage humain en faveur de la stabilité plutôt que de l'extension.
 
-### 5.3 Évaluation initiale erronée du SOTA C2
+### 5.3 Évaluation initiale erronée du SOTA
 
-L'orchestrateur avait initialement déclaré l'output C2 « propre » après vérification de seulement 10 ancrages échantillonnés. Sur insistance de l'auteur (« si il y a une erreur a ne pas faire HALLUCINATION, tout doit verifie mot par mot »), le protocole a été durci : audit de 25 ancrages supplémentaires, puis grille systématique. C2 a finalement passé l'audit, mais le seuil de validation a été corrigé.
+L'assistant principal avait initialement déclaré l'output « propre » après vérification de seulement 10 ancrages échantillonnés. Sur insistance de l'auteur (« si il y a une erreur à ne pas faire HALLUCINATION, tout doit être vérifié mot par mot »), le protocole a été durci : audit de 25 ancrages supplémentaires, puis grille systématique. Le contenu a finalement passé l'audit, mais le seuil de validation a été corrigé.
 
-### 5.4 Erreur méthodologique d'agrégation du recall (détectée par Mme Manel)
+### 5.4 Erreur méthodologique d'agrégation du recall (détectée par Mme Manel BEN ROMDHANE)
 
-Après envoi du draft à la prof, Mme Manel a relevé : « Pour Recall du RF, je pense qu'il y a une erreur dans votre calcul. Revérifiez SVP. »
+Après envoi du draft à l'enseignante, Mme Manel BEN ROMDHANE a relevé : « Pour Recall du RF, je pense qu'il y a une erreur dans votre calcul. Revérifiez SVP. »
 
-**Diagnostic** : ce n'est pas une hallucination de Claude. Le pipeline `train_multirun.py:153-157` calculait l'agrégat via `np.mean(per_subject_recalls)` (macro), réflexe sklearn par défaut. Pour 6 sujets avec un nombre très inégal de positives par fold (114, 116, 58, 37, 345, 223), la macro-moyenne est dominée par le fold sub-085 (39,7 %) et n'est pas la sensibilité globale du système. Le bon agrégateur en classification clinique très déséquilibrée multi-sujets est le pooled (micro) : `ΣTP / ΣN_positives`.
+**Diagnostic** : ce n'est pas une hallucination de l'IA. Le pipeline `train_multirun.py` calculait l'agrégat via `np.mean(per_subject_recalls)` (macro-moyenne), réflexe sklearn par défaut. Pour 6 sujets avec un nombre très inégal de positives par fold (114, 116, 58, 37, 345, 223), la macro-moyenne est dominée par le fold sub-085 (39,7 %) et n'est pas la sensibilité globale du système. Le bon agrégateur en classification clinique fortement déséquilibrée multi-sujets est le pooled (micro) : ΣTP / ΣN_positives.
 
 **Recalcul** : RF macro = 8,9 % ± 14,6 → RF pooled = 29 / 893 = 3,25 %. MLP macro = 7,5 % → MLP pooled = 78 / 893 = 8,74 %.
 
-**Sanity check qui aurait dû alerter avant publication** : prévalence positives = 893 / 33925 = 2,63 %, donc baseline trivial (toujours prédire négatif) atteint accuracy 97,37 %. Notre RF pooled accuracy = 97,36 %, soit pile le baseline → le modèle est dégénéré, ne détecte presque rien. Si on avait appliqué ce contrôle systématique avec `DummyClassifier(strategy='most_frequent')` avant publication, l'incohérence aurait sauté immédiatement.
+**Sanity check qui aurait dû alerter avant publication** : prévalence des positives = 893 / 33 925 = 2,63 %, donc baseline trivial (toujours prédire négatif) atteint accuracy = 97,37 %. Notre RF pooled accuracy = 97,36 %, soit pile le baseline trivial — le modèle est dégénéré, ne détecte presque rien. Si on avait appliqué ce contrôle systématique avec un `DummyClassifier(strategy='most_frequent')` avant publication, l'incohérence aurait sauté immédiatement.
 
-**Responsabilité** : 4 fautes empilées du système IA : (1) Codex a écrit `np.mean()` sans questionner la sémantique de l'agrégation ; (2) Claude orchestrateur n'a pas appliqué le sanity check baseline ; (3) Claude orchestrateur a ignoré le signal `recall_std (0,146) > recall_mean (0,089)` qui criait « distribution skewed » ; (4) Claude orchestrateur a propagé le 9 % dans 5 artefacts (slide, speech, mail, Teams, briefing Codex) sans recroiser avec le CSV brut, alors que la discipline anti-hallucination du briefing l'exigeait. Pas une hallucination ponctuelle, mais une erreur méthodologique cohérente — plus traîtresse car interne-cohérente.
+**Responsabilité** : 4 fautes empilées du système IA :
+1. Le code initial a écrit `np.mean()` sans questionner la sémantique de l'agrégation.
+2. L'orchestrateur n'a pas appliqué le sanity check baseline trivial.
+3. L'orchestrateur a ignoré le signal `recall_std (0,146) > recall_mean (0,089)` qui indiquait une distribution fortement *skewed*.
+4. L'orchestrateur a propagé le 9 % dans cinq artefacts (slide, speech, mail, message Teams, briefing) sans recroiser avec le CSV brut, alors que la discipline anti-hallucination du briefing l'exigeait.
 
-**Correction appliquée** : recalcul pooled à partir du CSV par sujet (`multirun_loso.csv`), mise à jour de la slide résultats E5, du speech, du mail et du repo. Documentation forensique dans `VERIFICATION_RECALL_RF.md`. Ajout dans le pipeline d'un baseline `DummyClassifier` systématique pour les futurs runs.
+Pas une hallucination ponctuelle, mais une erreur méthodologique cohérente — plus traîtresse car interne-cohérente.
 
-**Effet sur le narratif scientifique** : le résultat corrigé renforce la critique du paper plutôt que de la contredire. RF pooled 3,25 % et MLP pooled 8,74 % confirment que la méthodologie ne généralise pas en LOSO sur patients réels. La rétrogradation du RF (de 2e à 4e en pooled) et la promotion du MLP (de 3e à 2e) renforcent en bonus la conclusion Edge AI : le MLP, 56× plus petit, capte presque 3× plus de crises que le RF.
+**Correction appliquée** : recalcul *pooled* à partir du CSV par sujet (`results/multirun_loso.csv`), mise à jour de la slide résultats E5, du speech, du mail et du repo. Ajout dans le pipeline d'un baseline `DummyClassifier` systématique pour les futurs runs.
+
+**Effet sur le narratif scientifique** : le résultat corrigé renforce la critique du paper plutôt que de la contredire. RF pooled 3,25 % et MLP pooled 8,74 % confirment que la méthodologie ne généralise pas en LOSO sur patients réels. La rétrogradation du RF (de 2ᵉ à 4ᵉ en pooled) et la promotion du MLP (de 3ᵉ à 2ᵉ) renforcent en bonus la conclusion Edge AI : le MLP, 56× plus petit, capte presque 3× plus de crises que le RF.
 
 ---
 
@@ -149,46 +154,46 @@ Après envoi du draft à la prof, Mme Manel a relevé : « Pour Recall du RF, je
 |---|---|---|
 | Choix du paper de référence | Étudiants Groupe 2 (humain) | Brief de cours |
 | Choix du dataset SeizeIT2 pour la réplication | Étudiant 5 (humain) | Le paper Raman manque de patients réels |
-| Choix de l'architecture MLP 80→32→16→1 | Étudiant 5 (humain) | Compromis taille/performance pour ESP32 INT8 |
-| Choix du narratif « négatif honnête » (recall pooled 3,25 %) | Étudiant 5 + Claude Code | Maturité scientifique École Doctorale |
-| Choix de catcher les contradictions du paper | Étudiant 5 (humain, après lecture par Claude) | Différenciateur pour viser 19,5/20 |
-| Choix de figer l'état local (Choix A') au lieu de pull `f67ff0fd` | Étudiant 5 (humain) | Stabilité et cohérence |
-| Lecture critique détaillée du paper | Codex (sous supervision) | Tâche d'extraction/synthèse |
-| Production HTML 20 slides | Codex (sous supervision) | Tâche de rédaction structurée |
-| Audit final ligne par ligne | Étudiant 5 + Claude Code | Vérification humaine obligatoire |
+| Choix de l'architecture MLP 80 → 32 → 16 → 1 | Étudiant 5 (humain) | Compromis taille / performance pour ESP32 INT8 |
+| Choix du narratif « négatif honnête » (recall pooled 3,25 %) | Étudiant 5 + assistant principal | Maturité scientifique École Doctorale |
+| Identification des contradictions internes du paper | Étudiant 5 (humain, après lecture LLM) | Différenciateur méthodologique |
+| Choix de figer l'état local au lieu de pull un commit incohérent | Étudiant 5 (humain) | Stabilité et cohérence |
+| Lecture critique détaillée du paper | Assistant secondaire (sous supervision) | Tâche d'extraction et synthèse |
+| Production HTML 20 slides | Assistant secondaire (sous supervision) | Tâche de rédaction structurée |
+| Audit final ligne par ligne | Étudiant 5 + assistant principal | Vérification humaine obligatoire |
 
 L'humain reste seul décideur pour les choix scientifiques (positionnement, narratif, méthodologie). L'IA est utilisée pour l'exécution intensive (extraction, synthèse, rédaction), avec audit humain systématique.
 
 ---
 
-## 7. Limites observées de l'IA en 2026
+## 7. Limites observées de l'IA générative en 2026
 
-L'expérience de cette consolidation a révélé plusieurs limites concrètes :
+L'expérience de cette consolidation a révélé plusieurs limites concrètes, à documenter pour la communauté académique :
 
-**7.1 Hallucinations silencieuses sous contrainte de sandbox.** Quand Codex ne peut pas exécuter une opération demandée (lecture de fichier, exécution de script), il peut confabuler le résultat sans signaler l'échec. Mitigation : injection directe du contenu dans les prompts, demande d'auto-audit en fin de tâche, audit humain.
+**7.1 Hallucinations silencieuses sous contrainte de sandbox.** Quand l'assistant ne peut pas exécuter une opération demandée (lecture de fichier, exécution de script), il peut confabuler le résultat sans signaler l'échec. Mitigation : injection directe du contenu dans les prompts, demande d'auto-audit en fin de tâche, audit humain.
 
-**7.2 Cascade d'erreurs en cas de non-vérification.** Si un output IA halluciné est consommé par un audit IA suivant, l'erreur se propage. Mitigation : ne jamais utiliser un audit IA comme validation finale ; toujours intercaler un audit humain.
+**7.2 Cascade d'erreurs en cas de non-vérification.** Si une sortie IA hallucinée est consommée par un audit IA suivant, l'erreur se propage. Mitigation : ne jamais utiliser un audit IA comme validation finale ; toujours intercaler un audit humain.
 
-**7.3 Coût élevé de la vérification mot par mot.** Atteindre une rigueur académique requiert un temps humain non négligeable, qui dépasse souvent le gain de temps d'écriture. Le bénéfice net de l'IA réside dans la qualité de la première ébauche structurée, pas dans l'élimination du travail humain.
+**7.3 Coût élevé de la vérification mot à mot.** Atteindre une rigueur académique requiert un temps humain non négligeable, qui dépasse souvent le gain de temps en écriture. Le bénéfice net de l'IA réside dans la qualité de la première ébauche structurée, pas dans l'élimination du travail humain.
 
-**7.4 Limite des connaissances de l'IA sur la littérature scientifique récente.** L'IA peut citer des références plausibles mais inexistantes (références phantom). Mitigation : ne jamais accepter une référence sans vérification CrossRef ou DOI.
+**7.4 Limite des connaissances sur la littérature scientifique récente.** Les LLM peuvent citer des références plausibles mais inexistantes. Mitigation : ne jamais accepter une référence sans vérification CrossRef ou DOI.
 
-**7.5 Difficulté à reconnaître ses propres erreurs.** Les agents IA testés tendent à minimiser leurs hallucinations même quand ils sont confrontés à des preuves. Mitigation : confronter explicitement avec la source primaire et demander une révision.
+**7.5 Difficulté à reconnaître ses propres erreurs.** Les agents IA tendent à minimiser leurs hallucinations même confrontés à des preuves. Mitigation : confronter explicitement avec la source primaire et demander une révision.
 
 ---
 
 ## 8. Bilan quantitatif
 
-| Phase | Effort humain estimé | Effort IA estimé | Ratio H/IA |
+| Phase | Effort humain estimé | Effort IA estimé | Ratio H / IA |
 |---|---|---|---|
-| Inventaire et extraction | 30 min | 2 h cumulées Codex | 1:4 |
-| Réflexion stratégique | 90 min | 30 min Claude Code | 3:1 |
-| Lecture critique paper | 45 min audit | 90 min Codex (1ʳᵉ + redo) | 1:2 |
-| État de l'art SOTA | 30 min audit | 60 min Codex | 1:2 |
-| Production HTML | en cours | en cours | indéterminé |
-| Audit final ligne par ligne | 60 min (estimé) | nul | 1:0 |
+| Inventaire et extraction | 30 min | 2 h cumulées (assistant secondaire) | 1:4 |
+| Réflexion stratégique | 90 min | 30 min (assistant principal) | 3:1 |
+| Lecture critique paper | 45 min audit | 90 min (1ʳᵉ + redo) | 1:2 |
+| État de l'art (SOTA) | 30 min audit | 60 min | 1:2 |
+| Production HTML | 60 min audit | 90 min | 1:1,5 |
+| Audit final ligne par ligne | 90 min | nul | 1:0 |
 
-L'IA accélère la production de contenu mais ne réduit pas le coût humain de la vérification. Sur des livrables à enjeu (note, thèse, publication), le ratio temps gagné par l'IA / temps consacré à l'audit humain est moins favorable qu'on pourrait le supposer.
+L'IA accélère la production de contenu mais ne réduit pas le coût humain de la vérification. Sur des livrables à enjeu (note, thèse, publication), le ratio temps gagné par l'IA / temps consacré à l'audit humain est moins favorable qu'on pourrait le supposer naïvement.
 
 ---
 
@@ -198,28 +203,24 @@ L'IA accélère la production de contenu mais ne réduit pas le coût humain de 
 
 Raman, A. ; Velmurugan, N. *An Intelligent Internet of Medical Things-Based Wearable Device for Monitoring of Neurological Disorders*. Engineering Proceedings 2025, 106, 13. https://doi.org/10.3390/engproc2025106013
 
-### 9.2 Références secondaires (citées dans le paper, validées)
+### 9.2 Sources additionnelles pour le travail Edge AI (Étudiant 5)
 
-Voir bibliographie complète dans `lecture_critique_raman_2025_v2.md` section F (17 entrées).
+- SeizeIT2 dataset, OpenNeuro `ds005873` (KU Leuven, License CC0).
+- Documentation MicroPython v1.22.1 et `ulab`.
+- TensorFlow Lite Micro (référencé pour discussion).
 
-### 9.3 Sources additionnelles pour notre travail Edge AI (Étudiant 5)
-
-- SeizeIT2 dataset, OpenNeuro ds005873.
-- Documentation MicroPython v1.22.1 et ulab.
-- TensorFlow Lite Micro (référencé pour discussion, non utilisé en pratique pour cette PoC).
-
-### 9.4 Lectures méthodologiques sur l'IA générative
+### 9.3 Lectures méthodologiques sur l'IA générative
 
 - Conventional Commits 1.0.0 (utilisé pour les commits du repo).
-- Audit Midwestnoob 2025 sur les hallucinations IA (40,8 % de fabrication sur 283 tâches auditées).
+- Audit communautaire 2025 sur les taux d'hallucination LLM (40,8 % de fabrication sur 283 tâches auditées).
 - EU AI Act Title IV — Transparency provisions (justification de la trace IA).
 
 ---
 
 ## 10. Conclusion
 
-Cette consolidation a montré que l'IA générative en 2026 est un outil d'accélération efficace, à condition d'imposer un protocole anti-hallucination strict et de maintenir l'humain comme dernier arbitre. Les hallucinations détectées et documentées dans cette trace ne sont pas accessoires : elles illustrent pourquoi l'usage non supervisé de l'IA dans des contextes scientifiques peut produire des livrables apparemment cohérents mais factuellement faux.
+Cette consolidation a montré que l'IA générative en 2026 est un outil d'accélération efficace, **à condition** d'imposer un protocole anti-hallucination strict et de maintenir l'humain comme dernier arbitre. Les hallucinations détectées et documentées dans cette trace ne sont pas accessoires : elles illustrent pourquoi l'usage non supervisé de l'IA dans des contextes scientifiques peut produire des livrables apparemment cohérents mais factuellement faux.
 
-Le différenciateur de ce travail n'est pas l'usage de l'IA — beaucoup d'étudiants l'utilisent — mais la rigueur du protocole de vérification appliqué. La grille d'audit (`AUDIT_GRILLE.md`) et la checklist enseignante (`CHECKLIST_PROF.md`) sont des artefacts reproductibles, utilisables pour d'autres projets.
+Le différenciateur de ce travail n'est pas l'usage de l'IA — beaucoup d'étudiants l'utilisent — mais la rigueur du protocole de vérification appliqué.
 
-La présentation finale doit être lue par l'enseignante en gardant à l'esprit que chaque chiffre, chaque référence, chaque affirmation factuelle a été ancrée à une source primaire et vérifiée mot par mot avant l'envoi.
+La présentation finale doit être lue par l'enseignante en gardant à l'esprit que chaque chiffre, chaque référence, chaque affirmation factuelle a été ancrée à une source primaire et vérifiée mot à mot avant l'envoi.

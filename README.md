@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.13](https://img.shields.io/badge/python-3.13-blue.svg)](https://www.python.org/downloads/release/python-3130/)
 
-This repository contains the engineering replication and Edge AI optimization project for the **IoT Devices** course (École Doctorale SUPCOM). It evaluates the feasibility of embedding seizure detection models on low-power microcontrollers (ESP32) using real-world patient data.
+This repository contains the engineering replication and Edge AI optimization project for the **IoT Devices** course (École Doctorale SUP'COM). It evaluates the feasibility of embedding seizure detection models on low-power microcontrollers (ESP32) using real-world patient data.
 
 ## Project Context
 
@@ -17,7 +17,7 @@ We reproduce and critically analyze the workflow described in:
 
 ## Results Summary
 
-Recall reported as **pooled (micro)** = ΣTP / ΣN_positives across 6 LOSO folds (n=893 seizure windows). This answers the clinical question "out of all real seizure windows, how many did the system detect?" — see `VERIFICATION_RECALL_RF.md` for the methodological discussion (macro-vs-pooled aggregation).
+Recall reported as **pooled (micro)** = ΣTP / ΣN_positives across 6 LOSO folds (n=893 seizure windows). This answers the clinical question "out of all real seizure windows, how many did the system detect?" — pooled aggregation is used throughout (macro per-subject mean is rejected as it overweights small folds in this imbalanced clinical setting).
 
 | Model | Regime | Recall (pooled) | TP / N_pos | Accuracy (pooled) | RAM (ESP32 INT8) | Latency |
 |---|---|---|---|---|---|---|
@@ -27,7 +27,7 @@ Recall reported as **pooled (micro)** = ΣTP / ΣN_positives across 6 LOSO folds
 | Decision Tree | LOSO (real) | 11.0 % | 98 / 893 | 94.5 % | -- | -- |
 | SVM RBF | LOSO (real) | 6.5 % | 58 / 893 | 96.2 % | -- | -- |
 
-\* RF pooled accuracy (97.4 %) ≡ trivial dummy baseline (1 - prevalence = 1 - 893/33925 = 97.37 %). The RF degenerates to "predict all negative" on cross-subject data.
+\* RF pooled accuracy (97.4 %) ≈ trivial dummy baseline (1 − prevalence = 1 − 893/33925 = 97.37 %). The RF degenerates to "predict all negative" on cross-subject data.
 
 **Conclusion**: Random Forest's intra-patient performance does not transfer to cross-subject (LOSO) deployment, where it collapses to the dummy classifier baseline. The MLP TinyML model — 56× smaller in memory — actually achieves higher pooled recall (8.7 % vs 3.3 %) than the RF, while remaining far below clinically acceptable sensitivity. Both confirm that the reference paper's 100 % recall claim is an artefact of its 30-sample simulated dataset and does not generalize.
 
@@ -60,7 +60,7 @@ python src/estimate_esp32_cost.py
 
 ## Authors
 - **Group 2 (SUPCOM 2026)**: Rihab HMAIED, Hamdi BENALI, Khaoula JRIDI, Mohamed Amine LAAGAB, Oussama AKIR.
-- **Supervisor**: Mme Manel Ben Romdhane.
+- **Supervisor**: Mme Manel BEN ROMDHANE.
 
 ## License
 Distributed under the **MIT License**. See `LICENSE` for more information.

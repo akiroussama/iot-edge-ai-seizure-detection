@@ -8,7 +8,7 @@ Aravind Raman * and Nagarajan Velmurugan
                                         Department of Electronics Engineering, Pondicherry University, Pondicherry 605014, India;
                                         nagarajanvelmurugan@pondiuni.ac.in
                                         * Correspondence: aravindramanphd@gmail.com; Tel.: +91-7667430293
-                                         Presented at the 5th International Electronic Conference on Biosensors, 26­28 May 2025;
+                                         Presented at the 5th International Electronic Conference on Biosensors, 26?28 May 2025;
 
                                            Available online: https://sciforum.net/event/IECB2025.
 
@@ -41,7 +41,7 @@ doi.org/10.3390/engproc2025106013       utilizes an MPU6500-based inertial measu
                                         Keywords: accelerometer; activity recognition; machine learning; internet of medical
                                         things; epilepsy; seizures
 
-Copyright: © 2025 by the authors.       1. Introduction
+Copyright: ? 2025 by the authors.       1. Introduction
 Licensee MDPI, Basel, Switzerland.
 This article is an open access article        Generally, seizures are immediate, uncontrollable and abnormal electrical activity
 distributed under the terms and         in the brain. Seizures affect the normal activities of a person at the motor, emotional,
@@ -100,7 +100,7 @@ Eng. Proc. 2025, 106, 13                          https://doi.org/10.3390/engpro
                           continuous seizure monitoring outside clinical settings is feasible; however, many existing
                           devices have limitations such as limited accuracy, discomfort on prolonged usage and
                           reliance on a single bio-signal modality. Within this context, the proposed accelerometer-
-                          driven hardware­software co-design advances seizure detection. Also, the proposed work
+                          driven hardware?software co-design advances seizure detection. Also, the proposed work
                           employs an electrode-free, accelerometer-based wearable for continuous monitoring of
                           sleep postures and seizure-like activities. By integrating machine learning algorithms,
                           the system not only detects seizure activity with high accuracy but also classifies various
@@ -261,7 +261,7 @@ Eng. Proc. 2025, 106, 13                          https://doi.org/10.3390/engpro
                           were utilized for testing, ensuring an unbiased evaluation of model performance. All the
                           acquired signals were pre-processed, and the extraction of features was performed to train
                           and test the machine learning models. Evaluation metrics such as accuracy, precision, recall
-                          and FPR were derived using Equations (1)­(4), respectively:
+                          and FPR were derived using Equations (1)?(4), respectively:
 
                                        Accuracy  =  TP    +  TP + TN    TN                                   (1)
                                                              FP + FN +
@@ -407,17 +407,17 @@ References
 
 1. Giourou, E.; Stavropoulou-Deli, A.; Giannakopoulou, A.; Kostopoulos, G.K.; Koutroumanidis, M. Introduction to epilepsy and
        related brain disorders. In Cyberphysical Systems for Epilepsy and Related Brain Disorders: Multi-Parametric Monitoring and Analysis
-       for Diagnosis and Optimal Disease Management; Springer International Publishing: Cham, Switzerland, 2015; pp. 11­38.
+       for Diagnosis and Optimal Disease Management; Springer International Publishing: Cham, Switzerland, 2015; pp. 11?38.
 
 2. Sarmast, S.T.; Abdullahi, A.M.; Jahan, N. Current classification of seizures and epilepsies: Scope, limitations and recommendations
        for future action. Cureus 2020, 12, e10549. [CrossRef] [PubMed]
 
-3. Roliz, A.H.; Kothare, S. The interaction between sleep and epilepsy. Curr. Neurol. Neurosci. Rep. 2022, 22, 551­563. [CrossRef]
+3. Roliz, A.H.; Kothare, S. The interaction between sleep and epilepsy. Curr. Neurol. Neurosci. Rep. 2022, 22, 551?563. [CrossRef]
        [PubMed]
 
-4. Nobili, L.; de Weerd, A.; Rubboli, G.; Beniczky, S.; Derry, C.; Eriksson, S.; Halasz, P.; Högl, B.; Santamaria, J.; Khatami, R.; et al.
+4. Nobili, L.; de Weerd, A.; Rubboli, G.; Beniczky, S.; Derry, C.; Eriksson, S.; Halasz, P.; H?gl, B.; Santamaria, J.; Khatami, R.; et al.
        Standard procedures for the diagnostic pathway of sleep-related epilepsies and comorbid sleep disorders: An EAN, ESRS and
-       ILAE-Europe consensus review. Eur. J. Neurol. 2021, 28, 15­32. [CrossRef] [PubMed]
+       ILAE-Europe consensus review. Eur. J. Neurol. 2021, 28, 15?32. [CrossRef] [PubMed]
 
 5. Anwar, H.; Khan, Q.U.; Nadeem, N.; Pervaiz, I.; Ali, M.; Cheema, F.F. Epileptic seizures. Discoveries 2020, 8, e110. [CrossRef]
 6. Stafstrom, C.E.; Carmant, L. Seizures and epilepsy: An overview for neuroscientists. Cold Spring Harb. Perspect. Med. 2015,
@@ -432,27 +432,27 @@ References
 9. Wu, Y.; Xiao, D.; Liu, P.; Liao, Q.; Ruan, Q.; Huang, C.; Liu, L.; Li, D.; Zhang, X.; Chu, P.K. Nanostructured conductive polypyrrole
 
        for antibacterial components in flexible wearable devices. Research 2023, 6, 0074. [CrossRef] [PubMed]
-10. Amengual-Gual, M.; Fernández, I.S.; Loddenkemper, T. Patterns of epileptic seizure occurrence. Brain Res. 2019, 1703, 3­12.
+10. Amengual-Gual, M.; Fern?ndez, I.S.; Loddenkemper, T. Patterns of epileptic seizure occurrence. Brain Res. 2019, 1703, 3?12.
 
        [CrossRef] [PubMed]
 11. Kusmakar, S.; Karmakar, C.K.; Yan, B.; O'Brien, T.J.; Muthuganapathy, R.; Palaniswami, M. Automated detection of convulsive
 
-       seizures using a wearable accelerometer device. IEEE Trans. Biomed. Eng. 2018, 66, 421­432. [CrossRef] [PubMed]
+       seizures using a wearable accelerometer device. IEEE Trans. Biomed. Eng. 2018, 66, 421?432. [CrossRef] [PubMed]
 12. Davidson, S.; McCallan, N.; Ng, K.Y.; Biglarbeigi, P.; Finlay, D.; Lan, B.L.; McLaughlin, J. Epileptic seizure classification using
 
        combined labels and a genetic algorithm. In Proceedings of the 2022 IEEE 21st Mediterranean Electrotechnical Conference
-       (MELECON), Palermo, Italy, 14­16 June 2022; pp. 430­435. [CrossRef]
+       (MELECON), Palermo, Italy, 14?16 June 2022; pp. 430?435. [CrossRef]
 Eng. Proc. 2025, 106, 13  9 of 9
 
 13. Roy, S.; Asif, U.; Tang, J.; Harrer, S. Seizure type classification using EEG signals and machine learning: Setting a benchmark. In
        Proceedings of the 2020 IEEE Signal Processing in Medicine and Biology Symposium (SPMB), Philadelphia, PA, USA, 5 December
-       2020; pp. 1­6.
+       2020; pp. 1?6.
 
 14. Liu, Y.; Sivathamboo, S.; Goodin, P.; Bonnington, P.; Kwan, P.; Kuhlmann, L.; O'Brein, T.; Perucca, P.; Ge, Z. Epileptic seizure
        detection using convolutional neural network: A multi-biosignal study. In Proceedings of the Australasian Computer Science
-       Week Multiconference, Victoria, Australia, 3­7 February 2020; pp. 1­8.
+       Week Multiconference, Victoria, Australia, 3?7 February 2020; pp. 1?8.
 
-15. Zabler, N.; Swinnen, L.; Biondi, A.; Novitskaya, Y.; Schütz, E.; Epitashvili, N.; Dümpelmann, M.; Richardson, M.P.; Van Paesschen,
+15. Zabler, N.; Swinnen, L.; Biondi, A.; Novitskaya, Y.; Sch?tz, E.; Epitashvili, N.; D?mpelmann, M.; Richardson, M.P.; Van Paesschen,
        W.; Hirsch, M.; et al. High precision in epileptic seizure self-reporting with an app diary. Sci. Rep. 2024, 14, 15823. [CrossRef]
        [PubMed]
 
@@ -461,7 +461,7 @@ References
 
 17. Yadav, R.; Agarwal, R.; Swamy, M.N.S. A novel dual-stage classifier for automatic detection of epileptic seizures. In Proceedings
        of the 2008 30th Annual International Conference of the IEEE Engineering in Medicine and Biology Society, Vancouver, BC,
-       Canada, 20­24 August 2008; pp. 911­914.
+       Canada, 20?24 August 2008; pp. 911?914.
 
 Disclaimer/Publisher's Note: The statements, opinions and data contained in all publications are solely those of the individual
 author(s) and contributor(s) and not of MDPI and/or the editor(s). MDPI and/or the editor(s) disclaim responsibility for any injury to

@@ -1,4 +1,4 @@
-# Reproduction Guide — Seizure Detection Edge AI
+# Reproduction Guide - Seizure Detection Edge AI
 
 This guide explains how to reproduce the results of the Group 2 project, from raw data acquisition to Edge AI cost estimation.
 
