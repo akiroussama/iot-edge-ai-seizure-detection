@@ -247,6 +247,32 @@ st.markdown(
 }
 .sg-code-title { font-weight: 700; color: #334155; margin-bottom: .25rem; }
 .small-muted { color: #64748b; font-size: .86rem; }
+
+/* --- Onglets : empêcher la troncature sur petits écrans (9 onglets) --- */
+div[data-baseweb="tab-list"] {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    flex-wrap: nowrap !important;
+    gap: 2px;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+    border-bottom: 1px solid #e2e8f0;
+}
+div[data-baseweb="tab-list"]::-webkit-scrollbar { height: 7px; }
+div[data-baseweb="tab-list"]::-webkit-scrollbar-thumb {
+    background: #cbd5e1; border-radius: 4px;
+}
+div[data-baseweb="tab-list"]::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+div[data-baseweb="tab-list"] button {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+    padding: 0.55rem 0.9rem !important;
+    font-size: 0.95rem !important;
+}
+div[data-baseweb="tab-list"] button[aria-selected="true"] p {
+    font-weight: 600 !important;
+    color: #1f4e79 !important;
+}
 </style>
 """,
     unsafe_allow_html=True,
@@ -1206,15 +1232,15 @@ def main() -> None:
 
     tabs = st.tabs(
         [
-            "🏠 Projet",
-            "🔬 Méthodologie",
-            "📊 Résultats",
-            "🧠 Edge AI",
-            "📄 Livrables",
-            "🔁 Google Colab",
-            "🧾 Trace IA",
-            "🎯 Conclusion",
-            "❓ Questions",
+            "Projet",
+            "Méthodologie",
+            "Résultats",
+            "Edge AI",
+            "Livrables",
+            "Colab",
+            "Trace IA",
+            "Conclusion",
+            "Questions",
         ]
     )
     with tabs[0]:
