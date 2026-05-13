@@ -46,6 +46,10 @@ COLAB_URL = (
     "https://colab.research.google.com/github/akiroussama/"
     "iot-edge-ai-seizure-detection/blob/main/notebooks/launch_streamlit_colab.ipynb"
 )
+COLAB_REPRODUCE_URL = (
+    "https://colab.research.google.com/github/akiroussama/"
+    "iot-edge-ai-seizure-detection/blob/main/notebooks/reproduce_pipeline_colab.ipynb"
+)
 INFOGRAPHIC_CANDIDATES = [
     ASSETS / "project_workflow_infographic.svg",
     ASSETS / "project_workflow_infographic.png",
@@ -954,13 +958,38 @@ def render_edge_ai(results: pd.DataFrame, cost: pd.DataFrame) -> None:
 
 
 def render_colab() -> None:
-    st.header("🔁 Google Colab et déploiement Streamlit")
+    st.header("🔁 Google Colab — démo et reproduction scientifique")
     st.markdown(
-        "Le notebook Colab sert à lancer le site web sans installation locale. Il clone le repo, installe les dépendances Streamlit, lance l'app et expose une URL temporaire avec Cloudflare Tunnel."
+        "Deux notebooks sont fournis : le premier lance le portfolio Streamlit en quelques secondes, "
+        "le second reproduit la pipeline scientifique complète sur SeizeIT2 (preprocessing, LOSO, "
+        "TinyML, estimation Edge AI) et compare aux chiffres canoniques."
     )
 
-    st.link_button("Ouvrir le notebook Colab", COLAB_URL, use_container_width=False)
+    c1, c2 = st.columns(2)
+    with c1:
+        st.markdown(
+            """
+<div class="sg-card">
+<h3>Démo portfolio (rapide, 1 min)</h3>
+<p>Clone le repo, installe Streamlit, expose une URL temporaire via Cloudflare. Aucune donnée nécessaire.</p>
+</div>
+""",
+            unsafe_allow_html=True,
+        )
+        st.link_button("Ouvrir le notebook démo", COLAB_URL, use_container_width=True)
+    with c2:
+        st.markdown(
+            """
+<div class="sg-card">
+<h3>Reproduction scientifique (lente, 20–60 min)</h3>
+<p>Télécharge SeizeIT2 (Drive ou OpenNeuro), recalcule les métriques LOSO, compare aux chiffres canoniques.</p>
+</div>
+""",
+            unsafe_allow_html=True,
+        )
+        st.link_button("Ouvrir le notebook reproduction", COLAB_REPRODUCE_URL, use_container_width=True)
 
+    st.markdown("---")
     st.subheader("Mode 1 — Lancer seulement le site Streamlit")
     code_block(
         "Cellule Colab : cloner le repo",
