@@ -31,12 +31,37 @@ cd web
 npx --yes serve .
 ```
 
-## Déploiement Vercel — drag & drop
+## Déploiement Vercel — recommandé (depuis la racine du repo)
 
-1. Aller sur https://vercel.com/new
-2. Glisser-déposer le dossier `web/` complet.
-3. Confirmer la création du projet (aucune configuration requise).
-4. Le site est en ligne avec une URL `*.vercel.app`.
+Un `vercel.json` est présent **à la racine du repo** avec
+`"outputDirectory": "web"`. Vercel sait donc déjà que le site
+est servi depuis `web/`, sans avoir à choisir un Root Directory
+particulier dans l'UI Vercel.
+
+1. Pousser le repo sur GitHub :
+   ```bash
+   git add vercel.json web/ assets/project_workflow_infographic.svg \
+           assets/README.md assets/screenshots/ \
+           docs/assets/ docs/index.html docs/DEPLOYMENT_CHECKLIST.md \
+           streamlit_app.py README.md
+   git commit -m "feat(portfolio): add Vercel landing and SSOT structure"
+   git push origin main
+   ```
+2. Aller sur https://vercel.com/new
+3. Importer le repo `akiroussama/iot-edge-ai-seizure-detection`.
+4. **Laisser Root Directory = `./`** (le `vercel.json` racine gère
+   tout). Framework Preset : *Other*.
+5. Cliquer *Deploy*. URL `*.vercel.app` disponible en < 30 s.
+
+## Déploiement Vercel — variante "Root = web/"
+
+Si tu préfères pointer Vercel directement sur `web/` :
+
+1. Pousser le code (cf. ci-dessus).
+2. Sur Vercel, sélectionner **Root Directory = `web`** dans
+   les *Project Settings*.
+3. Le `web/vercel.json` prend alors le relais. Le `vercel.json`
+   racine est ignoré.
 
 ## Déploiement Vercel — CLI
 
