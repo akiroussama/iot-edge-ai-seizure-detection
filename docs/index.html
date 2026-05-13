@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IoMT Edge AI — Groupe 2 SUP'COM</title>
+  <style>
+    :root { --bg:#f8fafc; --ink:#0f172a; --muted:#475569; --blue:#1f4e79; --green:#0f766e; --line:#dbe4ee; --card:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--ink); background:var(--bg); }
+    header { padding:70px 24px 54px; color:white; background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 58%,#0f766e 100%); }
+    .wrap { max-width:1120px; margin:0 auto; }
+    h1 { font-size:clamp(2rem,4vw,3.35rem); margin:0 0 12px; letter-spacing:-.03em; }
+    h2 { margin-top:0; font-size:1.45rem; }
+    p { line-height:1.62; color:var(--muted); }
+    header p { color:#e2e8f0; max-width:860px; font-size:1.08rem; }
+    .pill { display:inline-block; padding:6px 10px; border:1px solid rgba(255,255,255,.35); border-radius:999px; color:white; margin:0 8px 8px 0; font-size:.92rem; }
+    section { padding:34px 24px; }
+    .grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; }
+    .grid2 { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:20px; box-shadow:0 1px 2px rgba(15,23,42,.04); }
+    .metric { font-size:2.1rem; font-weight:800; letter-spacing:-.04em; margin:4px 0; color:var(--blue); }
+    .label { color:var(--muted); font-size:.94rem; }
+    a.btn { display:inline-block; padding:11px 15px; border-radius:12px; background:var(--ink); color:white; text-decoration:none; font-weight:700; margin:6px 8px 6px 0; }
+    a.btn.secondary { background:var(--green); }
+    table { width:100%; border-collapse:collapse; background:white; border-radius:14px; overflow:hidden; }
+    th, td { border-bottom:1px solid var(--line); padding:12px 14px; text-align:left; }
+    th { background:#eef2f7; }
+    code { background:#eef2f7; padding:2px 5px; border-radius:6px; }
+    footer { padding:26px 24px 46px; color:var(--muted); }
+    @media (max-width:900px) { .grid,.grid2 { grid-template-columns:1fr; } header { padding-top:44px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <span class="pill">SUP'COM — IoT Devices</span>
+      <span class="pill">IoMT</span>
+      <span class="pill">Edge AI / ESP32</span>
+      <span class="pill">SeizeIT2</span>
+      <h1>IoMT Edge AI — Détection de crises épileptiques</h1>
+      <p>Portfolio numérique du Groupe 2 : dépôt reproductible, site Streamlit, notebook Google Colab, résultats LOSO et trace IA générative.</p>
+      <a class="btn secondary" href="https://github.com/akiroussama/iot-edge-ai-seizure-detection" target="_blank">Repository GitHub</a>
+      <a class="btn" href="https://colab.research.google.com/github/akiroussama/iot-edge-ai-seizure-detection/blob/main/notebooks/launch_streamlit_colab.ipynb" target="_blank">Ouvrir dans Colab</a>
+      <a class="btn" href="https://share.streamlit.io/" target="_blank">Déployer sur Streamlit Cloud</a>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap grid">
+      <div class="card"><div class="label">Fenêtres test</div><div class="metric">33 925</div><p>Validation LOSO sur 6 patients SeizeIT2.</p></div>
+      <div class="card"><div class="label">Fenêtres crise</div><div class="metric">893</div><p>Recall pooled calculé sur toutes les positives.</p></div>
+      <div class="card"><div class="label">RF recall pooled</div><div class="metric">3,3 %</div><p>Le Random Forest se rapproche du baseline toujours négatif.</p></div>
+      <div class="card"><div class="label">MLP RAM INT8</div><div class="metric">6,4 KB</div><p>Environ 1,2 % de la SRAM ESP32.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid2">
+      <div class="card">
+        <h2>Site Streamlit</h2>
+        <p>Le fichier <code>streamlit_app.py</code> regroupe les livrables, les résultats, le dashboard Edge AI, le guide Colab, la trace IA et les questions à poser aux autres équipes.</p>
+        <p><strong>Lancement local :</strong></p>
+        <pre><code>pip install -r requirements.txt
+streamlit run streamlit_app.py</code></pre>
+      </div>
+      <div class="card">
+        <h2>Google Colab</h2>
+        <p>Le notebook <code>notebooks/launch_streamlit_colab.ipynb</code> clone le repo, lance Streamlit et génère une URL temporaire via Cloudflare Tunnel.</p>
+        <a class="btn secondary" href="https://colab.research.google.com/github/akiroussama/iot-edge-ai-seizure-detection/blob/main/notebooks/launch_streamlit_colab.ipynb" target="_blank">Lancer le notebook</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap card">
+      <h2>Résumé des résultats</h2>
+      <table>
+        <thead><tr><th>Modèle</th><th>Régime</th><th>Recall pooled</th><th>TP / N_pos</th><th>Accuracy pooled</th><th>RAM ESP32 INT8</th></tr></thead>
+        <tbody>
+          <tr><td>Random Forest</td><td>LOSO réel</td><td>3,3 %</td><td>29 / 893</td><td>97,4 %</td><td>357 KB</td></tr>
+          <tr><td>MLP TinyML</td><td>LOSO réel</td><td>8,7 %</td><td>78 / 893</td><td>91,6 %</td><td>6,4 KB</td></tr>
+          <tr><td>Decision Tree</td><td>LOSO réel</td><td>11,0 %</td><td>98 / 893</td><td>94,5 %</td><td>—</td></tr>
+          <tr><td>SVM RBF</td><td>LOSO réel</td><td>6,5 %</td><td>58 / 893</td><td>96,2 %</td><td>—</td></tr>
+        </tbody>
+      </table>
+      <p>Conclusion : les performances parfaites annoncées en simulation ne généralisent pas directement sur patients réels. Le MLP TinyML améliore le compromis embarqué, mais reste insuffisant cliniquement.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid2">
+      <div class="card"><h2>Empreinte IA</h2><p>Le fichier <code>presentation/trace_ia.md</code> documente les outils utilisés, les hallucinations détectées/corrigées et la part de décision humaine.</p></div>
+      <div class="card"><h2>Reproduction</h2><p>Le guide <code>docs/REPRODUCTION.md</code> décrit l'installation, les données SeizeIT2, le pipeline et les scripts pour recalculer les résultats.</p></div>
+    </div>
+  </section>
+
+  <footer><div class="wrap">Groupe 2 — SUP'COM 2026 — Projet IoT Devices.</div></footer>
+</body>
+</html>
