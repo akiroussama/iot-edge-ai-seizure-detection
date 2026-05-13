@@ -5,7 +5,9 @@ Ce package ajoute un mini-site web au dépôt `iot-edge-ai-seizure-detection`.
 Il regroupe :
 
 - un site Streamlit principal : `streamlit_app.py` ;
-- un notebook Google Colab : `notebooks/launch_streamlit_colab.ipynb` ;
+- deux notebooks Google Colab :
+  - `notebooks/launch_streamlit_colab.ipynb` (démo Streamlit, 1 min, aucune donnée nécessaire) ;
+  - `notebooks/reproduce_pipeline_colab.ipynb` (reproduction complète de la pipeline scientifique sur SeizeIT2, 20–60 min) ;
 - une page statique optionnelle GitHub Pages : `docs/index.html` ;
 - une configuration Streamlit : `.streamlit/config.toml` ;
 - un dossier `assets/` pour intégrer le rapport et la présentation ;

@@ -5,7 +5,8 @@
 - [ ] `streamlit_app.py` existe à la racine du dépôt.
 - [ ] `.streamlit/config.toml` existe.
 - [ ] `requirements.txt` contient `streamlit`, `plotly`, `pandas`, `numpy`.
-- [ ] `notebooks/launch_streamlit_colab.ipynb` existe.
+- [ ] `notebooks/launch_streamlit_colab.ipynb` existe (démo Streamlit).
+- [ ] `notebooks/reproduce_pipeline_colab.ipynb` existe (reproduction pipeline).
 - [ ] `assets/project_workflow_infographic.svg` existe (affiché dans l'onglet Projet).
 - [ ] `presentation/trace_ia.md` existe déjà dans le dépôt.
 - [ ] `docs/REPRODUCTION.md` existe déjà dans le dépôt.
@@ -41,6 +42,8 @@ Vérifier les onglets :
 
 ## Google Colab
 
-- [ ] Ouvrir : `https://colab.research.google.com/github/akiroussama/iot-edge-ai-seizure-detection/blob/main/notebooks/launch_streamlit_colab.ipynb`.
+- [ ] Démo Streamlit — ouvrir : `https://colab.research.google.com/github/akiroussama/iot-edge-ai-seizure-detection/blob/main/notebooks/launch_streamlit_colab.ipynb`.
 - [ ] La cellule Cloudflare affiche une URL `trycloudflare.com`.
 - [ ] Le site s'ouvre via l'URL temporaire.
+- [ ] Reproduction pipeline — ouvrir : `https://colab.research.google.com/github/akiroussama/iot-edge-ai-seizure-detection/blob/main/notebooks/reproduce_pipeline_colab.ipynb`.
+- [ ] Cellule §10 affiche `MATCH` pour les 4 modèles (TP = 29, 78, 98, 58).

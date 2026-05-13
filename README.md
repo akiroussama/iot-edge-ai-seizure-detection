@@ -11,7 +11,8 @@ The interactive portfolio bundles the presentation, the LOSO results, the Edge
 AI dashboard, the AI-transparency trace and the reproduction guide in one place.
 
 - **Streamlit app** (recommended) : `streamlit run streamlit_app.py`
-- **Run from your browser, no install** : [Open in Google Colab](https://colab.research.google.com/github/akiroussama/iot-edge-ai-seizure-detection/blob/main/notebooks/launch_streamlit_colab.ipynb)
+- **Run the portfolio from your browser, no install** : [Colab — demo (1 min)](https://colab.research.google.com/github/akiroussama/iot-edge-ai-seizure-detection/blob/main/notebooks/launch_streamlit_colab.ipynb)
+- **Reproduce the full scientific pipeline from raw EDFs** : [Colab — reproduction (20–60 min)](https://colab.research.google.com/github/akiroussama/iot-edge-ai-seizure-detection/blob/main/notebooks/reproduce_pipeline_colab.ipynb)
 - **Static landing page** : [`docs/index.html`](docs/index.html) (deployable on GitHub Pages from `/docs`)
 - **Reproduction guide** : [`docs/REPRODUCTION.md`](docs/REPRODUCTION.md)
 - **AI transparency trace** : [`presentation/trace_ia.md`](presentation/trace_ia.md)
