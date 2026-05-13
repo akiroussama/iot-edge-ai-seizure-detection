@@ -6,6 +6,7 @@
 - [ ] `.streamlit/config.toml` existe.
 - [ ] `requirements.txt` contient `streamlit`, `plotly`, `pandas`, `numpy`.
 - [ ] `notebooks/launch_streamlit_colab.ipynb` existe.
+- [ ] `assets/project_workflow_infographic.svg` existe (affiché dans l'onglet Projet).
 - [ ] `presentation/trace_ia.md` existe déjà dans le dépôt.
 - [ ] `docs/REPRODUCTION.md` existe déjà dans le dépôt.
 - [ ] `results/multirun_loso.csv`, `results/mlp_loso.csv` et `results/esp32_cost_estimate.json` existent.
@@ -20,12 +21,14 @@ streamlit run streamlit_app.py
 
 Vérifier les onglets :
 
-- [ ] Vue d'ensemble.
-- [ ] Livrables.
+- [ ] Projet (avec infographie SVG visible).
+- [ ] Méthodologie.
 - [ ] Résultats.
 - [ ] Edge AI.
-- [ ] Colab / déploiement.
+- [ ] Livrables (section screenshots accessible, même si vide).
+- [ ] Google Colab.
 - [ ] Trace IA.
+- [ ] Conclusion.
 - [ ] Questions.
 
 ## Streamlit Cloud

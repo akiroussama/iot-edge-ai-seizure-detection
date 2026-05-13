@@ -5,6 +5,18 @@
 
 This repository contains the engineering replication and Edge AI optimization project for the **IoT Devices** course (École Doctorale SUP'COM). It evaluates the feasibility of embedding seizure detection models on low-power microcontrollers (ESP32) using real-world patient data.
 
+## Portfolio — single source of truth
+
+The interactive portfolio bundles the presentation, the LOSO results, the Edge
+AI dashboard, the AI-transparency trace and the reproduction guide in one place.
+
+- **Streamlit app** (recommended) : `streamlit run streamlit_app.py`
+- **Run from your browser, no install** : [Open in Google Colab](https://colab.research.google.com/github/akiroussama/iot-edge-ai-seizure-detection/blob/main/notebooks/launch_streamlit_colab.ipynb)
+- **Static landing page** : [`docs/index.html`](docs/index.html) (deployable on GitHub Pages from `/docs`)
+- **Reproduction guide** : [`docs/REPRODUCTION.md`](docs/REPRODUCTION.md)
+- **AI transparency trace** : [`presentation/trace_ia.md`](presentation/trace_ia.md)
+- **Project workflow infographic** : [`assets/project_workflow_infographic.svg`](assets/project_workflow_infographic.svg)
+
 ## Project Context
 
 We reproduce and critically analyze the workflow described in:

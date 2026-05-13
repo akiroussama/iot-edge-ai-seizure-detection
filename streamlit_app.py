@@ -38,12 +38,24 @@ import streamlit as st
 # ---------------------------------------------------------------------------
 ROOT = Path(__file__).resolve().parent
 RESULTS = ROOT / "results"
+ASSETS = ROOT / "assets"
+SCREENSHOTS = ASSETS / "screenshots"
 ESP32_SRAM_KB = 520.0
 REPO_URL = "https://github.com/akiroussama/iot-edge-ai-seizure-detection"
 COLAB_URL = (
     "https://colab.research.google.com/github/akiroussama/"
     "iot-edge-ai-seizure-detection/blob/main/notebooks/launch_streamlit_colab.ipynb"
 )
+INFOGRAPHIC_CANDIDATES = [
+    ASSETS / "project_workflow_infographic.svg",
+    ASSETS / "project_workflow_infographic.png",
+]
+SCREENSHOT_SPECS = [
+    ("portfolio_home.png", "Page d'accueil du portfolio Streamlit"),
+    ("portfolio_results.png", "Onglet Résultats avec recall pooled"),
+    ("portfolio_edge_ai.png", "Onglet Edge AI / ESP32"),
+    ("colab_running.png", "Notebook Colab en cours d'exécution"),
+]
 
 MODEL_LABELS = {
     "decision_tree": "Decision Tree",
@@ -449,6 +461,46 @@ def code_block(title: str, code: str, language: str = "bash") -> None:
     st.code(textwrap.dedent(code).strip(), language=language)
 
 
+def render_infographic() -> None:
+    """Affiche l'infographie projet si présente, sinon un placeholder explicite."""
+    path = first_existing(INFOGRAPHIC_CANDIDATES)
+    if path is None:
+        st.info(
+            "Infographie absente : place `assets/project_workflow_infographic.svg` "
+            "ou `.png` pour la rendre visible ici et dans GitHub Pages."
+        )
+        return
+    if path.suffix.lower() == ".svg":
+        svg = path.read_text(encoding="utf-8", errors="replace")
+        st.components.v1.html(
+            f"<div style='width:100%; overflow-x:auto;'>{svg}</div>",
+            height=680,
+            scrolling=True,
+        )
+    else:
+        st.image(str(path), use_column_width=True)
+
+
+def render_screenshots() -> None:
+    """Affiche les screenshots du dossier assets/screenshots/ s'ils existent."""
+    existing = [
+        (name, caption, SCREENSHOTS / name)
+        for name, caption in SCREENSHOT_SPECS
+        if (SCREENSHOTS / name).exists()
+    ]
+    if not existing:
+        st.info(
+            "Aucun screenshot dans `assets/screenshots/`. Les noms attendus sont : "
+            + ", ".join(f"`{name}`" for name, _ in SCREENSHOT_SPECS)
+            + ". Le portfolio reste fonctionnel sans eux."
+        )
+        return
+    cols = st.columns(2)
+    for idx, (_, caption, path) in enumerate(existing):
+        with cols[idx % 2]:
+            st.image(str(path), caption=caption, use_column_width=True)
+
+
 # ---------------------------------------------------------------------------
 # Sidebar
 # ---------------------------------------------------------------------------
@@ -548,6 +600,9 @@ def render_home(results: pd.DataFrame) -> None:
             unsafe_allow_html=True,
         )
 
+    st.markdown("### Infographie projet")
+    render_infographic()
+
     st.markdown("### Narratif scientifique conseillé")
     st.markdown(
         """
@@ -630,6 +685,10 @@ def render_deliverables() -> None:
             st.markdown(repro_text)
     else:
         st.info("Le guide `docs/REPRODUCTION.md` n'est pas encore présent dans cette copie locale.")
+
+    st.markdown("---")
+    st.subheader("Screenshots du portfolio")
+    render_screenshots()
 
     st.subheader("Commandes essentielles")
     code_block(
@@ -1033,6 +1092,109 @@ Cette question teste directement la généralisation, qui est souvent le point f
     )
 
 
+def render_methodology() -> None:
+    st.header("🔬 Problématique et méthodologie")
+
+    st.markdown(
+        """
+<div class="sg-warning">
+<strong>Problématique :</strong> le paper Raman &amp; Velmurugan 2025 annonce 100 % d'accuracy et de recall sur 30 échantillons simulés, sans validation cross-subject ni mesure embarquée. Pour un usage IoMT réel — capteur porté en continu, patient inconnu du train set, contrainte ESP32 — il faut vérifier si ces performances généralisent.
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+
+    st.markdown("### Démarche en 4 étapes")
+    st.markdown(
+        """
+1. **Audit critique du paper** : terminologie capteur incohérente, FPR contradictoire entre abstract et tableau, dataset minuscule, absence de mesure énergétique réelle.
+2. **Réplication sur données réelles** : dataset SeizeIT2 (KU Leuven, OpenNeuro `ds005873`), 6 patients avec crises focal-to-bilateral tonic-clonic, EEG + IMU.
+3. **Validation Leave-One-Subject-Out** : entraînement sur 5 patients, test sur le 6ᵉ, répété pour tous les sujets. Métrique principale : recall pooled = ΣTP / Σ(TP+FN).
+4. **Estimation Edge AI** : RAM, latence, énergie pour chaque modèle en INT8 sur ESP32 (520 KB SRAM, 160 MHz, 70 mW actif).
+"""
+    )
+
+    st.markdown("### Pipeline de signal")
+    st.markdown(
+        """
+- **Filtres** : Butterworth 0,5–12 Hz pour l'EEG, 0,1–10 Hz pour l'IMU.
+- **Fenêtres glissantes** : 4 secondes, recouvrement 50 %.
+- **Features (80 au total)** : variance, skewness, kurtosis, Higuchi Fractal Dimension, Spectral Entropy, MFCCs adaptés, statistiques temporelles IMU.
+- **Modèles testés** : Decision Tree, SVM RBF, Random Forest (référence du paper), MLP TinyML 80→32→16→1.
+"""
+    )
+
+    st.markdown("### Pourquoi LOSO et pas un split aléatoire ?")
+    st.markdown(
+        """
+<div class="sg-ok">
+Un split aléatoire intra-sujet laisse fuiter de l'information : un même patient apparaît dans le train et le test. Le modèle apprend la signature du patient, pas la signature de la crise. LOSO simule la situation clinique réelle d'un nouveau patient porteur du dispositif IoMT.
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+
+    st.markdown("### Pourquoi le recall pooled et pas la macro ?")
+    st.markdown(
+        """
+- Le dataset est très déséquilibré (prévalence ≈ 2,63 %).
+- La macro-moyenne par sujet est dominée par un sujet à fort recall (par exemple RF sub-085 → 39,7 %), ce qui surestime la sensibilité globale.
+- Le recall pooled (`ΣTP / ΣN_positives`) répond directement à la question clinique : *parmi toutes les crises réelles, combien sont détectées ?*
+"""
+    )
+
+
+def render_conclusion() -> None:
+    st.header("🎯 Conclusion et contribution scientifique")
+
+    st.markdown(
+        """
+<div class="sg-ok">
+<strong>Message central :</strong> les résultats sur patients réels montrent que les performances annoncées en simulation ne généralisent pas directement. Le MLP TinyML améliore le compromis embarqué mais reste insuffisant pour un usage clinique.
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+
+    st.markdown("### Ce que le projet a apporté")
+    st.markdown(
+        """
+1. **Audit critique** du paper Raman &amp; Velmurugan 2025 (4 contradictions documentées).
+2. **Réplication scientifique** sur SeizeIT2 avec protocole LOSO rigoureux (33 925 fenêtres, 893 crises, 6 patients).
+3. **Constat de faible généralisation** : RF passe de ~50 % recall macro intra-patient à 3,25 % recall pooled en LOSO — ordre du dummy baseline.
+4. **Optimisation Edge AI** : MLP TinyML INT8 = 6,4 KB de RAM (1,2 % SRAM ESP32) avec recall pooled supérieur au RF (8,7 % vs 3,25 %).
+5. **Transparence IA** : trace complète des outils utilisés, hallucinations détectées et corrigées, décisions humaines vs IA documentées.
+"""
+    )
+
+    st.markdown("### Limites assumées")
+    st.markdown(
+        """
+- 6 patients seulement (à étendre à toute la cohorte SeizeIT2 pour publier).
+- Pas de mesure énergétique sur silicium réel (estimation analytique).
+- Pas de tuning hyperparamétrique LOSO-friendly (coût compute).
+- Le recall absolu (8,7 % MLP) reste cliniquement insuffisant : il faut explorer des architectures séquentielles (TinyLSTM, TCN INT8) et le post-processing temporel avant de revendiquer un usage clinique.
+"""
+    )
+
+    st.markdown("### Phrase à retenir")
+    st.markdown(
+        """
+> Le système n'est pas cliniquement suffisant en l'état, mais le projet montre une démarche reproductible, critique et orientée déploiement Edge AI.
+"""
+    )
+
+    st.markdown("### Suite naturelle")
+    st.markdown(
+        """
+- Étendre LOSO à l'ensemble des sujets SeizeIT2.
+- Ajouter une couche de post-décision temporelle (lissage majority-voting sur fenêtres consécutives).
+- Mesurer le coût réel sur un ESP32 instrumenté (INA219 pour le courant, scope pour la latence).
+- Comparer à des baselines TinyML séquentielles (Conv1D, TCN, TinyLSTM).
+"""
+    )
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -1044,28 +1206,34 @@ def main() -> None:
 
     tabs = st.tabs(
         [
-            "🏠 Vue d'ensemble",
-            "📄 Livrables",
+            "🏠 Projet",
+            "🔬 Méthodologie",
             "📊 Résultats",
             "🧠 Edge AI",
-            "🔁 Colab / déploiement",
+            "📄 Livrables",
+            "🔁 Google Colab",
             "🧾 Trace IA",
+            "🎯 Conclusion",
             "❓ Questions",
         ]
     )
     with tabs[0]:
         render_home(results)
     with tabs[1]:
-        render_deliverables()
+        render_methodology()
     with tabs[2]:
         render_results(results)
     with tabs[3]:
         render_edge_ai(results, cost)
     with tabs[4]:
-        render_colab()
+        render_deliverables()
     with tabs[5]:
-        render_trace()
+        render_colab()
     with tabs[6]:
+        render_trace()
+    with tabs[7]:
+        render_conclusion()
+    with tabs[8]:
         render_questions()
 
 
