@@ -58,7 +58,8 @@ SCREENSHOT_SPECS = [
     ("portfolio_home.png", "Page d'accueil du portfolio Streamlit"),
     ("portfolio_results.png", "Onglet Résultats avec recall pooled"),
     ("portfolio_edge_ai.png", "Onglet Edge AI / ESP32"),
-    ("colab_running.png", "Notebook Colab en cours d'exécution"),
+    ("colab_running.png", "Notebook Colab démo Streamlit"),
+    ("colab_reproduce.png", "Notebook Colab reproduction — verdict MATCH"),
 ]
 
 MODEL_LABELS = {
