@@ -11,7 +11,8 @@ dans `streamlit_app.py`.
 | `portfolio_home.png` | Page d'accueil du portfolio Streamlit (onglet Projet). |
 | `portfolio_results.png` | Onglet Résultats avec recall pooled. |
 | `portfolio_edge_ai.png` | Onglet Edge AI / ESP32. |
-| `colab_running.png` | Notebook Google Colab en cours d'exécution. |
+| `colab_running.png` | Notebook Colab `launch_streamlit_colab.ipynb` (démo) en cours d'exécution. |
+| `colab_reproduce.png` | Notebook Colab `reproduce_pipeline_colab.ipynb` (reproduction pipeline) — cellule §10 affichant les verdicts MATCH. |
 
 ## Comment générer les screenshots
 
