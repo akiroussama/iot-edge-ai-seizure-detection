@@ -8,10 +8,15 @@
 # Usage:
 #     pip install -r requirements-pipeline.txt
 
-mne>=1.6,<2.0
-numpy>=1.24,<2.0
-scipy>=1.11,<2.0
-scikit-learn>=1.3,<2.0
+# NumPy 1.x and 2.x both work — the src/ code has been audited for numpy 2.0
+# breaking changes (no np.int/np.float/np.bool legacy aliases, no removed
+# stable APIs). Keeping a wide range avoids painful downgrades on platforms
+# (e.g. Google Colab) that already ship numpy 2.x and depend on it for
+# jax/opencv/shap/tifffile.
+mne>=1.6
+numpy>=1.24
+scipy>=1.11
+scikit-learn>=1.3
 pandas>=2.0
 matplotlib>=3.7
 
