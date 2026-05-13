@@ -554,7 +554,8 @@ La simulation parfaite du paper ne généralise pas directement sur patients ré
     )
     st.sidebar.markdown("---")
     st.sidebar.link_button("GitHub repository", REPO_URL)
-    st.sidebar.link_button("Ouvrir le Colab", COLAB_URL)
+    st.sidebar.link_button("Colab — démo (1 min)", COLAB_URL)
+    st.sidebar.link_button("Colab — reproduction (20–60 min)", COLAB_REPRODUCE_URL)
     st.sidebar.markdown("---")
     st.sidebar.caption(
         "Astuce : pour Streamlit Cloud, le fichier principal doit rester nommé "
@@ -666,13 +667,15 @@ def render_deliverables() -> None:
         "Cette page sert de portail : elle donne accès aux documents, au repo, au README, au guide de reproduction et aux exports PDF."
     )
 
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
     with col1:
         st.link_button("Repository GitHub", REPO_URL, use_container_width=True)
     with col2:
-        st.link_button("Notebook Google Colab", COLAB_URL, use_container_width=True)
+        st.link_button("Colab — démo Streamlit", COLAB_URL, use_container_width=True)
     with col3:
-        st.link_button("DOI du paper de référence", "https://doi.org/10.3390/engproc2025106013", use_container_width=True)
+        st.link_button("Colab — reproduction", COLAB_REPRODUCE_URL, use_container_width=True)
+    with col4:
+        st.link_button("DOI du paper", "https://doi.org/10.3390/engproc2025106013", use_container_width=True)
 
     st.markdown("---")
     pres_path = first_existing(PRESENTATION_CANDIDATES)
