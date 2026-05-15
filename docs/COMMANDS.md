@@ -67,6 +67,10 @@ uv run python scripts/prepare_seizeit2.py \
 My Seizure Gauge dry inspection:
 
 ```bash
+uv run python scripts/download_msg_zenodo.py \
+  --out-dir data/raw/msg \
+  --include SeizureTimesOnly.zip
+
 uv run python scripts/prepare_msg.py \
   --raw-dir data/raw/msg \
   --processed-dir data/processed/msg \

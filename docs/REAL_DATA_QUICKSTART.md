@@ -84,6 +84,21 @@ uv run python scripts/audit_labels.py \
 
 ## My Seizure Gauge
 
+Download from the current Zenodo record with resumable `curl`:
+
+```bash
+uv run python scripts/download_msg_zenodo.py \
+  --out-dir data/raw/msg
+```
+
+For a quick annotation-only check:
+
+```bash
+uv run python scripts/download_msg_zenodo.py \
+  --out-dir data/raw/msg \
+  --include SeizureTimesOnly.zip
+```
+
 Inspect:
 
 ```bash
