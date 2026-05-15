@@ -118,6 +118,29 @@ def _baseline_table(
     )
 
 
+def _prediction_metadata_table(predictions: pd.DataFrame) -> pd.DataFrame:
+    if predictions.empty:
+        return pd.DataFrame()
+    valid_mask = ~predictions.get("is_excluded", pd.Series(False, index=predictions.index)).fillna(False).astype(bool)
+    row: dict[str, object] = {
+        "prediction_rows": len(predictions),
+        "valid_prediction_rows": int(valid_mask.sum()),
+        "alarms": int(predictions.get("alarm", pd.Series(False, index=predictions.index)).fillna(False).sum()),
+    }
+    if "split" in predictions.columns:
+        row["splits"] = ",".join(sorted(predictions["split"].dropna().astype(str).unique()))
+    for col in ["score_fit_split", "threshold_source_split"]:
+        if col in predictions.columns:
+            row[col] = ",".join(sorted(predictions[col].dropna().astype(str).unique()))
+    for col in ["alarm_threshold", "patient_threshold"]:
+        if col in predictions.columns:
+            values = pd.to_numeric(predictions[col], errors="coerce").dropna()
+            if not values.empty:
+                row[f"{col}_min"] = float(values.min())
+                row[f"{col}_max"] = float(values.max())
+    return pd.DataFrame([row])
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Create a dataset-specific benchmark status report.")
     parser.add_argument("--dataset-name", required=True)
@@ -168,6 +191,7 @@ def main() -> None:
     write_table(distribution, out_dir / "label_distribution.csv")
 
     baseline = pd.DataFrame()
+    prediction_metadata = _prediction_metadata_table(predictions)
     if args.predictions:
         baseline = _baseline_table(
             predictions,
@@ -177,6 +201,7 @@ def main() -> None:
             args.baseline_name,
         )
         write_table(baseline, out_dir / "baseline_results.csv")
+        write_table(prediction_metadata, out_dir / "prediction_metadata.csv")
 
     event_status = {}
     if "recording_match_status" in events_all.columns:
@@ -211,6 +236,10 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 ## Label Distribution
 
 {_markdown_table(distribution)}
+
+## Prediction Metadata
+
+{_markdown_table(prediction_metadata)}
 
 ## Baseline
 

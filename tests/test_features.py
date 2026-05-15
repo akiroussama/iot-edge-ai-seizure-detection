@@ -7,6 +7,7 @@ from zipfile import ZipFile
 
 import pandas as pd
 
+from src.baselines.simple_rules import normalize_score
 from src.features.msg_empatica import extract_msg_empatica_window_features
 from src.features.window_features import extract_window_features, make_feature_matrix
 from src.utils.io import read_table, write_table
@@ -93,3 +94,50 @@ def test_run_rule_baseline_preserves_exclusions(tmp_path) -> None:
 
     preds = read_table(out_path)
     assert preds["alarm"].tolist() == [True, False, True, False]
+
+
+def test_normalize_score_uses_reference_rows_only() -> None:
+    score = pd.Series([0.0, 1.0, 100.0, float("nan")])
+    reference_mask = pd.Series([True, True, False, True])
+
+    normalized = normalize_score(score, reference_mask=reference_mask)
+
+    assert normalized.tolist() == [0.5, 1.0, 1.0, 0.0]
+
+
+def test_run_rule_baseline_defaults_to_train_fit_and_val_threshold(tmp_path) -> None:
+    features = pd.DataFrame(
+        {
+            "patient_id": ["p1", "p1", "p1", "p1"],
+            "recording_id": ["r1", "r1", "r2", "r3"],
+            "window_start": pd.date_range("2026-01-01", periods=4, freq="1h"),
+            "window_end": pd.date_range("2026-01-01 01:00", periods=4, freq="1h"),
+            "forecast_label": [False, False, False, True],
+            "is_excluded": [False, False, False, False],
+            "split": ["train", "train", "val", "test"],
+            "hr_mean": [60.0, 62.0, 70.0, 200.0],
+        }
+    )
+    features_path = tmp_path / "features_split.parquet"
+    out_path = tmp_path / "predictions_split.parquet"
+    write_table(features, features_path)
+
+    subprocess.run(
+        [
+            sys.executable,
+            "scripts/run_rule_baseline.py",
+            "--features",
+            str(features_path),
+            "--out",
+            str(out_path),
+            "--rule",
+            "hr_tachycardia",
+            "--target-tiw",
+            "1.0",
+        ],
+        check=True,
+    )
+
+    preds = read_table(out_path)
+    assert set(preds["score_fit_split"]) == {"train"}
+    assert set(preds["threshold_source_split"]) == {"val"}

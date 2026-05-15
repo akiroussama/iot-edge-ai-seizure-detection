@@ -189,15 +189,17 @@ samples to a single table:
 ```bash
 uv run python scripts/extract_msg_features.py \
   --raw-dir data/raw/msg \
-  --windows data/processed/msg/labels_sph60_sop1440.parquet \
-  --out data/processed/msg/features_hr_acc_sph60_sop1440.parquet \
-  --modalities hr acc
+  --windows data/processed/msg/split_temporal_recording.parquet \
+  --out data/processed/msg/features_hr_temporal_recording_sph60_sop1440.parquet \
+  --modalities hr
 
 uv run python scripts/run_rule_baseline.py \
-  --features data/processed/msg/features_hr_acc_sph60_sop1440.parquet \
-  --out data/processed/msg/hr_tachycardia_predictions_sph60_sop1440.parquet \
+  --features data/processed/msg/features_hr_temporal_recording_sph60_sop1440.parquet \
+  --out data/processed/msg/hr_tachycardia_recording_splitaware_predictions_sph60_sop1440.parquet \
   --rule hr_tachycardia \
-  --target-tiw 0.1
+  --target-tiw 0.1 \
+  --score-fit-split train \
+  --threshold-split val
 ```
 
 Run a validation-thresholded hour-of-day cycle baseline after creating a split table:

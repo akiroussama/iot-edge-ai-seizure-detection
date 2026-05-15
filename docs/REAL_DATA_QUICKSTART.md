@@ -258,25 +258,29 @@ the target patients. For quick parser checks, use `--max-recordings`; omit it fo
 ```bash
 uv run python scripts/extract_msg_features.py \
   --raw-dir data/raw/msg \
-  --windows data/processed/msg/labels_sph60_sop1440.parquet \
-  --out data/processed/msg/features_hr_acc_sph60_sop1440.parquet \
-  --modalities hr acc
+  --windows data/processed/msg/split_temporal_recording.parquet \
+  --out data/processed/msg/features_hr_temporal_recording_sph60_sop1440.parquet \
+  --modalities hr
 
 uv run python scripts/run_rule_baseline.py \
-  --features data/processed/msg/features_hr_acc_sph60_sop1440.parquet \
-  --out data/processed/msg/hr_tachycardia_predictions_sph60_sop1440.parquet \
+  --features data/processed/msg/features_hr_temporal_recording_sph60_sop1440.parquet \
+  --out data/processed/msg/hr_tachycardia_recording_splitaware_predictions_sph60_sop1440.parquet \
   --rule hr_tachycardia \
-  --target-tiw 0.1
+  --target-tiw 0.1 \
+  --score-fit-split train \
+  --threshold-split val
 
 uv run python scripts/make_dataset_report.py \
   --dataset-name MSG-local \
   --windows data/processed/msg/windows_1h.parquet \
   --labels data/processed/msg/labels_sph60_sop1440.parquet \
   --events data/processed/msg/events.parquet \
-  --predictions data/processed/msg/hr_tachycardia_predictions_sph60_sop1440.parquet \
-  --baseline-name hr_tachycardia_tiw10 \
+  --predictions data/processed/msg/hr_tachycardia_recording_splitaware_predictions_sph60_sop1440.parquet \
+  --baseline-name hr_tachycardia_trainfit_valthreshold_recording_testsplit \
   --event-filter recording_match_status=matched \
-  --out-dir reports/msg_hr_tachycardia_check \
+  --prediction-filter split=test \
+  --restrict-events-to-prediction-coverage \
+  --out-dir reports/msg_hr_tachycardia_recording_splitaware_check \
   --sph-minutes 60 \
   --sop-minutes 1440
 ```

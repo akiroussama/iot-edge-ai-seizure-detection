@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from scripts.make_dataset_report import _events_coverable_by_predictions
+from scripts.make_dataset_report import _events_coverable_by_predictions, _prediction_metadata_table
 
 
 def test_events_coverable_by_predictions_uses_selected_horizon() -> None:
@@ -31,3 +31,24 @@ def test_events_coverable_by_predictions_uses_selected_horizon() -> None:
 
     assert len(covered) == 1
     assert covered.loc[0, "seizure_start"] == base + pd.Timedelta(hours=3)
+
+
+def test_prediction_metadata_table_reports_fit_and_threshold_scope() -> None:
+    predictions = pd.DataFrame(
+        {
+            "split": ["test", "test"],
+            "alarm": [True, False],
+            "is_excluded": [False, True],
+            "score_fit_split": ["train", "train"],
+            "threshold_source_split": ["val", "val"],
+            "alarm_threshold": [0.4, 0.4],
+        }
+    )
+
+    metadata = _prediction_metadata_table(predictions)
+
+    assert metadata.loc[0, "prediction_rows"] == 2
+    assert metadata.loc[0, "valid_prediction_rows"] == 1
+    assert metadata.loc[0, "alarms"] == 1
+    assert metadata.loc[0, "score_fit_split"] == "train"
+    assert metadata.loc[0, "threshold_source_split"] == "val"

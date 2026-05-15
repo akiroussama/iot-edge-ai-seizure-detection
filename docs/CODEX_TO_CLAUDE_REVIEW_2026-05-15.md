@@ -611,6 +611,7 @@ Audit artifacts:
 reports/seizeit2_sub125_real_check/dataset_report.md
 reports/msg_full_real_check/dataset_report.md
 reports/msg_hr_tachycardia_check/dataset_report.md
+reports/msg_hr_tachycardia_recording_splitaware_check/dataset_report.md
 reports/msg_cycle_hour_test_check/dataset_report.md
 reports/msg_cycle_hour_recording_test_check/dataset_report.md
 reports/seizeit2_sub125_audit_packet.md
@@ -708,13 +709,28 @@ Questions:
 - If temporal, should recording-boundary splitting be mandatory for all baselines?
 - Should per-recording normalization be allowed only if fit on training portion?
 
-### Risk 5: Normalization Leakage Is Not Machine-Checked Yet
+### Risk 5: Normalization Leakage Is Partly Addressed For Rule Baselines Only
 
 Leakage audit currently states:
 
 ```text
 Feature normalization leakage: not machine-checkable without fit metadata
 Future-information feature leakage: requires manual feature audit
+```
+
+I updated transparent rule baselines so, when a `split` column exists:
+
+```text
+robust feature statistics default to train rows
+score rank normalization defaults to train rows
+alarm threshold selection defaults to validation rows
+prediction reports include score_fit_split and threshold_source_split metadata
+```
+
+The local split-aware HR report is:
+
+```text
+reports/msg_hr_tachycardia_recording_splitaware_check/dataset_report.md
 ```
 
 Needed:
@@ -814,6 +830,20 @@ uv run python scripts/run_rule_baseline.py \
   --rule hr_tachycardia \
   --target-tiw 0.1
 
+uv run python scripts/extract_msg_features.py \
+  --raw-dir data/raw/msg \
+  --windows data/processed/msg/split_temporal_recording.parquet \
+  --out data/processed/msg/features_hr_temporal_recording_sph60_sop1440.parquet \
+  --modalities hr
+
+uv run python scripts/run_rule_baseline.py \
+  --features data/processed/msg/features_hr_temporal_recording_sph60_sop1440.parquet \
+  --out data/processed/msg/hr_tachycardia_recording_splitaware_predictions_sph60_sop1440.parquet \
+  --rule hr_tachycardia \
+  --target-tiw 0.1 \
+  --score-fit-split train \
+  --threshold-split val
+
 uv run python scripts/run_cycle_baseline.py \
   --split-labels data/processed/msg/split_temporal.parquet \
   --out data/processed/msg/cycle_hour_predictions_sph60_sop1440.parquet \
@@ -897,6 +927,20 @@ uv run python scripts/make_dataset_report.py \
   --prediction-filter split=test \
   --restrict-events-to-prediction-coverage \
   --out-dir reports/msg_cycle_hour_recording_test_check \
+  --sph-minutes 60 \
+  --sop-minutes 1440
+
+uv run python scripts/make_dataset_report.py \
+  --dataset-name MSG-local-full-download \
+  --windows data/processed/msg/windows_1h.parquet \
+  --labels data/processed/msg/labels_sph60_sop1440.parquet \
+  --events data/processed/msg/events.parquet \
+  --predictions data/processed/msg/hr_tachycardia_recording_splitaware_predictions_sph60_sop1440.parquet \
+  --baseline-name hr_tachycardia_trainfit_valthreshold_recording_testsplit \
+  --event-filter recording_match_status=matched \
+  --prediction-filter split=test \
+  --restrict-events-to-prediction-coverage \
+  --out-dir reports/msg_hr_tachycardia_recording_splitaware_check \
   --sph-minutes 60 \
   --sop-minutes 1440
 ```
