@@ -168,6 +168,8 @@ As of 2026-05-15:
 - Real SeizeIT2 local integration: single-subject pipeline check produced labels/reports; not a cohort result.
 - Real MSG local integration: full Zenodo file list downloaded and parsed; 510 / 768 onsets are matched
   to downloaded wearable segments; labels, random baseline, HR-rule baseline, and split audits exist.
+- A split-safe hour-of-day cycle baseline now exists and uses validation-only thresholding, but the
+  current unaudited temporal-test check has low event sensitivity.
 - Clinical result claims: not allowed yet.
 - A100 training: not cleared.
 - Next blocker: manual audit of 5-10 seizure timelines per dataset and correction of any parser/label issues.

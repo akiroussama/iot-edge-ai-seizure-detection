@@ -35,7 +35,8 @@ Required:
 - Ictal and postictal windows are excluded by default.
 - Patient-wise, temporal, and center-wise split logic exists.
 - Leakage audit reports patient/recording overlap, duplicate windows, temporal overlap, and postictal contamination.
-- Random rate-matched, cycle/rhythm placeholder, HR/ACC/EMG rule, and generic anomaly baselines are available or explicitly documented as pending.
+- Random rate-matched, hour-of-day cycle/rhythm, HR/ACC rule, and generic anomaly baselines are
+  available or explicitly documented as pending for unsupported modalities.
 - Reports include dataset summary, label distribution, baseline metrics, leakage audit, and human audit checklist.
 - Synthetic/mock reports are clearly labeled as non-clinical.
 

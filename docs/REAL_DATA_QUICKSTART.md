@@ -205,6 +205,13 @@ uv run python scripts/make_splits.py \
   --out data/processed/msg/split_temporal.parquet \
   --audit-out reports/msg_leakage_audit.txt \
   --strategy temporal
+
+uv run python scripts/run_cycle_baseline.py \
+  --split-labels data/processed/msg/split_temporal.parquet \
+  --out data/processed/msg/cycle_hour_predictions_sph60_sop1440.parquet \
+  --fit-split train \
+  --threshold-split val \
+  --target-tiw 0.1
 ```
 
 Export a compact Markdown packet for manual review:

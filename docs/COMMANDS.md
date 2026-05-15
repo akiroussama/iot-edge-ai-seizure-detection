@@ -175,6 +175,17 @@ uv run python scripts/run_rule_baseline.py \
   --target-tiw 0.1
 ```
 
+Run a validation-thresholded hour-of-day cycle baseline after creating a split table:
+
+```bash
+uv run python scripts/run_cycle_baseline.py \
+  --split-labels data/processed/msg/split_temporal.parquet \
+  --out data/processed/msg/cycle_hour_predictions_sph60_sop1440.parquet \
+  --fit-split train \
+  --threshold-split val \
+  --target-tiw 0.1
+```
+
 ## A100 Policy
 
 Do not launch A100 training until:

@@ -20,6 +20,8 @@
 - `scripts/make_dataset_report.py`: dataset-specific report generator for real-data pipeline checks.
 - `scripts/extract_msg_features.py`: MSG nested Empatica HR/ACC window feature extraction.
 - `scripts/run_rule_baseline.py`: transparent HR tachycardia, ACC energy, and generic z-score rule baselines.
+- `scripts/run_cycle_baseline.py`: split-safe hour-of-day cycle prior baseline with validation-only thresholding.
+- `scripts/make_audit_packet.py`: compact Markdown packets for human seizure timeline audits.
 
 ## Core source modules
 
@@ -45,3 +47,5 @@
 - `reports/synthetic_demo/`: generated synthetic demo outputs.
 - `reports/*_real_check/`: local real-data pipeline check reports. These are not paper results until manual audit is complete.
 - `reports/msg_hr_tachycardia_check/`: local full-download MSG HR-rule baseline check. This is an audit artifact, not a clinical result.
+- `reports/msg_cycle_hour_test_check/`: local split-filtered MSG cycle-prior baseline check. This is an audit artifact, not a clinical result.
+- `reports/*_audit_packet.md`: compact manual audit packets generated from seizure-centered audit CSVs.

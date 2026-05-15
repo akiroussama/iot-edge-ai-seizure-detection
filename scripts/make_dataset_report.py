@@ -45,6 +45,52 @@ def _filter_events(events: pd.DataFrame, expression: str | None) -> pd.DataFrame
     return events.loc[events[column].astype(str).eq(value)].reset_index(drop=True)
 
 
+def _filter_rows(df: pd.DataFrame, expression: str | None, name: str) -> pd.DataFrame:
+    if not expression:
+        return df
+    if "=" not in expression:
+        raise ValueError(f"{name} filter must be formatted as column=value")
+    column, value = expression.split("=", maxsplit=1)
+    if column not in df.columns:
+        raise ValueError(f"{name} filter column not found: {column}")
+    return df.loc[df[column].astype(str).eq(value)].reset_index(drop=True)
+
+
+def _filter_column(expression: str) -> str:
+    return expression.split("=", maxsplit=1)[0]
+
+
+def _events_coverable_by_predictions(
+    predictions: pd.DataFrame,
+    events: pd.DataFrame,
+    sph_minutes: float,
+    sop_minutes: float,
+) -> pd.DataFrame:
+    """Keep events that could be forecasted by at least one selected prediction window."""
+    if predictions.empty or events.empty:
+        return events.iloc[0:0].copy()
+    preds = predictions.copy()
+    preds = preds.loc[~preds.get("is_excluded", pd.Series(False, index=preds.index)).fillna(False)]
+    preds["window_end"] = pd.to_datetime(preds["window_end"])
+    ev = events.copy()
+    ev["seizure_start"] = pd.to_datetime(ev["seizure_start"])
+    sph = pd.Timedelta(minutes=sph_minutes)
+    sop = pd.Timedelta(minutes=sop_minutes)
+
+    keep_indices = []
+    for idx, event in ev.iterrows():
+        candidates = preds.loc[preds["patient_id"].astype(str).eq(str(event["patient_id"]))]
+        if "recording_id" in preds.columns and "recording_id" in ev.columns:
+            candidates = candidates.loc[candidates["recording_id"].astype(str).eq(str(event["recording_id"]))]
+        if candidates.empty:
+            continue
+        horizon_start = candidates["window_end"] + sph
+        horizon_end = candidates["window_end"] + sph + sop
+        if ((event["seizure_start"] >= horizon_start) & (event["seizure_start"] < horizon_end)).any():
+            keep_indices.append(idx)
+    return ev.loc[keep_indices].reset_index(drop=True)
+
+
 def _baseline_table(
     predictions: pd.DataFrame,
     events: pd.DataFrame,
@@ -81,6 +127,12 @@ def main() -> None:
     parser.add_argument("--predictions", default=None)
     parser.add_argument("--baseline-name", default="random_rate_matched")
     parser.add_argument("--event-filter", default=None, help="Optional filter such as recording_match_status=matched")
+    parser.add_argument("--prediction-filter", default=None, help="Optional filter such as split=test")
+    parser.add_argument(
+        "--restrict-events-to-prediction-coverage",
+        action="store_true",
+        help="Evaluate only events whose onset is inside at least one selected prediction horizon.",
+    )
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--sph-minutes", type=float, required=True)
     parser.add_argument("--sop-minutes", type=float, required=True)
@@ -92,6 +144,23 @@ def main() -> None:
     labels = read_table(args.labels)
     events_all = read_table(args.events)
     events_eval = _filter_events(events_all, args.event_filter)
+    predictions = read_table(args.predictions) if args.predictions else pd.DataFrame()
+    if args.prediction_filter:
+        predictions = _filter_rows(predictions, args.prediction_filter, "prediction")
+        filter_col = _filter_column(args.prediction_filter)
+        if filter_col in labels.columns:
+            labels = _filter_rows(labels, args.prediction_filter, "label")
+        if filter_col in windows.columns:
+            windows = _filter_rows(windows, args.prediction_filter, "window")
+    if args.restrict_events_to_prediction_coverage:
+        if predictions.empty:
+            raise ValueError("--restrict-events-to-prediction-coverage requires --predictions")
+        events_eval = _events_coverable_by_predictions(
+            predictions,
+            events_eval,
+            args.sph_minutes,
+            args.sop_minutes,
+        )
 
     summary = dataset_summary(windows, events_eval)
     distribution = label_distribution(labels)
@@ -100,7 +169,6 @@ def main() -> None:
 
     baseline = pd.DataFrame()
     if args.predictions:
-        predictions = read_table(args.predictions)
         baseline = _baseline_table(
             predictions,
             events_eval,
@@ -133,6 +201,8 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 - SPH minutes: {args.sph_minutes:g}
 - SOP minutes: {args.sop_minutes:g}
 - Event filter used for metrics: `{args.event_filter or "none"}`
+- Prediction filter used for metrics: `{args.prediction_filter or "none"}`
+- Events restricted to selected prediction horizon coverage: `{args.restrict_events_to_prediction_coverage}`
 
 ## Dataset Summary
 
