@@ -197,6 +197,20 @@ uv run python scripts/make_dataset_report.py \
   --sop-minutes 1440
 ```
 
+Before comparing baselines, summarize event coverage and clusters. Patients with many unmatched
+events or large clusters must be manually reviewed before the denominator is treated as fixed:
+
+```bash
+uv run python scripts/summarize_event_coverage.py \
+  --events data/processed/msg/events.parquet \
+  --recordings data/processed/msg/recordings.parquet \
+  --out-md reports/msg_event_coverage_summary.md \
+  --out-coverage-csv reports/msg_event_coverage_summary.csv \
+  --out-clusters-csv reports/msg_event_cluster_summary.csv \
+  --cluster-gap-minutes 240 \
+  --title "MSG Event Coverage And Cluster Summary"
+```
+
 Then generate a temporal leakage audit:
 
 ```bash

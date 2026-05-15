@@ -156,6 +156,19 @@ uv run python scripts/make_splits.py \
   --strategy recording_wise
 ```
 
+Summarize per-patient event coverage and seizure clusters before interpreting event-level metrics:
+
+```bash
+uv run python scripts/summarize_event_coverage.py \
+  --events data/processed/msg/events.parquet \
+  --recordings data/processed/msg/recordings.parquet \
+  --out-md reports/msg_event_coverage_summary.md \
+  --out-coverage-csv reports/msg_event_coverage_summary.csv \
+  --out-clusters-csv reports/msg_event_cluster_summary.csv \
+  --cluster-gap-minutes 240 \
+  --title "MSG Event Coverage And Cluster Summary"
+```
+
 ## Transparent Rule Baselines
 
 MSG Empatica HR/ACC features can be extracted directly from nested ZIPs without writing all raw

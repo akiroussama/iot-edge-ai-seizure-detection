@@ -564,7 +564,7 @@ Latest push-clone validation:
 
 ```bash
 uv run --extra dev --extra torch python -m pytest -q
-# 62 passed before cycle-baseline continuation; rerun before final push
+# 70 passed after event-coverage continuation
 
 uv run --extra dev ruff check .
 # All checks passed
@@ -574,9 +574,9 @@ GitHub Actions:
 
 ```text
 workflow: tests
-run number: 22
+latest checked run number before this continuation: 24
 status: success
-commit: f45f76b
+commit: 29fd714
 ```
 
 ## Files Claude Should Review First
@@ -602,6 +602,7 @@ src/datasets/msg_loader.py
 src/datasets/seizeit2_loader.py
 src/reports/label_audit.py
 src/reports/audit_packet.py
+src/reports/event_coverage.py
 ```
 
 Audit artifacts:
@@ -613,6 +614,7 @@ reports/msg_hr_tachycardia_check/dataset_report.md
 reports/msg_cycle_hour_test_check/dataset_report.md
 reports/seizeit2_sub125_audit_packet.md
 reports/msg_full_audit_packet.md
+reports/msg_event_coverage_summary.md
 ```
 
 Docs:
@@ -653,12 +655,28 @@ Current local MSG parser:
 258 unmatched
 ```
 
+I added a per-patient coverage and cluster report:
+
+```text
+reports/msg_event_coverage_summary.md
+```
+
+Key findings from the local full MSG files:
+
+```text
+1219, 1675, and 1942 have seizure annotations but zero parsed wearable recordings.
+Several wearable patients still have unmatched events: 1110, 1869, 1876, 1904, 1965, 1988, 2002.
+Only patient 1927 has 100% event-to-recording matching in the current parsed local artifacts.
+Large clusters are visible, including max cluster size 20 for patient 1942.
+```
+
 Questions:
 
 - Are unmatched events outside downloaded wearable segments?
 - Are they from participants with only seizure annotations and no wearable ZIP?
 - Are any unmatched events due to parser timestamp mistakes?
-- Should reports include a per-patient matched/unmatched table?
+- Should final denominators exclude seizure-only patients, or should they be reported as a separate
+  coverage limitation?
 
 ### Risk 3: Seizure Clusters
 
@@ -710,17 +728,17 @@ Needed:
 - apply frozen threshold to test split;
 - report train/val/test split names and threshold source.
 
-### Risk 7: Cycle/Rhythm Baseline Is Still Needed
+### Risk 7: Cycle/Rhythm Baseline Needs Stronger Split-Frozen Evaluation
 
-MSG publication framing requires a circadian/multiday baseline. HR tachycardia alone is weak and
-random rate-matched is a sanity baseline, not a strong comparator.
+MSG publication framing requires a circadian/multiday baseline. I added a patient-specific
+hour-of-day cycle baseline with training-only priors and validation-only thresholding, but this is
+still a pipeline check until labels, coverage, and splits are manually audited.
 
 Needed:
 
-- cycle-only baseline;
-- patient-specific hour-of-day risk;
-- optional day-of-week or multiday phase if defensible;
-- validation-only thresholding.
+- decide whether the primary MSG task is temporal within-patient or patient-held-out;
+- force split boundaries to recording boundaries if within-recording leakage is unacceptable;
+- add day-of-week or multiday phase only if it can be justified without post-hoc tuning.
 
 ### Risk 8: SOTA Claim Must Remain Conservative
 
@@ -788,6 +806,13 @@ uv run python scripts/run_rule_baseline.py \
   --out data/processed/msg/hr_tachycardia_predictions_sph60_sop1440.parquet \
   --rule hr_tachycardia \
   --target-tiw 0.1
+
+uv run python scripts/run_cycle_baseline.py \
+  --split-labels data/processed/msg/split_temporal.parquet \
+  --out data/processed/msg/cycle_hour_predictions_sph60_sop1440.parquet \
+  --fit-split train \
+  --threshold-split val \
+  --target-tiw 0.1
 ```
 
 MSG reports:
@@ -816,6 +841,29 @@ uv run python scripts/make_dataset_report.py \
   --out-dir reports/msg_hr_tachycardia_check \
   --sph-minutes 60 \
   --sop-minutes 1440
+
+uv run python scripts/make_dataset_report.py \
+  --dataset-name MSG-local-full-download \
+  --windows data/processed/msg/windows_1h.parquet \
+  --labels data/processed/msg/labels_sph60_sop1440.parquet \
+  --events data/processed/msg/events.parquet \
+  --predictions data/processed/msg/cycle_hour_predictions_sph60_sop1440.parquet \
+  --baseline-name cycle_hour_val_tiw10_testsplit \
+  --event-filter recording_match_status=matched \
+  --prediction-filter split=test \
+  --restrict-events-to-prediction-coverage \
+  --out-dir reports/msg_cycle_hour_test_check \
+  --sph-minutes 60 \
+  --sop-minutes 1440
+
+uv run python scripts/summarize_event_coverage.py \
+  --events data/processed/msg/events.parquet \
+  --recordings data/processed/msg/recordings.parquet \
+  --out-md reports/msg_event_coverage_summary.md \
+  --out-coverage-csv reports/msg_event_coverage_summary.csv \
+  --out-clusters-csv reports/msg_event_cluster_summary.csv \
+  --cluster-gap-minutes 240 \
+  --title "MSG Event Coverage And Cluster Summary"
 ```
 
 Audit packets:

@@ -19,6 +19,9 @@ Generated package status:
 - Real MSG cycle baseline support: an hour-of-day patient-specific prior can be fit on the train
   split and thresholded on validation only. The current local temporal-test pipeline check is weak
   in event sensitivity and remains unaudited.
+- Real MSG event-coverage audit support: `scripts/summarize_event_coverage.py` now reports
+  per-patient matched/unmatched events, parsed recording hours, and seizure-cluster size. The
+  current local report is `reports/msg_event_coverage_summary.md`.
 
 Verified test status:
 
@@ -39,6 +42,9 @@ Known limitations:
 - Recording-wise splits are only for single-patient/run-disjoint smoke checks. They do not support
   prospective or patient-generalization claims.
 - Current MSG local run uses the full Zenodo file list available through the downloader, but 258 seizure onsets are still unmatched to downloaded wearable segments and are excluded from metric denominators only when explicitly filtered.
+- MSG patients 1219, 1675, and 1942 currently have seizure annotations but zero parsed wearable
+  recordings in the local artifacts; they require source-data review before being treated as
+  evaluable forecast events.
 - Current MSG random and HR tachycardia metrics are pipeline checks only. HR tachycardia underperforms the random rate-matched sanity baseline in the current unaudited full-download check.
 - Current MSG cycle baseline metrics are split-filtered pipeline checks only; do not compare them
   as final paper results until split policy and timeline audit are frozen.
