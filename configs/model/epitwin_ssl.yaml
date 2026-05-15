@@ -1,0 +1,13 @@
+model: epitwin_ssl
+modalities: [ecg, acc, emg]
+input_channels: 1
+hidden_dim: 64
+backbone: tcn  # options: tcn, gru, transformer, cfc, mamba_placeholder
+backbone_layers: 3
+ssl_losses:
+  masked_reconstruction: 1.0
+  future_latent_prediction: 0.1
+  cross_modal_prediction: 0.1
+hazard:
+  enabled: true
+  horizon_steps: 30

@@ -1,0 +1,8 @@
+model: edge_observable_student
+input_dim: 16
+hidden_dim: 32
+layers: 1
+modalities: [ecg_features, acc_features]
+quantization:
+  target: int8_qat_later
+  note: "QAT is a phase-3 task after dataset labels and baselines are verified."

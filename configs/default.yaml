@@ -1,0 +1,43 @@
+project: epitwin-open
+version: 0.1.0
+seed: 42
+
+paths:
+  raw_root: data/raw
+  processed_root: data/processed
+  reports_root: reports
+  checkpoints_root: checkpoints
+
+task:
+  name: short_horizon_forecasting
+  distinction: "Forecasting labels use SPH/SOP and are not seizure detection labels."
+
+labeling:
+  sph_minutes: 5
+  sop_minutes: 30
+  postictal_exclusion_minutes: 60
+  ictal_exclusion: true
+
+splits:
+  default_strategy: patient_wise
+  temporal_purge_overlap: true
+  random_window_split_allowed: false
+
+metrics:
+  primary:
+    - event_level_sensitivity
+    - false_alarm_rate_per_day
+    - time_in_warning
+    - median_lead_time
+  calibration:
+    - brier_score
+    - expected_calibration_error
+
+alarm_budgets:
+  far_per_day: [0.1, 0.5, 1.0]
+  time_in_warning: [0.05, 0.10, 0.20]
+
+a100_policy:
+  allowed_before_real_label_audit: false
+  first_backbones: [tcn_small, gru_small]
+  forbidden_initial_backbones: [liquid_mamba, mamba2_large]
