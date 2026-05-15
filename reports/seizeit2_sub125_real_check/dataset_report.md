@@ -1,4 +1,4 @@
-# SeizeIT2-sub125-local Dataset Report
+# SeizeIT2-local Dataset Report
 
 ## Status
 

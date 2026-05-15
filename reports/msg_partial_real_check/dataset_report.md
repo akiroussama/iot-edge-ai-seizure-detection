@@ -1,4 +1,4 @@
-# MSG-partial-Zenodo-local Dataset Report
+# MSG-local Dataset Report
 
 ## Status
 
@@ -31,7 +31,7 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 | baseline | horizon | n_events | n_forecasted | sensitivity | far_per_hour | far_per_day | time_in_warning | median_lead_time_seconds | brier_score | ece |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| random_rate_matched_tiw10 | SPH 60 / SOP 1440 | 111 | 71 | 0.6396396396396397 | 0.04293951041877402 | 1.0305482500505765 | 0.09993930811248229 | 49819.0 | 0.15136637784957163 | 0.2443851251433933 |
+| random_rate_matched_tiw10 | SPH 60 / SOP 1440 | 111 | 70 | 0.6306306306306306 | 0.04229529995397126 | 1.01508719889531 | 0.09988237099166368 | 43278.0 | 0.15130343799271098 | 0.2447543514512368 |
 
 ## Event Coverage
 

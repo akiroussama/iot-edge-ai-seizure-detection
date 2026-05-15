@@ -54,8 +54,7 @@ Run a random alarm sanity baseline and dataset report:
 
 ```bash
 uv run python scripts/run_baseline.py \
-  --windows data/processed/seizeit2/windows.parquet \
-  --events data/processed/seizeit2/events.parquet \
+  --labels data/processed/seizeit2/forecast_labels.parquet \
   --out data/processed/seizeit2/random_tiw10_predictions.parquet \
   --sph-minutes 5 \
   --sop-minutes 30 \
@@ -173,8 +172,7 @@ write_table(matched, "data/processed/msg/events_matched.parquet")
 PY
 
 uv run python scripts/run_baseline.py \
-  --windows data/processed/msg/windows_1h.parquet \
-  --events data/processed/msg/events.parquet \
+  --labels data/processed/msg/labels_sph60_sop1440.parquet \
   --out data/processed/msg/random_tiw10_predictions_sph60_sop1440.parquet \
   --sph-minutes 60 \
   --sop-minutes 1440 \
