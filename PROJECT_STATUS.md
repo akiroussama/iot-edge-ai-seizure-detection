@@ -33,6 +33,8 @@ Generated package status:
   within-recording split boundaries would create preprocessing or artifact leakage risk.
 - Phase R audit remediation has started from `docs/CLAUDE_REVIEW_2026-05-15.md`. C1-C4 are now
   guarded in code, but the advisor has not yet declared M2 closed.
+- Leakage audit now flags missing fit-scope metadata as `UNVERIFIED_OR_FAILED` and detects duplicate
+  recording time ranges that can invalidate temporal assumptions.
 
 Verified test status:
 
@@ -56,6 +58,9 @@ Known limitations:
 - After right-censoring SPH60/SOP1440 horizons against parsed Empatica recording ends, only 4,854
   / 49,596 MSG one-hour windows remain valid; 44,708 windows are right-censored. This is a major
   feasibility warning for 24-hour SOP evaluation on per-segment wearable files.
+- Current MSG temporal-recording split audit flags duplicate recording time ranges for patient
+  `2002`, including duplicated recording IDs with ` (1)` suffixes. This must be resolved before
+  split freeze.
 - MSG patients 1219, 1675, and 1942 currently have seizure annotations but zero parsed wearable
   recordings in the local artifacts; they require source-data review before being treated as
   evaluable forecast events.

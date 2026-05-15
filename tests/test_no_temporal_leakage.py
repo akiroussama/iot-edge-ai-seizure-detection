@@ -4,7 +4,9 @@ from src.datasets.seizeit2_loader import make_synthetic_seizeit2_tables
 import pandas as pd
 
 from src.splits.leakage_checks import (
+    check_duplicate_recording_time_ranges,
     check_duplicate_windows,
+    check_fit_scope_metadata,
     check_postictal_label_contamination,
     check_temporal_leakage,
     leakage_audit,
@@ -55,6 +57,7 @@ def test_leakage_audit_marks_temporal_patient_overlap_as_contextual():
 
     assert "Patient overlap across splits: True" in report
     assert "Temporal ordering/overlap leakage: False" in report
+    assert "Feature normalization leakage: UNVERIFIED_OR_FAILED" in report
 
 
 def test_duplicate_window_check_detects_repeated_intervals():
@@ -68,6 +71,23 @@ def test_duplicate_window_check_detects_repeated_intervals():
     )
 
     assert check_duplicate_windows(df)["has_leakage"]
+
+
+def test_duplicate_recording_time_ranges_flag_reset_timestamps():
+    base = pd.Timestamp("2026-01-01 00:00:00")
+    df = pd.DataFrame(
+        {
+            "patient_id": ["p1", "p1"],
+            "recording_id": ["r1", "r2"],
+            "window_start": [base, base],
+            "window_end": [base + pd.Timedelta(minutes=1), base + pd.Timedelta(minutes=1)],
+        }
+    )
+
+    audit = check_duplicate_recording_time_ranges(df)
+
+    assert audit["has_leakage"]
+    assert {issue["recording_id"] for issue in audit["issues"]} == {"r1", "r2"}
 
 
 def test_postictal_label_contamination_check_detects_unexcluded_positive():
@@ -148,3 +168,30 @@ def test_temporal_recording_unit_requires_recording_id():
         assert "recording_id" in str(exc)
     else:
         raise AssertionError("expected recording_id validation error")
+
+
+def test_fit_scope_metadata_flags_test_fit_scope() -> None:
+    df = pd.DataFrame(
+        {
+            "score_fit_split": ["test", "test"],
+            "threshold_source_split": ["val", "val"],
+        }
+    )
+
+    audit = check_fit_scope_metadata(df)
+
+    assert audit["has_leakage"]
+    assert audit["issues"][0]["status"] == "test_scope_used"
+
+
+def test_fit_scope_metadata_passes_train_val_scope() -> None:
+    df = pd.DataFrame(
+        {
+            "score_fit_split": ["train", "train"],
+            "threshold_source_split": ["val", "val"],
+        }
+    )
+
+    audit = check_fit_scope_metadata(df)
+
+    assert not audit["has_leakage"]

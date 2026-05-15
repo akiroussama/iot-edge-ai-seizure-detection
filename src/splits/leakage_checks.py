@@ -37,6 +37,29 @@ def check_duplicate_windows(df: pd.DataFrame) -> dict[str, object]:
     return {"has_leakage": bool(issues), "issues": issues}
 
 
+def check_duplicate_recording_time_ranges(df: pd.DataFrame) -> dict[str, object]:
+    """Detect repeated recording time ranges within a patient across different recording IDs."""
+    required = {"patient_id", "recording_id", "window_start", "window_end"}
+    if not required.issubset(df.columns):
+        return {"has_leakage": False, "issues": []}
+    out = df.copy()
+    out["window_start"] = ensure_datetime(out["window_start"])
+    out["window_end"] = ensure_datetime(out["window_end"])
+    recording_ranges = (
+        out.groupby(["patient_id", "recording_id"], as_index=False)
+        .agg(recording_window_start=("window_start", "min"), recording_window_end=("window_end", "max"))
+    )
+    duplicate_mask = recording_ranges.duplicated(
+        ["patient_id", "recording_window_start", "recording_window_end"],
+        keep=False,
+    )
+    duplicates = recording_ranges.loc[duplicate_mask].sort_values(
+        ["patient_id", "recording_window_start", "recording_id"]
+    )
+    issues = duplicates.head(20).to_dict("records")
+    return {"has_leakage": bool(issues), "issues": issues}
+
+
 def check_postictal_label_contamination(df: pd.DataFrame) -> dict[str, object]:
     """Flag postictal positive labels that were not excluded."""
     required = {"forecast_label", "is_postictal", "is_excluded"}
@@ -84,6 +107,24 @@ def check_temporal_leakage(
     return {"has_leakage": bool(issues), "issues": issues}
 
 
+def check_fit_scope_metadata(df: pd.DataFrame) -> dict[str, object]:
+    """Inspect score-fit and threshold-selection metadata when a prediction table carries it."""
+    metadata_cols = [col for col in ["score_fit_split", "threshold_source_split"] if col in df.columns]
+    if not metadata_cols:
+        return {
+            "has_leakage": True,
+            "issues": [{"status": "unverified", "reason": "missing score_fit_split/threshold_source_split metadata"}],
+        }
+    issues = []
+    for col in metadata_cols:
+        values = sorted(set(df[col].dropna().astype(str)))
+        if not values:
+            issues.append({"column": col, "status": "empty"})
+        if "test" in values:
+            issues.append({"column": col, "status": "test_scope_used", "values": values})
+    return {"has_leakage": bool(issues), "issues": issues, "metadata_columns": metadata_cols}
+
+
 def leakage_audit(df: pd.DataFrame, split_col: str = "split", split_strategy: str = "auto") -> str:
     lines = ["EpiTwin-Open leakage audit", "===========================", ""]
     if "patient_id" in df.columns and split_col in df.columns:
@@ -110,6 +151,13 @@ def leakage_audit(df: pd.DataFrame, split_col: str = "split", split_strategy: st
     lines.append(f"Duplicate window intervals: {duplicates['has_leakage']}")
     if duplicates["issues"]:
         lines.append(str(duplicates["issues"][:10]))
+    duplicate_ranges = check_duplicate_recording_time_ranges(df)
+    lines.append(f"Duplicate recording time ranges: {duplicate_ranges['has_leakage']}")
+    if duplicate_ranges["issues"]:
+        lines.append(
+            "Potential timestamp reset or duplicated recording intervals; temporal splits may be invalid. "
+            + str(duplicate_ranges["issues"][:10])
+        )
     postictal = check_postictal_label_contamination(df)
     lines.append(f"Postictal positive labels not excluded: {postictal['has_leakage']}")
     if postictal["issues"]:
@@ -125,6 +173,13 @@ def leakage_audit(df: pd.DataFrame, split_col: str = "split", split_strategy: st
             "Temporal ordering/overlap leakage: not evaluated "
             f"(strategy={split_strategy}; use temporal splits for prospective claims)"
         )
-    lines.append("Feature normalization leakage: not machine-checkable without fit metadata")
+    fit_scope = check_fit_scope_metadata(df)
+    if fit_scope["has_leakage"]:
+        lines.append(f"Feature normalization leakage: UNVERIFIED_OR_FAILED {fit_scope['issues'][:10]}")
+    else:
+        lines.append(
+            "Feature normalization leakage: metadata present "
+            f"({fit_scope.get('metadata_columns', [])}); no test-scope fit metadata detected"
+        )
     lines.append("Future-information feature leakage: requires manual feature audit")
     return "\n".join(lines)
