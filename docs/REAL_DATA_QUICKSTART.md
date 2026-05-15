@@ -169,6 +169,26 @@ uv run python scripts/label_windows.py \
 MSG public annotations are onset-only in this pipeline. The CLI refuses to anchor postictal
 exclusion to imputed `seizure_end` values unless an explicit override is supplied.
 
+Before treating SPH60/SOP1440 as a main task, summarize whether the recording coverage supports
+that horizon. This is a feasibility audit, not a model result:
+
+```bash
+uv run python scripts/summarize_horizon_viability.py \
+  --windows data/processed/msg/windows_1h.parquet \
+  --events data/processed/msg/events.parquet \
+  --out-csv reports/msg_horizon_viability.csv \
+  --out-md reports/msg_horizon_viability.md \
+  --sph-minutes 5 60 \
+  --sop-minutes 30 360 1440 \
+  --postictal-exclusion-minutes 240 \
+  --postictal-anchor seizure_start \
+  --title "MSG Horizon Viability"
+```
+
+If valid-window or event-coverable fractions are poor for SOP1440, do not use that horizon as the
+headline result without advisor approval. Prefer a shorter, better-supported horizon or report the
+24-hour analysis explicitly as coverage-limited.
+
 For partial downloads, evaluate only events whose onsets were matched to a downloaded wearable
 segment:
 
