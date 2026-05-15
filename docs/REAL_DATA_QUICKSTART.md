@@ -226,7 +226,8 @@ uv run python scripts/make_splits.py \
   --out data/processed/msg/split_temporal_recording.parquet \
   --audit-out reports/msg_temporal_recording_leakage_audit.txt \
   --strategy temporal \
-  --temporal-unit recording
+  --temporal-unit recording \
+  --temporal-basis elapsed_time
 
 uv run python scripts/run_cycle_baseline.py \
   --split-labels data/processed/msg/split_temporal_recording.parquet \

@@ -18,9 +18,9 @@ Observed split counts:
 
 | split | windows |
 | --- | ---: |
-| train | 35627 |
-| val | 4709 |
-| test | 9260 |
+| train | 33853 |
+| val | 5415 |
+| test | 10328 |
 
 Audit output:
 
@@ -28,9 +28,9 @@ Audit output:
 EpiTwin-Open leakage audit
 ===========================
 
-Patient overlap across splits: True (allowed only for temporal/within-patient analyses; strategy=temporal_recording)
+Patient overlap across splits: True (allowed only for temporal/within-patient analyses; strategy=temporal_recording_elapsed_time)
 [{'patient_id': '1110', 'splits': ['test', 'train', 'val']}, {'patient_id': '1869', 'splits': ['test', 'train', 'val']}, {'patient_id': '1876', 'splits': ['test', 'train', 'val']}, {'patient_id': '1904', 'splits': ['test', 'train', 'val']}, {'patient_id': '1927', 'splits': ['test', 'train', 'val']}, {'patient_id': '1965', 'splits': ['test', 'train', 'val']}, {'patient_id': '1988', 'splits': ['test', 'train', 'val']}, {'patient_id': '2002', 'splits': ['test', 'train', 'val']}]
-Recording overlap across splits: False (allowed only for temporal/within-recording analyses; strategy=temporal_recording)
+Recording overlap across splits: False (allowed only for temporal/within-recording analyses; strategy=temporal_recording_elapsed_time)
 Duplicate window intervals: False
 Duplicate recording time ranges: True
 Potential timestamp reset or duplicated recording intervals; temporal splits may be invalid. [{'patient_id': '2002', 'recording_id': '2002_1607691981_A029E3', 'recording_window_start': Timestamp('2020-12-11 13:06:31'), 'recording_window_end': Timestamp('2020-12-12 04:06:31')}, {'patient_id': '2002', 'recording_id': '2002_1607691981_A029E3 (1)', 'recording_window_start': Timestamp('2020-12-11 13:06:31'), 'recording_window_end': Timestamp('2020-12-12 04:06:31')}, {'patient_id': '2002', 'recording_id': '2002_1607987768_A029E3', 'recording_window_start': Timestamp('2020-12-14 23:16:18'), 'recording_window_end': Timestamp('2020-12-15 03:16:18')}, {'patient_id': '2002', 'recording_id': '2002_1607987768_A029E3 (1)', 'recording_window_start': Timestamp('2020-12-14 23:16:18'), 'recording_window_end': Timestamp('2020-12-15 03:16:18')}]

@@ -1,4 +1,4 @@
-# MSG-local-full-download-right-censored Dataset Report
+# MSG-local-full-download-right-censored-elapsed-time Dataset Report
 
 ## Status
 
@@ -39,13 +39,13 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 | prediction_rows | valid_prediction_rows | alarms | splits | score_fit_split | threshold_source_split | alarm_threshold_min | alarm_threshold_max |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 9260 | 792 | 63 | test | train | val | 0.9004579552159133 | 0.9004579552159133 |
+| 10328 | 1077 | 119 | test | train | val | 0.8655844347851801 | 0.8655844347851801 |
 
 ## Baseline
 
 | baseline | horizon | n_events | n_forecasted | sensitivity | far_per_hour | far_per_day | time_in_warning | median_lead_time_seconds | brier_score | ece |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| hr_tachycardia_trainfit_valthreshold_recording_right_censored_testsplit | SPH 60 / SOP 1440 | 13 | 10 | 0.7692307692307693 | 0.050505050505050504 | 1.2121212121212122 | 0.07954545454545454 | 62243.5 | 0.40961799574173907 | 0.5933435299813521 |
+| hr_tachycardia_trainfit_valthreshold_recording_right_censored_testsplit_elapsed_time | SPH 60 / SOP 1440 | 13 | 11 | 0.8461538461538461 | 0.06220984215413185 | 1.4930362116991645 | 0.11049210770659239 | 63567.0 | 0.4132309207311703 | 0.6040359373400309 |
 
 ## Event Coverage
 

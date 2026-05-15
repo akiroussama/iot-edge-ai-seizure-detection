@@ -36,6 +36,12 @@ def main() -> None:
         default="window",
         help="When strategy=temporal, split individual windows or whole recordings.",
     )
+    parser.add_argument(
+        "--temporal-basis",
+        choices=["elapsed_time", "count"],
+        default="elapsed_time",
+        help="When strategy=temporal, split by elapsed patient time or legacy row/recording count.",
+    )
     args = parser.parse_args()
 
     labels = read_table(args.labels)
@@ -46,6 +52,7 @@ def main() -> None:
             val_fraction=args.val_fraction,
             purge_overlap=not args.no_purge_overlap,
             split_unit=args.temporal_unit,
+            split_basis=args.temporal_basis,
         )
     elif args.strategy == "patient_wise":
         split = patient_wise_split(
@@ -63,7 +70,9 @@ def main() -> None:
         )
 
     write_table(split, args.out)
-    audit_strategy = args.strategy if args.strategy != "temporal" else f"temporal_{args.temporal_unit}"
+    audit_strategy = (
+        args.strategy if args.strategy != "temporal" else f"temporal_{args.temporal_unit}_{args.temporal_basis}"
+    )
     audit = leakage_audit(split, split_strategy=audit_strategy)
     Path(args.audit_out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.audit_out).write_text(audit, encoding="utf-8")

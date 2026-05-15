@@ -49,6 +49,37 @@ def test_temporal_split_purges_overlapping_boundary_windows():
     assert not audit["has_leakage"]
 
 
+def test_temporal_split_uses_elapsed_time_by_default_not_row_count():
+    base = pd.Timestamp("2026-01-01 00:00:00")
+    windows = pd.DataFrame(
+        {
+            "patient_id": ["p1"] * 4,
+            "recording_id": ["r1"] * 4,
+            "window_start": [
+                base,
+                base + pd.Timedelta(minutes=1),
+                base + pd.Timedelta(minutes=2),
+                base + pd.Timedelta(hours=10),
+            ],
+            "window_end": [
+                base + pd.Timedelta(minutes=1),
+                base + pd.Timedelta(minutes=2),
+                base + pd.Timedelta(minutes=3),
+                base + pd.Timedelta(hours=11),
+            ],
+        }
+    )
+
+    split = temporal_split_per_patient(
+        windows,
+        train_fraction=0.5,
+        val_fraction=0.25,
+        purge_overlap=False,
+    )
+
+    assert split["split"].tolist() == ["train", "train", "train", "test"]
+
+
 def test_leakage_audit_marks_temporal_patient_overlap_as_contextual():
     _, windows, _ = make_synthetic_seizeit2_tables()
     split = temporal_split_per_patient(windows, train_fraction=0.7, val_fraction=0.1)

@@ -1,4 +1,4 @@
-# MSG-local-full-download-right-censored Dataset Report
+# MSG-local-full-download-right-censored-elapsed-time Dataset Report
 
 ## Status
 
@@ -39,13 +39,13 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 | prediction_rows | valid_prediction_rows | alarms | splits | alarm_threshold_min | alarm_threshold_max |
 | --- | --- | --- | --- | --- | --- |
-| 9260 | 792 | 92 | test | 0.06516476024115028 | 0.06516476024115028 |
+| 10328 | 1077 | 228 | test | 0.06852789988630621 | 0.06852789988630621 |
 
 ## Baseline
 
 | baseline | horizon | n_events | n_forecasted | sensitivity | far_per_hour | far_per_day | time_in_warning | median_lead_time_seconds | brier_score | ece |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| cycle_hour_recording_val_tiw10_right_censored_testsplit | SPH 60 / SOP 1440 | 13 | 8 | 0.6153846153846154 | 0.03409090909090909 | 0.8181818181818182 | 0.11616161616161616 | 64935.0 | 0.042354985675889426 | 0.02113345096149134 |
+| cycle_hour_recording_val_tiw10_right_censored_testsplit_elapsed_time | SPH 60 / SOP 1440 | 13 | 9 | 0.6923076923076923 | 0.056638811513463325 | 1.3593314763231197 | 0.2116991643454039 | 63567.0 | 0.03994688727933054 | 0.05532927962325607 |
 
 ## Event Coverage
 

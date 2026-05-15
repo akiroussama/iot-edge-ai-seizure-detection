@@ -31,6 +31,8 @@ Generated package status:
 - Temporal split support now includes `--temporal-unit recording`, which keeps every recording in a
   single split while preserving per-patient chronological ordering. This should be preferred when
   within-recording split boundaries would create preprocessing or artifact leakage risk.
+- Temporal split boundaries now default to elapsed patient time rather than row/recording counts.
+  The old count-based behavior requires explicit `--temporal-basis count`.
 - Phase R audit remediation has started from `docs/CLAUDE_REVIEW_2026-05-15.md`. C1-C4 are now
   guarded in code, but the advisor has not yet declared M2 closed.
 - Leakage audit now flags missing fit-scope metadata as `UNVERIFIED_OR_FAILED` and detects duplicate
@@ -61,6 +63,8 @@ Known limitations:
 - Current MSG temporal-recording split audit flags duplicate recording time ranges for patient
   `2002`, including duplicated recording IDs with ` (1)` suffixes. This must be resolved before
   split freeze.
+- The current MSG temporal-recording elapsed-time split has 33,853 train windows, 5,415 validation
+  windows, and 10,328 test windows.
 - MSG patients 1219, 1675, and 1942 currently have seizure annotations but zero parsed wearable
   recordings in the local artifacts; they require source-data review before being treated as
   evaluable forecast events.
