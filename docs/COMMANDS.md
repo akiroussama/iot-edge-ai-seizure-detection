@@ -75,6 +75,13 @@ uv run python scripts/prepare_msg.py \
   --raw-dir data/raw/msg \
   --processed-dir data/processed/msg \
   --inspect-only
+
+# Real preparation fails closed on duplicate recording time ranges by default.
+# Use drop_exact only after documenting exact duplicate segment copies.
+uv run python scripts/prepare_msg.py \
+  --raw-dir data/raw/msg \
+  --processed-dir data/processed/msg \
+  --duplicate-recording-policy drop_exact
 ```
 
 ## Windows And Labels
@@ -93,6 +100,19 @@ uv run python scripts/label_windows.py \
   --sph-minutes 5 \
   --sop-minutes 30 \
   --postictal-exclusion-minutes 60
+```
+
+For onset-only MSG annotations, do not anchor postictal exclusion to the imputed seizure end:
+
+```bash
+uv run python scripts/label_windows.py \
+  --windows data/processed/msg/windows_1h.parquet \
+  --events data/processed/msg/events.parquet \
+  --output data/processed/msg/labels_sph60_sop1440.parquet \
+  --sph-minutes 60 \
+  --sop-minutes 1440 \
+  --postictal-exclusion-minutes 240 \
+  --postictal-anchor seizure_start
 ```
 
 Export a human label audit CSV:
@@ -182,6 +202,27 @@ uv run python scripts/summarize_event_coverage.py \
   --out-clusters-csv reports/msg_event_cluster_summary.csv \
   --cluster-gap-minutes 240 \
   --title "MSG Event Coverage And Cluster Summary"
+```
+
+Report seizure-level and cluster-level denominators separately when clusters are material:
+
+```bash
+uv run python scripts/make_dataset_report.py \
+  --dataset-name "MSG HR Tachycardia Cluster Check" \
+  --windows data/processed/msg/split_temporal_recording.parquet \
+  --labels data/processed/msg/split_temporal_recording.parquet \
+  --events data/processed/msg/events.parquet \
+  --predictions data/processed/msg/hr_tachycardia_recording_splitaware_predictions_sph60_sop1440.parquet \
+  --baseline-name hr_tachycardia \
+  --event-filter recording_match_status=matched \
+  --acknowledge-event-filter-bias \
+  --prediction-filter split=test \
+  --restrict-events-to-prediction-coverage \
+  --event-unit cluster \
+  --cluster-gap-minutes 240 \
+  --out-dir reports/msg_hr_tachycardia_cluster_recording_splitaware_check \
+  --sph-minutes 60 \
+  --sop-minutes 1440
 ```
 
 ## Transparent Rule Baselines

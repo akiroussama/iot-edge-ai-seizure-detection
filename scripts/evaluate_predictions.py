@@ -12,6 +12,7 @@ import json
 
 from src.metrics import (
     brier_score,
+    collapse_event_clusters,
     event_level_sensitivity,
     expected_calibration_error,
     false_alarm_rate_per_day,
@@ -28,12 +29,17 @@ def main() -> None:
     parser.add_argument("--events", required=True)
     parser.add_argument("--sph-minutes", type=float, required=True)
     parser.add_argument("--sop-minutes", type=float, required=True)
+    parser.add_argument("--event-unit", choices=["seizure", "cluster"], default="seizure")
+    parser.add_argument("--cluster-gap-minutes", type=float, default=240)
     args = parser.parse_args()
     preds = read_table(args.predictions)
     events = read_table(args.events)
+    if args.event_unit == "cluster":
+        events = collapse_event_clusters(events, cluster_gap_minutes=args.cluster_gap_minutes)
     sens = event_level_sensitivity(preds, events, args.sph_minutes, args.sop_minutes)
     result = {
         **sens,
+        "event_unit": args.event_unit,
         "far_per_hour": false_alarm_rate_per_hour(preds, events, args.sph_minutes, args.sop_minutes),
         "far_per_day": false_alarm_rate_per_day(preds, events, args.sph_minutes, args.sop_minutes),
         "time_in_warning": time_in_warning(preds),

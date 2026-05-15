@@ -7,7 +7,12 @@ from src.metrics.alarm_metrics import (
     time_in_warning,
 )
 from src.metrics.calibration import brier_score, expected_calibration_error, reliability_table
-from src.metrics.event_metrics import event_forecast_details, event_level_sensitivity
+from src.metrics.event_metrics import (
+    assign_event_clusters,
+    collapse_event_clusters,
+    event_forecast_details,
+    event_level_sensitivity,
+)
 from src.metrics.sweep import (
     select_threshold_under_constraints,
     sensitivity_at_fixed_far,
@@ -19,6 +24,8 @@ from src.metrics.sweep import (
 __all__ = [
     "event_forecast_details",
     "event_level_sensitivity",
+    "assign_event_clusters",
+    "collapse_event_clusters",
     "false_alarm_count",
     "false_alarm_rate_per_hour",
     "false_alarm_rate_per_day",

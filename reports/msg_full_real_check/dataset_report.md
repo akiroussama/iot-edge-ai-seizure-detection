@@ -27,13 +27,13 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 | total_windows | valid_windows | excluded_windows | positive_windows | positive_fraction_valid |
 | --- | --- | --- | --- | --- |
-| 49577.0 | 7919.0 | 41658.0 | 3325.0 | 0.41987624700088394 |
+| 49577.0 | 7920.0 | 41657.0 | 3326.0 | 0.41994949494949496 |
 
 ## Event Denominator
 
-| event_unit | events_source_total | events_after_filter | events_used_for_metrics | event_filter | prediction_filter | restricted_to_prediction_coverage | denominator_warning | cluster_gap_minutes | cluster_policy |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| seizure | 768 | 768 | 768 | none | none | False | none | 240.0 | seizure_level_metrics_clusters_not_collapsed |
+| event_unit | events_source_total | events_after_filter | events_used_for_metrics | metric_units_after_filter | metric_units_used_for_metrics | event_filter | prediction_filter | restricted_to_prediction_coverage | denominator_warning | cluster_gap_minutes | cluster_policy |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| seizure | 768 | 768 | 768 | 768 | 768 | none | none | False | none | 240.0 | seizure_level_metrics_clusters_not_collapsed |
 
 ## Event Annotation
 
@@ -45,13 +45,13 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 | prediction_rows | valid_prediction_rows | alarms | splits |
 | --- | --- | --- | --- |
-| 49577 | 7919 | 792 | test,train,val |
+| 49577 | 7920 | 792 | test,train,val |
 
 ## Baseline
 
 | baseline | horizon | n_events | n_forecasted | sensitivity | far_per_hour | far_per_day | time_in_warning | median_lead_time_seconds | brier_score | ece |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| random_rate_matched | SPH 60 / SOP 1440 | 768 | 256 | 0.3333333333333333 | 0.03662078545270867 | 0.8788988508650083 | 0.10001262785705266 | 37285.5 | 0.30115339210073905 | 0.19954489191178557 |
+| random_rate_matched | SPH 60 / SOP 1440 | 768 | 240 | 0.3125 | 0.03674242424242424 | 0.8818181818181818 | 0.1 | 35262.0 | 0.3015899425315694 | 0.20049106257335464 |
 
 ## Event Coverage
 

@@ -6,6 +6,7 @@ from scripts.make_dataset_report import (
     _event_denominator_table,
     _event_annotation_table,
     _events_coverable_by_predictions,
+    _metric_event_units,
     _prediction_metadata_table,
     _requires_bias_acknowledgement,
 )
@@ -69,6 +70,7 @@ def test_event_denominator_table_makes_matched_subset_explicit() -> None:
         events_all,
         events_after_filter,
         events_after_coverage,
+        events_after_coverage,
         event_filter="recording_match_status=matched",
         prediction_filter="split=test",
         restricted_to_prediction_coverage=True,
@@ -80,8 +82,35 @@ def test_event_denominator_table_makes_matched_subset_explicit() -> None:
     assert denominator.loc[0, "events_source_total"] == 3
     assert denominator.loc[0, "events_after_filter"] == 2
     assert denominator.loc[0, "events_used_for_metrics"] == 1
+    assert denominator.loc[0, "metric_units_used_for_metrics"] == 1
     assert "wearable recording intervals" in denominator.loc[0, "denominator_warning"]
     assert denominator.loc[0, "cluster_policy"] == "seizure_level_metrics_clusters_not_collapsed"
+
+
+def test_metric_event_units_can_collapse_clusters_for_reports() -> None:
+    base = pd.Timestamp("2026-01-01 00:00:00")
+    events = pd.DataFrame(
+        {
+            "patient_id": ["p1", "p1", "p1"],
+            "recording_id": ["r1", "r1", "r1"],
+            "seizure_start": [
+                base,
+                base + pd.Timedelta(minutes=60),
+                base + pd.Timedelta(hours=8),
+            ],
+            "seizure_end": [
+                base + pd.Timedelta(minutes=1),
+                base + pd.Timedelta(minutes=61),
+                base + pd.Timedelta(hours=8, minutes=1),
+            ],
+        }
+    )
+
+    units = _metric_event_units(events, event_unit="cluster", cluster_gap_minutes=240)
+
+    assert len(units) == 2
+    assert units["event_unit"].tolist() == ["cluster", "cluster"]
+    assert units["cluster_size"].tolist() == [2, 1]
 
 
 def test_event_annotation_table_reports_imputed_seizure_ends() -> None:

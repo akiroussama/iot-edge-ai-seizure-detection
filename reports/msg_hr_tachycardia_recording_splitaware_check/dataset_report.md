@@ -31,9 +31,9 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 ## Event Denominator
 
-| event_unit | events_source_total | events_after_filter | events_used_for_metrics | event_filter | prediction_filter | restricted_to_prediction_coverage | denominator_warning | cluster_gap_minutes | cluster_policy |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| seizure | 768 | 510 | 54 | recording_match_status=matched | split=test | True | recording_match_status=matched selects seizures whose onsets could be matched to parsed wearable recording intervals; report source totals separately and do not generalize to all annotated seizures without coverage audit | 240.0 | seizure_level_metrics_clusters_not_collapsed |
+| event_unit | events_source_total | events_after_filter | events_used_for_metrics | metric_units_after_filter | metric_units_used_for_metrics | event_filter | prediction_filter | restricted_to_prediction_coverage | denominator_warning | cluster_gap_minutes | cluster_policy |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| seizure | 768 | 510 | 54 | 510 | 54 | recording_match_status=matched | split=test | True | recording_match_status=matched selects seizures whose onsets could be matched to parsed wearable recording intervals; report source totals separately and do not generalize to all annotated seizures without coverage audit | 240.0 | seizure_level_metrics_clusters_not_collapsed |
 
 ## Event Annotation
 

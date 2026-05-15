@@ -143,7 +143,8 @@ placeholder:
 ```bash
 uv run python scripts/prepare_msg.py \
   --raw-dir data/raw/msg \
-  --processed-dir data/processed/msg
+  --processed-dir data/processed/msg \
+  --duplicate-recording-policy drop_exact
 ```
 
 Generate one-hour windows for a long-horizon check:
@@ -161,8 +162,12 @@ uv run python scripts/label_windows.py \
   --output data/processed/msg/labels_sph60_sop1440.parquet \
   --sph-minutes 60 \
   --sop-minutes 1440 \
-  --postictal-exclusion-minutes 240
+  --postictal-exclusion-minutes 240 \
+  --postictal-anchor seizure_start
 ```
+
+MSG public annotations are onset-only in this pipeline. The CLI refuses to anchor postictal
+exclusion to imputed `seizure_end` values unless an explicit override is supplied.
 
 For partial downloads, evaluate only events whose onsets were matched to a downloaded wearable
 segment:

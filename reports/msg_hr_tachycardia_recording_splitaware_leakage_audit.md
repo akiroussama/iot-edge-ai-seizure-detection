@@ -15,5 +15,4 @@ Feature normalization leakage: metadata present (['score_fit_split', 'threshold_
 Future-information feature leakage: requires manual feature audit
 ```
 
-This audit applies to the regenerated HR tachycardia prediction table, which records
-`score_fit_split=train` and `threshold_source_split=val`.
+This audit applies to the regenerated HR tachycardia prediction table, which records `score_fit_split=train` and `threshold_source_split=val`.

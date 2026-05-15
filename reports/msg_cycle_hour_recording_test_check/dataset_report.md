@@ -31,9 +31,9 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 ## Event Denominator
 
-| event_unit | events_source_total | events_after_filter | events_used_for_metrics | event_filter | prediction_filter | restricted_to_prediction_coverage | denominator_warning | cluster_gap_minutes | cluster_policy |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| seizure | 768 | 510 | 54 | recording_match_status=matched | split=test | True | recording_match_status=matched selects seizures whose onsets could be matched to parsed wearable recording intervals; report source totals separately and do not generalize to all annotated seizures without coverage audit | 240.0 | seizure_level_metrics_clusters_not_collapsed |
+| event_unit | events_source_total | events_after_filter | events_used_for_metrics | metric_units_after_filter | metric_units_used_for_metrics | event_filter | prediction_filter | restricted_to_prediction_coverage | denominator_warning | cluster_gap_minutes | cluster_policy |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| seizure | 768 | 510 | 54 | 510 | 54 | recording_match_status=matched | split=test | True | recording_match_status=matched selects seizures whose onsets could be matched to parsed wearable recording intervals; report source totals separately and do not generalize to all annotated seizures without coverage audit | 240.0 | seizure_level_metrics_clusters_not_collapsed |
 
 ## Event Annotation
 
@@ -45,13 +45,13 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 | prediction_rows | valid_prediction_rows | alarms | splits | alarm_threshold_min | alarm_threshold_max |
 | --- | --- | --- | --- | --- | --- |
-| 10309 | 1418 | 57 | test | 0.9878693632993535 | 0.9878693632993535 |
+| 10309 | 1418 | 57 | test | 0.9878694350646349 | 0.9878694350646349 |
 
 ## Baseline
 
 | baseline | horizon | n_events | n_forecasted | sensitivity | far_per_hour | far_per_day | time_in_warning | median_lead_time_seconds | brier_score | ece |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| cycle_hour | SPH 60 / SOP 1440 | 54 | 3 | 0.05555555555555555 | 0.003526093088857546 | 0.0846262341325811 | 0.04019746121297602 | 69473.0 | 0.12491522850141279 | 0.13052070527480925 |
+| cycle_hour | SPH 60 / SOP 1440 | 54 | 3 | 0.05555555555555555 | 0.003526093088857546 | 0.0846262341325811 | 0.04019746121297602 | 69473.0 | 0.12491471884580932 | 0.13053287346948575 |
 
 ## Event Coverage
 

@@ -12,8 +12,7 @@ Duplicate recording time ranges: False
 Postictal positive labels not excluded: False
 Temporal ordering/overlap leakage: False
 Feature normalization leakage: UNVERIFIED_OR_FAILED [{'status': 'unverified', 'reason': 'missing score_fit_split/threshold_source_split metadata'}]
-Future-information feature leakage: requires manual feature audit
-```
+Future-information feature leakage: requires manual feature audit```
 
 Note: this label/split audit cannot verify feature fitting because labels do not carry
 `score_fit_split` or `threshold_source_split`. Prediction tables must be audited separately.

@@ -13,6 +13,7 @@ import pandas as pd
 
 from src.metrics import (
     brier_score,
+    collapse_event_clusters,
     event_level_sensitivity,
     expected_calibration_error,
     false_alarm_rate_per_day,
@@ -98,7 +99,8 @@ def _events_coverable_by_predictions(
 def _event_denominator_table(
     events_all: pd.DataFrame,
     events_after_filter: pd.DataFrame,
-    events_after_coverage: pd.DataFrame,
+    metric_units_after_filter: pd.DataFrame,
+    metric_units_after_coverage: pd.DataFrame,
     event_filter: str | None,
     prediction_filter: str | None,
     restricted_to_prediction_coverage: bool,
@@ -109,7 +111,9 @@ def _event_denominator_table(
         "event_unit": event_unit,
         "events_source_total": len(events_all),
         "events_after_filter": len(events_after_filter),
-        "events_used_for_metrics": len(events_after_coverage),
+        "events_used_for_metrics": len(metric_units_after_coverage),
+        "metric_units_after_filter": len(metric_units_after_filter),
+        "metric_units_used_for_metrics": len(metric_units_after_coverage),
         "event_filter": event_filter or "none",
         "prediction_filter": prediction_filter or "none",
         "restricted_to_prediction_coverage": restricted_to_prediction_coverage,
@@ -123,10 +127,28 @@ def _event_denominator_table(
         )
     if cluster_gap_minutes is not None:
         row["cluster_gap_minutes"] = cluster_gap_minutes
-        row["cluster_policy"] = "seizure_level_metrics_clusters_not_collapsed"
+        row["cluster_policy"] = (
+            "cluster_level_first_event"
+            if event_unit == "cluster"
+            else "seizure_level_metrics_clusters_not_collapsed"
+        )
     else:
         row["cluster_policy"] = "not_summarized"
     return pd.DataFrame([row])
+
+
+def _metric_event_units(
+    events: pd.DataFrame,
+    event_unit: str,
+    cluster_gap_minutes: float | None,
+) -> pd.DataFrame:
+    if event_unit == "seizure":
+        out = events.copy()
+        out["event_unit"] = "seizure"
+        return out
+    if cluster_gap_minutes is None:
+        raise ValueError("--event-unit cluster requires --cluster-gap-minutes")
+    return collapse_event_clusters(events, cluster_gap_minutes=cluster_gap_minutes)
 
 
 def _event_annotation_table(events_all: pd.DataFrame) -> pd.DataFrame:
@@ -216,7 +238,7 @@ def main() -> None:
         action="store_true",
         help="Evaluate only events whose onset is inside at least one selected prediction horizon.",
     )
-    parser.add_argument("--event-unit", choices=["seizure"], default="seizure")
+    parser.add_argument("--event-unit", choices=["seizure", "cluster"], default="seizure")
     parser.add_argument(
         "--cluster-gap-minutes",
         type=float,
@@ -240,6 +262,11 @@ def main() -> None:
         )
     events_eval = _filter_events(events_all, args.event_filter)
     events_after_filter = events_eval.copy()
+    metric_units_after_filter = _metric_event_units(
+        events_after_filter,
+        event_unit=args.event_unit,
+        cluster_gap_minutes=args.cluster_gap_minutes,
+    )
     predictions = read_table(args.predictions) if args.predictions else pd.DataFrame()
     if args.prediction_filter:
         predictions = _filter_rows(predictions, args.prediction_filter, "prediction")
@@ -253,14 +280,17 @@ def main() -> None:
             raise ValueError("--restrict-events-to-prediction-coverage requires --predictions")
         events_eval = _events_coverable_by_predictions(
             predictions,
-            events_eval,
+            metric_units_after_filter,
             args.sph_minutes,
             args.sop_minutes,
         )
+    else:
+        events_eval = metric_units_after_filter
     denominator = _event_denominator_table(
         events_all=events_all,
         events_after_filter=events_after_filter,
-        events_after_coverage=events_eval,
+        metric_units_after_filter=metric_units_after_filter,
+        metric_units_after_coverage=events_eval,
         event_filter=args.event_filter,
         prediction_filter=args.prediction_filter,
         restricted_to_prediction_coverage=args.restrict_events_to_prediction_coverage,

@@ -27,6 +27,7 @@ def label_forecast_windows(
     postictal_exclusion_minutes: float = 60,
     ictal_exclusion: bool = True,
     require_recording_end: bool = False,
+    postictal_anchor: str = "seizure_end",
 ) -> pd.DataFrame:
     """Label windows for seizure forecasting using SPH/SOP.
 
@@ -44,6 +45,8 @@ def label_forecast_windows(
     """
     _validate_columns(windows_df, REQUIRED_WINDOW_COLUMNS, "windows_df")
     _validate_columns(events_df, REQUIRED_EVENT_COLUMNS, "events_df")
+    if postictal_anchor not in {"seizure_end", "seizure_start"}:
+        raise ValueError("postictal_anchor must be 'seizure_end' or 'seizure_start'")
     if require_recording_end and "recording_end" not in windows_df.columns:
         raise ValueError(
             "windows_df must contain recording_end for right-censoring. Regenerate windows with "
@@ -115,8 +118,8 @@ def label_forecast_windows(
 
         for s, e in zip(starts, ends, strict=True):
             ictal |= (window_starts < e) & (window_ends > s)
-            post_start = e
-            post_end = e + postictal.to_timedelta64()
+            post_start = e if postictal_anchor == "seizure_end" else s
+            post_end = post_start + postictal.to_timedelta64()
             post |= (window_starts < post_end) & (window_ends > post_start)
             horizon_start = window_ends + sph.to_timedelta64()
             horizon_end = window_ends + sph.to_timedelta64() + sop.to_timedelta64()
