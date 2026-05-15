@@ -1,5 +1,11 @@
 # MSG-local Dataset Report
 
+> SUPERSEDED LEGACY REPORT: this file came from an earlier partial MSG artifact set and predates
+> the Phase R right-censoring, full-download, recording-wise split, cluster-denominator, and
+> false-alarm episode fixes. Keep it only as a historical audit artifact. Use
+> `reports/msg_full_real_check/` and `reports/msg_full_real_check_coverable/` for the current
+> random-baseline pipeline check.
+
 ## Status
 
 This report is generated from local data files and is for pipeline verification and manual audit planning.

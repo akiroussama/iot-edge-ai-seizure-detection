@@ -1,5 +1,10 @@
 # MSG-local-full-download Dataset Report
 
+> SUPERSEDED LEGACY REPORT: this file predates the Phase R right-censoring, recording-wise split,
+> onset-anchored postictal, cluster-denominator, and false-alarm episode fixes. Keep it only as a
+> historical audit artifact. Use `reports/msg_hr_tachycardia_recording_splitaware_check/` and
+> `reports/msg_hr_tachycardia_cluster_recording_splitaware_check/` for the current pipeline check.
+
 ## Status
 
 This report is generated from local data files and is for pipeline verification and manual audit planning.

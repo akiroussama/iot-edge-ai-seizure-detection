@@ -1,5 +1,10 @@
 # MSG-local-full-download-cycle-test Dataset Report
 
+> SUPERSEDED LEGACY REPORT: this file predates the Phase R recording-wise split, current
+> right-censoring, cluster-denominator, and false-alarm episode fixes. Keep it only as a historical
+> audit artifact. Use `reports/msg_cycle_hour_recording_test_check/` and
+> `reports/msg_cycle_hour_cluster_recording_test_check/` for the current pipeline check.
+
 ## Status
 
 This report is generated from local data files and is for pipeline verification and manual audit planning.
