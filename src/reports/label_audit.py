@@ -33,6 +33,18 @@ REVIEW_SHEET_COLUMNS = [
     "notes",
 ]
 
+REVIEW_DECISION_COLUMNS = [
+    "source_onset_verified",
+    "source_recording_verified",
+    "sph_sop_labels_pass",
+    "ictal_exclusion_pass",
+    "postictal_exclusion_pass",
+    "right_censoring_pass",
+    "decision",
+]
+
+ALLOWED_REVIEW_DECISIONS = {"PASS", "FAIL", "NEEDS_SOURCE_REVIEW"}
+
 
 def _bool_series(df: pd.DataFrame, column: str, default: bool = False) -> pd.Series:
     """Return a robust boolean series for CSV/parquet audit inputs."""
@@ -228,3 +240,68 @@ def build_label_audit_review_sheet(
         )
 
     return pd.DataFrame(rows, columns=REVIEW_SHEET_COLUMNS)
+
+
+def validate_label_audit_review_sheet(
+    review_df: pd.DataFrame,
+    min_events: int = 5,
+) -> pd.DataFrame:
+    """Return a blocking validation report for a completed human audit sheet."""
+    if min_events <= 0:
+        raise ValueError("min_events must be positive")
+
+    checks: list[dict[str, object]] = []
+
+    def add_check(name: str, passed: bool, detail: str) -> None:
+        checks.append({"check": name, "passed": bool(passed), "detail": detail})
+
+    if review_df.empty:
+        add_check("non_empty_review_sheet", False, "review sheet has no audited events")
+        return pd.DataFrame(checks)
+
+    missing = set(REVIEW_SHEET_COLUMNS) - set(review_df.columns)
+    add_check(
+        "required_columns_present",
+        not missing,
+        "all required columns present" if not missing else f"missing columns: {sorted(missing)}",
+    )
+    if missing:
+        return pd.DataFrame(checks)
+
+    add_check(
+        "minimum_event_count",
+        len(review_df) >= min_events,
+        f"{len(review_df)} reviewed events; required at least {min_events}",
+    )
+
+    for column in REVIEW_DECISION_COLUMNS:
+        normalized = review_df[column].astype("string").str.strip().str.upper()
+        missing_rows = normalized.isna() | normalized.eq("")
+        invalid_rows = ~normalized.isin(ALLOWED_REVIEW_DECISIONS) & ~missing_rows
+        failing_rows = normalized.isin({"FAIL", "NEEDS_SOURCE_REVIEW"})
+        add_check(
+            f"{column}_filled",
+            not bool(missing_rows.any()),
+            f"{int(missing_rows.sum())} missing values",
+        )
+        add_check(
+            f"{column}_valid_values",
+            not bool(invalid_rows.any()),
+            f"{int(invalid_rows.sum())} invalid values",
+        )
+        add_check(
+            f"{column}_all_pass",
+            not bool(failing_rows.any()),
+            f"{int(failing_rows.sum())} blocking non-PASS values",
+        )
+
+    for column in ("unexpected_ictal_not_excluded_rows", "unexpected_postictal_not_excluded_rows"):
+        counts = pd.to_numeric(review_df[column], errors="coerce").fillna(0)
+        bad_rows = counts.gt(0)
+        add_check(
+            f"{column}_zero",
+            not bool(bad_rows.any()),
+            f"{int(bad_rows.sum())} events with non-zero anomaly count",
+        )
+
+    return pd.DataFrame(checks)

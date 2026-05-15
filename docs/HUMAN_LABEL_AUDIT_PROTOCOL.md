@@ -80,6 +80,18 @@ Fill these review-sheet columns for every audited event:
 The precomputed columns `unexpected_ictal_not_excluded_rows` and
 `unexpected_postictal_not_excluded_rows` must be zero before the event can pass.
 
+After filling the sheet, run the blocking gate:
+
+```bash
+uv run python scripts/check_label_audit_review.py \
+  --review-sheet reports/seizeit2_label_audit_review_sheet.csv \
+  --out reports/seizeit2_label_audit_review_check.csv \
+  --min-events 5
+```
+
+The command must exit successfully before A100 training or paper-result reporting.
+An incomplete sheet is expected to fail; that is the intended behavior.
+
 ## Failure Conditions
 
 Stop the experiment if any of these appear:
