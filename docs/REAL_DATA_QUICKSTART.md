@@ -220,9 +220,16 @@ uv run python scripts/make_splits.py \
   --audit-out reports/msg_leakage_audit.txt \
   --strategy temporal
 
+uv run python scripts/make_splits.py \
+  --labels data/processed/msg/labels_sph60_sop1440.parquet \
+  --out data/processed/msg/split_temporal_recording.parquet \
+  --audit-out reports/msg_temporal_recording_leakage_audit.txt \
+  --strategy temporal \
+  --temporal-unit recording
+
 uv run python scripts/run_cycle_baseline.py \
-  --split-labels data/processed/msg/split_temporal.parquet \
-  --out data/processed/msg/cycle_hour_predictions_sph60_sop1440.parquet \
+  --split-labels data/processed/msg/split_temporal_recording.parquet \
+  --out data/processed/msg/cycle_hour_recording_predictions_sph60_sop1440.parquet \
   --fit-split train \
   --threshold-split val \
   --target-tiw 0.1

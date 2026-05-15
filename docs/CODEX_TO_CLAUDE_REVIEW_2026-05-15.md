@@ -612,9 +612,11 @@ reports/seizeit2_sub125_real_check/dataset_report.md
 reports/msg_full_real_check/dataset_report.md
 reports/msg_hr_tachycardia_check/dataset_report.md
 reports/msg_cycle_hour_test_check/dataset_report.md
+reports/msg_cycle_hour_recording_test_check/dataset_report.md
 reports/seizeit2_sub125_audit_packet.md
 reports/msg_full_audit_packet.md
 reports/msg_event_coverage_summary.md
+reports/msg_temporal_recording_leakage_audit.md
 ```
 
 Docs:
@@ -689,16 +691,21 @@ Questions:
 - Should clustered seizures be collapsed into seizure clusters for long-horizon MSG evaluation?
 - Should event-level sensitivity count cluster-level forecasts instead of individual seizures?
 
-### Risk 4: Temporal Split Shares Recordings
+### Risk 4: Temporal Split Policy Must Be Explicit
 
-For MSG temporal splits, patient overlap is expected and temporal ordering is clean, but some
-recordings span train/val/test boundaries. This is currently treated as allowed for
-within-recording temporal analysis.
+For MSG temporal splits, patient overlap is expected. I added `--temporal-unit recording` so whole
+recordings can be kept inside one split while preserving within-patient chronological ordering.
+The local `reports/msg_temporal_recording_leakage_audit.md` check reports:
+
+```text
+Recording overlap across splits: False
+Temporal ordering/overlap leakage: False
+```
 
 Questions:
 
 - Should MSG primary evaluation be patient-wise or temporal?
-- If temporal, should split boundaries be forced to recording boundaries?
+- If temporal, should recording-boundary splitting be mandatory for all baselines?
 - Should per-recording normalization be allowed only if fit on training portion?
 
 ### Risk 5: Normalization Leakage Is Not Machine-Checked Yet
@@ -813,6 +820,20 @@ uv run python scripts/run_cycle_baseline.py \
   --fit-split train \
   --threshold-split val \
   --target-tiw 0.1
+
+uv run python scripts/make_splits.py \
+  --labels data/processed/msg/labels_sph60_sop1440.parquet \
+  --out data/processed/msg/split_temporal_recording.parquet \
+  --audit-out reports/msg_temporal_recording_leakage_audit.txt \
+  --strategy temporal \
+  --temporal-unit recording
+
+uv run python scripts/run_cycle_baseline.py \
+  --split-labels data/processed/msg/split_temporal_recording.parquet \
+  --out data/processed/msg/cycle_hour_recording_predictions_sph60_sop1440.parquet \
+  --fit-split train \
+  --threshold-split val \
+  --target-tiw 0.1
 ```
 
 MSG reports:
@@ -864,6 +885,20 @@ uv run python scripts/summarize_event_coverage.py \
   --out-clusters-csv reports/msg_event_cluster_summary.csv \
   --cluster-gap-minutes 240 \
   --title "MSG Event Coverage And Cluster Summary"
+
+uv run python scripts/make_dataset_report.py \
+  --dataset-name MSG-local-full-download \
+  --windows data/processed/msg/windows_1h.parquet \
+  --labels data/processed/msg/labels_sph60_sop1440.parquet \
+  --events data/processed/msg/events.parquet \
+  --predictions data/processed/msg/cycle_hour_recording_predictions_sph60_sop1440.parquet \
+  --baseline-name cycle_hour_recording_val_tiw10_testsplit \
+  --event-filter recording_match_status=matched \
+  --prediction-filter split=test \
+  --restrict-events-to-prediction-coverage \
+  --out-dir reports/msg_cycle_hour_recording_test_check \
+  --sph-minutes 60 \
+  --sop-minutes 1440
 ```
 
 Audit packets:

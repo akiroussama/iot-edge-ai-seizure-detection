@@ -144,6 +144,18 @@ uv run python scripts/make_splits.py \
   --strategy temporal
 ```
 
+For long wearable recordings or nested ZIP segments, keep whole recordings in a single temporal
+split:
+
+```bash
+uv run python scripts/make_splits.py \
+  --labels data/processed/msg/labels_sph60_sop1440.parquet \
+  --out data/processed/msg/split_temporal_recording.parquet \
+  --audit-out reports/msg_temporal_recording_leakage_audit.txt \
+  --strategy temporal \
+  --temporal-unit recording
+```
+
 For single-patient SeizeIT2 smoke checks with recordings that reset to dummy dates, create a
 recording-wise split to confirm no run appears in more than one split. This is not a substitute for
 patient-wise or prospective temporal evaluation.
@@ -192,8 +204,8 @@ Run a validation-thresholded hour-of-day cycle baseline after creating a split t
 
 ```bash
 uv run python scripts/run_cycle_baseline.py \
-  --split-labels data/processed/msg/split_temporal.parquet \
-  --out data/processed/msg/cycle_hour_predictions_sph60_sop1440.parquet \
+  --split-labels data/processed/msg/split_temporal_recording.parquet \
+  --out data/processed/msg/cycle_hour_recording_predictions_sph60_sop1440.parquet \
   --fit-split train \
   --threshold-split val \
   --target-tiw 0.1

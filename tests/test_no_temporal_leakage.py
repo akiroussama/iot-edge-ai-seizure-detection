@@ -108,3 +108,43 @@ def test_recording_wise_split_keeps_recordings_disjoint():
     assert "Patient overlap across splits: True" in report
     assert "Recording overlap across splits: False" in report
     assert "Temporal ordering/overlap leakage: not evaluated" in report
+
+
+def test_temporal_recording_unit_keeps_recordings_disjoint_and_ordered():
+    base = pd.Timestamp("2026-01-01 00:00:00")
+    rows = []
+    for rec in range(5):
+        rec_start = base + pd.Timedelta(days=rec)
+        for hour in range(4):
+            rows.append(
+                {
+                    "patient_id": "p1",
+                    "recording_id": f"r{rec}",
+                    "window_start": rec_start + pd.Timedelta(hours=hour),
+                    "window_end": rec_start + pd.Timedelta(hours=hour + 1),
+                }
+            )
+    windows = pd.DataFrame(rows)
+
+    split = temporal_split_per_patient(
+        windows,
+        train_fraction=0.4,
+        val_fraction=0.2,
+        split_unit="recording",
+    )
+    report = leakage_audit(split, split_strategy="temporal_recording")
+
+    assert split.groupby("recording_id")["split"].nunique().max() == 1
+    assert "Recording overlap across splits: False" in report
+    assert "Temporal ordering/overlap leakage: False" in report
+
+
+def test_temporal_recording_unit_requires_recording_id():
+    _, windows, _ = make_synthetic_seizeit2_tables()
+
+    try:
+        temporal_split_per_patient(windows.drop(columns=["recording_id"]), split_unit="recording")
+    except ValueError as exc:
+        assert "recording_id" in str(exc)
+    else:
+        raise AssertionError("expected recording_id validation error")

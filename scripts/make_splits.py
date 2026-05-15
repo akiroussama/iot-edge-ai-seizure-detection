@@ -30,6 +30,12 @@ def main() -> None:
     parser.add_argument("--test-fraction", type=float, default=0.2)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--no-purge-overlap", action="store_true")
+    parser.add_argument(
+        "--temporal-unit",
+        choices=["window", "recording"],
+        default="window",
+        help="When strategy=temporal, split individual windows or whole recordings.",
+    )
     args = parser.parse_args()
 
     labels = read_table(args.labels)
@@ -39,6 +45,7 @@ def main() -> None:
             train_fraction=args.train_fraction,
             val_fraction=args.val_fraction,
             purge_overlap=not args.no_purge_overlap,
+            split_unit=args.temporal_unit,
         )
     elif args.strategy == "patient_wise":
         split = patient_wise_split(
@@ -56,7 +63,8 @@ def main() -> None:
         )
 
     write_table(split, args.out)
-    audit = leakage_audit(split, split_strategy=args.strategy)
+    audit_strategy = args.strategy if args.strategy != "temporal" else f"temporal_{args.temporal_unit}"
+    audit = leakage_audit(split, split_strategy=audit_strategy)
     Path(args.audit_out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.audit_out).write_text(audit, encoding="utf-8")
     print({"out": args.out, "audit_out": args.audit_out, "split_counts": split["split"].value_counts().to_dict()})

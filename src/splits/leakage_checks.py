@@ -114,7 +114,8 @@ def leakage_audit(df: pd.DataFrame, split_col: str = "split", split_strategy: st
     lines.append(f"Postictal positive labels not excluded: {postictal['has_leakage']}")
     if postictal["issues"]:
         lines.append(str(postictal["issues"][:10]))
-    if split_strategy in {"temporal", "auto"} and {"window_start", "window_end", split_col}.issubset(df.columns):
+    is_temporal_strategy = split_strategy == "auto" or split_strategy.startswith("temporal")
+    if is_temporal_strategy and {"window_start", "window_end", split_col}.issubset(df.columns):
         temporal = check_temporal_leakage(df, split_col)
         lines.append(f"Temporal ordering/overlap leakage: {temporal['has_leakage']}")
         if temporal["issues"]:

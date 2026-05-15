@@ -22,6 +22,9 @@ Generated package status:
 - Real MSG event-coverage audit support: `scripts/summarize_event_coverage.py` now reports
   per-patient matched/unmatched events, parsed recording hours, and seizure-cluster size. The
   current local report is `reports/msg_event_coverage_summary.md`.
+- Temporal split support now includes `--temporal-unit recording`, which keeps every recording in a
+  single split while preserving per-patient chronological ordering. This should be preferred when
+  within-recording split boundaries would create preprocessing or artifact leakage risk.
 
 Verified test status:
 
