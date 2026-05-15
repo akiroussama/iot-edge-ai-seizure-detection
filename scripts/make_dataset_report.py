@@ -60,6 +60,10 @@ def _filter_column(expression: str) -> str:
     return expression.split("=", maxsplit=1)[0]
 
 
+def _requires_bias_acknowledgement(expression: str | None) -> bool:
+    return expression == "recording_match_status=matched"
+
+
 def _events_coverable_by_predictions(
     predictions: pd.DataFrame,
     events: pd.DataFrame,
@@ -89,6 +93,40 @@ def _events_coverable_by_predictions(
         if ((event["seizure_start"] >= horizon_start) & (event["seizure_start"] < horizon_end)).any():
             keep_indices.append(idx)
     return ev.loc[keep_indices].reset_index(drop=True)
+
+
+def _event_denominator_table(
+    events_all: pd.DataFrame,
+    events_after_filter: pd.DataFrame,
+    events_after_coverage: pd.DataFrame,
+    event_filter: str | None,
+    prediction_filter: str | None,
+    restricted_to_prediction_coverage: bool,
+    event_unit: str,
+    cluster_gap_minutes: float | None,
+) -> pd.DataFrame:
+    row: dict[str, object] = {
+        "event_unit": event_unit,
+        "events_source_total": len(events_all),
+        "events_after_filter": len(events_after_filter),
+        "events_used_for_metrics": len(events_after_coverage),
+        "event_filter": event_filter or "none",
+        "prediction_filter": prediction_filter or "none",
+        "restricted_to_prediction_coverage": restricted_to_prediction_coverage,
+        "denominator_warning": "none",
+    }
+    if _requires_bias_acknowledgement(event_filter):
+        row["denominator_warning"] = (
+            "recording_match_status=matched selects seizures whose onsets could be matched to parsed "
+            "wearable recording intervals; report source totals separately and do not generalize to all "
+            "annotated seizures without coverage audit"
+        )
+    if cluster_gap_minutes is not None:
+        row["cluster_gap_minutes"] = cluster_gap_minutes
+        row["cluster_policy"] = "seizure_level_metrics_clusters_not_collapsed"
+    else:
+        row["cluster_policy"] = "not_summarized"
+    return pd.DataFrame([row])
 
 
 def _baseline_table(
@@ -152,9 +190,21 @@ def main() -> None:
     parser.add_argument("--event-filter", default=None, help="Optional filter such as recording_match_status=matched")
     parser.add_argument("--prediction-filter", default=None, help="Optional filter such as split=test")
     parser.add_argument(
+        "--acknowledge-event-filter-bias",
+        action="store_true",
+        help="Required for recording_match_status=matched because this is a wear-time matched subset.",
+    )
+    parser.add_argument(
         "--restrict-events-to-prediction-coverage",
         action="store_true",
         help="Evaluate only events whose onset is inside at least one selected prediction horizon.",
+    )
+    parser.add_argument("--event-unit", choices=["seizure"], default="seizure")
+    parser.add_argument(
+        "--cluster-gap-minutes",
+        type=float,
+        default=None,
+        help="Optional cluster gap to document that metrics remain seizure-level, not cluster-collapsed.",
     )
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--sph-minutes", type=float, required=True)
@@ -166,7 +216,13 @@ def main() -> None:
     windows = read_table(args.windows)
     labels = read_table(args.labels)
     events_all = read_table(args.events)
+    if _requires_bias_acknowledgement(args.event_filter) and not args.acknowledge_event_filter_bias:
+        raise ValueError(
+            "recording_match_status=matched is a biased wear-time subset. Re-run with "
+            "--acknowledge-event-filter-bias and report source event totals."
+        )
     events_eval = _filter_events(events_all, args.event_filter)
+    events_after_filter = events_eval.copy()
     predictions = read_table(args.predictions) if args.predictions else pd.DataFrame()
     if args.prediction_filter:
         predictions = _filter_rows(predictions, args.prediction_filter, "prediction")
@@ -184,11 +240,22 @@ def main() -> None:
             args.sph_minutes,
             args.sop_minutes,
         )
+    denominator = _event_denominator_table(
+        events_all=events_all,
+        events_after_filter=events_after_filter,
+        events_after_coverage=events_eval,
+        event_filter=args.event_filter,
+        prediction_filter=args.prediction_filter,
+        restricted_to_prediction_coverage=args.restrict_events_to_prediction_coverage,
+        event_unit=args.event_unit,
+        cluster_gap_minutes=args.cluster_gap_minutes,
+    )
 
     summary = dataset_summary(windows, events_eval)
     distribution = label_distribution(labels)
     write_table(summary, out_dir / "dataset_summary.csv")
     write_table(distribution, out_dir / "label_distribution.csv")
+    write_table(denominator, out_dir / "event_denominator.csv")
 
     baseline = pd.DataFrame()
     prediction_metadata = _prediction_metadata_table(predictions)
@@ -236,6 +303,10 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 ## Label Distribution
 
 {_markdown_table(distribution)}
+
+## Event Denominator
+
+{_markdown_table(denominator)}
 
 ## Prediction Metadata
 

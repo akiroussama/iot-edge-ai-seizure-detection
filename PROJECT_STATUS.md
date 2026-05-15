@@ -4,6 +4,9 @@ Generated package status:
 
 - Benchmark scaffold: implemented.
 - SPH/SOP labeling: implemented and tested.
+- Right-censoring: implemented for windows whose full SPH/SOP horizon exceeds `recording_end`; the
+  real-data `label_windows.py` path now requires `recording_end` unless explicitly overridden for
+  legacy diagnostics.
 - Clinical metrics: implemented and tested.
 - Leakage-aware splits: implemented and tested, including patient-wise, temporal, center-wise, and
   recording-wise smoke-check splits.
@@ -28,6 +31,8 @@ Generated package status:
 - Temporal split support now includes `--temporal-unit recording`, which keeps every recording in a
   single split while preserving per-patient chronological ordering. This should be preferred when
   within-recording split boundaries would create preprocessing or artifact leakage risk.
+- Phase R audit remediation has started from `docs/CLAUDE_REVIEW_2026-05-15.md`. C1-C4 are now
+  guarded in code, but the advisor has not yet declared M2 closed.
 
 Verified test status:
 
@@ -48,10 +53,14 @@ Known limitations:
 - Recording-wise splits are only for single-patient/run-disjoint smoke checks. They do not support
   prospective or patient-generalization claims.
 - Current MSG local run uses the full Zenodo file list available through the downloader, but 258 seizure onsets are still unmatched to downloaded wearable segments and are excluded from metric denominators only when explicitly filtered.
+- After right-censoring SPH60/SOP1440 horizons against parsed Empatica recording ends, only 4,854
+  / 49,596 MSG one-hour windows remain valid; 44,708 windows are right-censored. This is a major
+  feasibility warning for 24-hour SOP evaluation on per-segment wearable files.
 - MSG patients 1219, 1675, and 1942 currently have seizure annotations but zero parsed wearable
   recordings in the local artifacts; they require source-data review before being treated as
   evaluable forecast events.
-- Current MSG random and HR tachycardia metrics are pipeline checks only. HR tachycardia underperforms the random rate-matched sanity baseline in the current unaudited full-download check.
+- Current MSG random, cycle, and HR tachycardia metrics are pipeline checks only. Denominators now
+  explicitly report source events, matched events, and prediction-coverable events.
 - The split-aware HR tachycardia check uses train-fitted score statistics and validation-selected
   thresholds, but remains unaudited and should not be compared as a final result.
 - Current MSG cycle baseline metrics are split-filtered pipeline checks only; do not compare them

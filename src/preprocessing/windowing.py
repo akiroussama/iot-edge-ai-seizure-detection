@@ -34,7 +34,13 @@ def generate_fixed_windows(
     recordings_df: pd.DataFrame,
     window_duration: str | pd.Timedelta = "2min",
     stride: str | pd.Timedelta = "30s",
-    carry_columns: Iterable[str] = ("center_id", "source_dataset", "modalities_available"),
+    carry_columns: Iterable[str] = (
+        "recording_start",
+        "recording_end",
+        "center_id",
+        "source_dataset",
+        "modalities_available",
+    ),
 ) -> pd.DataFrame:
     """Generate deterministic fixed windows within each recording.
 

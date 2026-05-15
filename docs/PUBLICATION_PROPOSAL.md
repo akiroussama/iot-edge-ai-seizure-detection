@@ -29,6 +29,7 @@ Recent work shows strong momentum in seizure forecasting, long-term seizure cycl
 
 - SPH/SOP forecasting labels;
 - explicit ictal/postictal exclusions;
+- right-censoring for windows whose SPH/SOP horizon is not fully observed;
 - patient-wise and temporal split checks;
 - event-level sensitivity with FAR/day and Time-in-Warning;
 - calibration metrics;
@@ -179,6 +180,10 @@ As of 2026-05-15:
   on validation, and reports on test only. Its local numbers are audit signals only, not paper
   results, because event matching, seizure timelines, cluster handling, and normalization policy
   are not manually cleared.
+- Phase R right-censoring changed MSG SPH60/SOP1440 feasibility substantially: only 4,854 / 49,596
+  one-hour windows remain valid when the full 24-hour SOP must be observed inside parsed wearable
+  recording intervals. This may force a shorter horizon, a different continuity model, or a stricter
+  wearable-coverage subset before final experiments.
 - Clinical result claims: not allowed yet.
 - A100 training: not cleared.
 - Next blocker: manual audit of 5-10 seizure timelines per dataset and correction of any parser/label issues.

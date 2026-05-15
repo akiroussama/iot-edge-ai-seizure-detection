@@ -132,7 +132,9 @@ uv run python scripts/make_dataset_report.py \
 ```
 
 For MSG partial downloads, pass `--event-filter recording_match_status=matched` so events outside
-downloaded wearable segments are reported as coverage gaps rather than false model failures.
+downloaded wearable segments are reported as coverage gaps rather than false model failures. This is
+a biased wear-time subset and report commands must also pass
+`--acknowledge-event-filter-bias`.
 
 Create temporal splits and a leakage audit:
 
@@ -211,6 +213,20 @@ uv run python scripts/run_cycle_baseline.py \
   --fit-split train \
   --threshold-split val \
   --target-tiw 0.1
+```
+
+Threshold sweeps are split-safe by default. They refuse full-table sweeps when a `split` column
+exists and refuse `split=test` unless explicitly marked exploratory:
+
+```bash
+uv run python scripts/sweep_thresholds.py \
+  --predictions data/processed/msg/hr_tachycardia_recording_splitaware_predictions_sph60_sop1440.parquet \
+  --events data/processed/msg/events.parquet \
+  --output reports/msg_hr_threshold_sweep_val.csv \
+  --sweep-filter split=val \
+  --event-filter recording_match_status=matched \
+  --sph-minutes 60 \
+  --sop-minutes 1440
 ```
 
 ## A100 Policy

@@ -120,3 +120,41 @@ def test_postictal_preictal_overlap_remains_excluded():
     assert labeled.loc[0, "forecast_label"]
     assert labeled.loc[0, "is_postictal"]
     assert labeled.loc[0, "is_excluded"]
+
+
+def test_right_censored_forecast_horizon_is_excluded():
+    base = pd.Timestamp("2026-01-01 00:00:00")
+    windows = pd.DataFrame(
+        {
+            "patient_id": ["p1", "p1"],
+            "recording_id": ["r1", "r1"],
+            "recording_end": [base + pd.Timedelta(minutes=40), base + pd.Timedelta(minutes=40)],
+            "window_start": [base, base + pd.Timedelta(minutes=20)],
+            "window_end": [base + pd.Timedelta(minutes=1), base + pd.Timedelta(minutes=21)],
+        }
+    )
+    events = _events([])
+
+    labeled = label_forecast_windows(windows, events, sph_minutes=5, sop_minutes=30)
+
+    assert labeled["is_right_censored"].tolist() == [False, True]
+    assert labeled["is_excluded"].tolist() == [False, True]
+
+
+def test_require_recording_end_for_right_censoring_fails_loudly():
+    windows = pd.DataFrame(
+        {
+            "patient_id": ["p1"],
+            "recording_id": ["r1"],
+            "window_start": [pd.Timestamp("2026-01-01 00:00:00")],
+            "window_end": [pd.Timestamp("2026-01-01 00:01:00")],
+        }
+    )
+    events = _events([])
+
+    try:
+        label_forecast_windows(windows, events, 5, 30, require_recording_end=True)
+    except ValueError as exc:
+        assert "recording_end" in str(exc)
+    else:
+        raise AssertionError("expected missing recording_end to fail")

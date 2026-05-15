@@ -14,14 +14,14 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 - SPH minutes: 60
 - SOP minutes: 1440
 - Event filter used for metrics: `recording_match_status=matched`
-- Prediction filter used for metrics: `split=test`
+- Prediction filter used for metrics: `none`
 - Events restricted to selected prediction horizon coverage: `True`
 
 ## Dataset Summary
 
 | patients | recordings | windows | events | window_hours_sum |
 | --- | --- | --- | --- | --- |
-| 8.0 | 2057.0 | 49596.0 | 13.0 | 49596.0 |
+| 8.0 | 2057.0 | 49596.0 | 78.0 | 49596.0 |
 
 ## Label Distribution
 
@@ -33,19 +33,19 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 | event_unit | events_source_total | events_after_filter | events_used_for_metrics | event_filter | prediction_filter | restricted_to_prediction_coverage | denominator_warning | cluster_gap_minutes | cluster_policy |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| seizure | 768 | 510 | 13 | recording_match_status=matched | split=test | True | recording_match_status=matched selects seizures whose onsets could be matched to parsed wearable recording intervals; report source totals separately and do not generalize to all annotated seizures without coverage audit | 240.0 | seizure_level_metrics_clusters_not_collapsed |
+| seizure | 768 | 510 | 78 | recording_match_status=matched | none | True | recording_match_status=matched selects seizures whose onsets could be matched to parsed wearable recording intervals; report source totals separately and do not generalize to all annotated seizures without coverage audit | 240.0 | seizure_level_metrics_clusters_not_collapsed |
 
 ## Prediction Metadata
 
-| prediction_rows | valid_prediction_rows | alarms | splits | alarm_threshold_min | alarm_threshold_max |
-| --- | --- | --- | --- | --- | --- |
-| 9260 | 792 | 92 | test | 0.06516476024115028 | 0.06516476024115028 |
+| prediction_rows | valid_prediction_rows | alarms |
+| --- | --- | --- |
+| 49596 | 4854 | 485 |
 
 ## Baseline
 
 | baseline | horizon | n_events | n_forecasted | sensitivity | far_per_hour | far_per_day | time_in_warning | median_lead_time_seconds | brier_score | ece |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| cycle_hour_recording_val_tiw10_right_censored_testsplit | SPH 60 / SOP 1440 | 13 | 8 | 0.6153846153846154 | 0.03409090909090909 | 0.8181818181818182 | 0.11616161616161616 | 64935.0 | 0.042354985675889426 | 0.02113345096149134 |
+| random_rate_matched_tiw10_right_censored_coverable | SPH 60 / SOP 1440 | 78 | 36 | 0.46153846153846156 | 0.05892047795632468 | 1.4140914709517924 | 0.09991759373712403 | 51068.0 | 0.1528706004873169 | 0.24383059713913505 |
 
 ## Event Coverage
 

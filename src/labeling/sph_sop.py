@@ -26,6 +26,7 @@ def label_forecast_windows(
     sop_minutes: float,
     postictal_exclusion_minutes: float = 60,
     ictal_exclusion: bool = True,
+    require_recording_end: bool = False,
 ) -> pd.DataFrame:
     """Label windows for seizure forecasting using SPH/SOP.
 
@@ -34,15 +35,27 @@ def label_forecast_windows(
 
     Ictal and postictal windows are marked with ``is_excluded`` so downstream metrics can
     ignore them. The raw forecast label is still computed for transparency.
+
+    If ``recording_end`` is present, windows whose full SPH/SOP horizon extends beyond the
+    recording boundary are marked ``is_right_censored`` and excluded. Use
+    ``require_recording_end=True`` in real-data label generation so unobserved future horizons
+    cannot silently become true negatives.
     """
     _validate_columns(windows_df, REQUIRED_WINDOW_COLUMNS, "windows_df")
     _validate_columns(events_df, REQUIRED_EVENT_COLUMNS, "events_df")
+    if require_recording_end and "recording_end" not in windows_df.columns:
+        raise ValueError(
+            "windows_df must contain recording_end for right-censoring. Regenerate windows with "
+            "current make_windows.py or pass allow-missing-recording-end only for legacy diagnostics."
+        )
 
     out = windows_df.copy()
     events = events_df.copy()
 
     for col in ("window_start", "window_end"):
         out[col] = ensure_datetime(out[col])
+    if "recording_end" in out.columns:
+        out["recording_end"] = ensure_datetime(out["recording_end"])
     for col in ("seizure_start", "seizure_end"):
         events[col] = ensure_datetime(events[col])
 
@@ -57,7 +70,11 @@ def label_forecast_windows(
     out["time_since_last_seizure_seconds"] = np.nan
     out["is_ictal"] = False
     out["is_postictal"] = False
+    out["is_right_censored"] = False
     out["forecast_label"] = False
+    if "recording_end" in out.columns:
+        horizon_end = out["window_end"] + sph + sop
+        out["is_right_censored"] = horizon_end > out["recording_end"]
 
     use_recording = _has_recording_scope(out, events)
     group_cols = ["patient_id"] + (["recording_id"] if use_recording else [])
@@ -108,8 +125,8 @@ def label_forecast_windows(
         out.loc[idx, "is_postictal"] = post
         out.loc[idx, "forecast_label"] = label
 
-    out["is_excluded"] = out["is_postictal"] | (out["is_ictal"] if ictal_exclusion else False)
+    out["is_excluded"] = out["is_postictal"] | out["is_right_censored"] | (out["is_ictal"] if ictal_exclusion else False)
     # Keep booleans as bool dtype.
-    for col in ("is_ictal", "is_postictal", "forecast_label", "is_excluded"):
+    for col in ("is_ictal", "is_postictal", "is_right_censored", "forecast_label", "is_excluded"):
         out[col] = out[col].astype(bool)
     return out

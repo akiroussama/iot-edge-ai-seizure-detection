@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import pandas as pd
 
-from scripts.make_dataset_report import _events_coverable_by_predictions, _prediction_metadata_table
+from scripts.make_dataset_report import (
+    _event_denominator_table,
+    _events_coverable_by_predictions,
+    _prediction_metadata_table,
+    _requires_bias_acknowledgement,
+)
 
 
 def test_events_coverable_by_predictions_uses_selected_horizon() -> None:
@@ -52,3 +57,27 @@ def test_prediction_metadata_table_reports_fit_and_threshold_scope() -> None:
     assert metadata.loc[0, "alarms"] == 1
     assert metadata.loc[0, "score_fit_split"] == "train"
     assert metadata.loc[0, "threshold_source_split"] == "val"
+
+
+def test_event_denominator_table_makes_matched_subset_explicit() -> None:
+    events_all = pd.DataFrame({"event_id": [1, 2, 3]})
+    events_after_filter = pd.DataFrame({"event_id": [1, 2]})
+    events_after_coverage = pd.DataFrame({"event_id": [1]})
+
+    denominator = _event_denominator_table(
+        events_all,
+        events_after_filter,
+        events_after_coverage,
+        event_filter="recording_match_status=matched",
+        prediction_filter="split=test",
+        restricted_to_prediction_coverage=True,
+        event_unit="seizure",
+        cluster_gap_minutes=240,
+    )
+
+    assert _requires_bias_acknowledgement("recording_match_status=matched")
+    assert denominator.loc[0, "events_source_total"] == 3
+    assert denominator.loc[0, "events_after_filter"] == 2
+    assert denominator.loc[0, "events_used_for_metrics"] == 1
+    assert "wearable recording intervals" in denominator.loc[0, "denominator_warning"]
+    assert denominator.loc[0, "cluster_policy"] == "seizure_level_metrics_clusters_not_collapsed"

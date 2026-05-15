@@ -10,7 +10,7 @@ def robust_zscore(series: pd.Series, reference_mask: pd.Series | None = None) ->
     reference = x.loc[reference_mask.reindex(x.index, fill_value=False)] if reference_mask is not None else x
     reference = reference.dropna()
     if reference.empty:
-        return pd.Series(0.0, index=series.index)
+        raise ValueError("empty reference rows for robust z-score; refusing silent zero-score fallback")
     med = reference.median()
     mad = (reference - med).abs().median()
     if mad == 0 or np.isnan(mad):
@@ -84,7 +84,7 @@ def normalize_score(score: pd.Series, reference_mask: pd.Series | None = None) -
     else:
         reference = x.loc[reference_mask.reindex(x.index, fill_value=False)].dropna()
     if reference.empty:
-        return pd.Series(0.0, index=score.index)
+        raise ValueError("empty reference rows for score normalization; refusing silent zero-score fallback")
     sorted_reference = np.sort(reference.to_numpy(dtype=float))
     out = pd.Series(0.0, index=score.index)
     finite = np.isfinite(x.to_numpy(dtype=float))

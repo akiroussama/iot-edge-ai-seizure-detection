@@ -192,6 +192,7 @@ uv run python scripts/make_dataset_report.py \
   --predictions data/processed/msg/random_tiw10_predictions_sph60_sop1440.parquet \
   --baseline-name random_rate_matched_tiw10 \
   --event-filter recording_match_status=matched \
+  --acknowledge-event-filter-bias \
   --out-dir reports/msg_real_check \
   --sph-minutes 60 \
   --sop-minutes 1440
@@ -278,8 +279,10 @@ uv run python scripts/make_dataset_report.py \
   --predictions data/processed/msg/hr_tachycardia_recording_splitaware_predictions_sph60_sop1440.parquet \
   --baseline-name hr_tachycardia_trainfit_valthreshold_recording_testsplit \
   --event-filter recording_match_status=matched \
+  --acknowledge-event-filter-bias \
   --prediction-filter split=test \
   --restrict-events-to-prediction-coverage \
+  --cluster-gap-minutes 240 \
   --out-dir reports/msg_hr_tachycardia_recording_splitaware_check \
   --sph-minutes 60 \
   --sop-minutes 1440

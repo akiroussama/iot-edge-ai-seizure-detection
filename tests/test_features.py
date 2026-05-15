@@ -7,7 +7,7 @@ from zipfile import ZipFile
 
 import pandas as pd
 
-from src.baselines.simple_rules import normalize_score
+from src.baselines.simple_rules import ecg_tachycardia_score, normalize_score
 from src.features.msg_empatica import extract_msg_empatica_window_features
 from src.features.window_features import extract_window_features, make_feature_matrix
 from src.utils.io import read_table, write_table
@@ -141,3 +141,32 @@ def test_run_rule_baseline_defaults_to_train_fit_and_val_threshold(tmp_path) -> 
     preds = read_table(out_path)
     assert set(preds["score_fit_split"]) == {"train"}
     assert set(preds["threshold_source_split"]) == {"val"}
+
+
+def test_rule_baseline_fails_on_patient_without_reference_rows() -> None:
+    features = pd.DataFrame(
+        {
+            "patient_id": ["train_patient", "heldout_patient"],
+            "hr_mean": [60.0, 90.0],
+        }
+    )
+    reference_mask = pd.Series([True, False])
+
+    try:
+        ecg_tachycardia_score(features, reference_mask=reference_mask)
+    except ValueError as exc:
+        assert "empty reference rows" in str(exc)
+    else:
+        raise AssertionError("expected empty patient reference to fail")
+
+
+def test_normalize_score_fails_on_empty_reference_rows() -> None:
+    score = pd.Series([0.1, 0.2])
+    reference_mask = pd.Series([False, False])
+
+    try:
+        normalize_score(score, reference_mask=reference_mask)
+    except ValueError as exc:
+        assert "empty reference rows" in str(exc)
+    else:
+        raise AssertionError("expected empty normalization reference to fail")

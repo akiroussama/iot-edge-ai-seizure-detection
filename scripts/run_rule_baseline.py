@@ -111,12 +111,19 @@ def main() -> None:
     if args.patient_specific_threshold:
         calibration_rows = preds.loc[valid_mask & evidence_mask & threshold_mask]
         if calibration_rows.empty:
-            preds["patient_threshold"] = np.nan
-            preds["alarm"] = False
+            raise ValueError(
+                f"threshold split {threshold_split or 'all'} has no valid evidence rows; "
+                "refusing silent no-alarm fallback"
+            )
         else:
             thresholds = patient_specific_quantile_thresholds(calibration_rows, args.target_tiw)
             preds = apply_patient_thresholds(preds, thresholds)
     else:
+        if not (valid_mask & evidence_mask & threshold_mask).any():
+            raise ValueError(
+                f"threshold split {threshold_split or 'all'} has no valid evidence rows; "
+                "refusing silent no-alarm fallback"
+            )
         threshold = quantile_threshold(preds.loc[valid_mask & evidence_mask & threshold_mask, "risk_score"], args.target_tiw)
         preds["alarm_threshold"] = threshold
         preds["alarm"] = preds["risk_score"].astype(float) >= threshold

@@ -24,6 +24,7 @@ def test_generate_fixed_windows_datetime_boundaries():
     assert windows["window_start"].iloc[0] == pd.Timestamp("2026-01-01 00:00:00")
     assert windows["window_end"].iloc[-1] == pd.Timestamp("2026-01-01 00:05:00")
     assert (windows["window_end"] <= recordings.iloc[0]["recording_end"]).all()
+    assert set(windows["recording_end"]) == {pd.Timestamp("2026-01-01 00:05:00")}
     assert set(windows["center_id"]) == {"c1"}
 
 

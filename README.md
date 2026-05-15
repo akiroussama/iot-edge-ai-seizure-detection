@@ -92,10 +92,12 @@ uv sync --extra dev --extra torch
 uv run python -m pytest -q
 ```
 
-Expected result for this package after the v0.1 verification pass:
+The test count changes as remediation tests are added. The current Phase R checkpoint collected
+83 tests; treat CI and the local command output as the source of truth rather than a hard-coded
+count.
 
 ```text
-51 passed
+all tests pass
 ```
 
 ## Synthetic demo
@@ -122,6 +124,12 @@ python scripts/prepare_seizeit2.py \
   --raw-dir data/raw/seizeit2 \
   --processed-dir data/processed/seizeit2
 
+python scripts/make_windows.py \
+  --recordings data/processed/seizeit2/recordings.parquet \
+  --out data/processed/seizeit2/windows.parquet \
+  --window-duration 2min \
+  --stride 30s
+
 python scripts/label_windows.py \
   --windows data/processed/seizeit2/windows.parquet \
   --events data/processed/seizeit2/events.parquet \
@@ -140,7 +148,7 @@ python scripts/inspect_labels.py \
 Do not launch serious GPU training until:
 
 1. labels are manually audited around multiple seizures;
-2. postictal exclusion is verified;
+2. ictal, postictal, and right-censored horizon exclusions are verified;
 3. random rate-matched baseline exists;
 4. split is frozen;
 5. leakage audit passes;
@@ -152,7 +160,7 @@ This package does **not** claim real seizure-forecasting performance yet. It is 
 
 Forbidden claims at this stage:
 
-- tibia performance;
+- wearable edge/TinyML hardware performance;
 - closed-loop stimulation;
 - 90% sensitivity at 0.1 FAR/day;
 - prediction of all focal seizures.

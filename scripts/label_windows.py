@@ -21,6 +21,11 @@ def main() -> None:
     parser.add_argument("--sop-minutes", type=float, default=30)
     parser.add_argument("--postictal-exclusion-minutes", type=float, default=60)
     parser.add_argument("--include-ictal", action="store_true")
+    parser.add_argument(
+        "--allow-missing-recording-end",
+        action="store_true",
+        help="Legacy/debug only. Real-data labels should include recording_end for right-censoring.",
+    )
     args = parser.parse_args()
 
     windows = read_table(args.windows)
@@ -32,6 +37,7 @@ def main() -> None:
         sop_minutes=args.sop_minutes,
         postictal_exclusion_minutes=args.postictal_exclusion_minutes,
         ictal_exclusion=not args.include_ictal,
+        require_recording_end=not args.allow_missing_recording_end,
     )
     write_table(labeled, args.output)
     print(f"wrote {args.output} with {len(labeled)} windows")
