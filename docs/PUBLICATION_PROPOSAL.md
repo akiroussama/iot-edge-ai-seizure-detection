@@ -180,10 +180,12 @@ As of 2026-05-15:
   on validation, and reports on test only. Its local numbers are audit signals only, not paper
   results, because event matching, seizure timelines, cluster handling, and normalization policy
   are not manually cleared.
-- Phase R right-censoring changed MSG SPH60/SOP1440 feasibility substantially: only 4,854 / 49,596
-  one-hour windows remain valid when the full 24-hour SOP must be observed inside parsed wearable
-  recording intervals. This may force a shorter horizon, a different continuity model, or a stricter
-  wearable-coverage subset before final experiments.
+- Phase R2/R3 right-censoring changed MSG SPH60/SOP1440 feasibility substantially: after preserving
+  confirmed positives and using onset-anchored postictal exclusion, 7,920 / 49,577 one-hour windows
+  remain valid. The current matched/coverable temporal-test denominator is 54 seizure events or 40
+  first-event clusters under the 240-minute cluster-gap audit policy. This may force a shorter
+  horizon, a different continuity model, or a stricter wearable-coverage subset before final
+  experiments.
 - Clinical result claims: not allowed yet.
 - A100 training: not cleared.
 - Next blocker: manual audit of 5-10 seizure timelines per dataset and correction of any parser/label issues.

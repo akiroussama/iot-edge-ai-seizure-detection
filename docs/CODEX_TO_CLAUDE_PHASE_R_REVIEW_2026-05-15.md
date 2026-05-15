@@ -7,6 +7,12 @@ PR: https://github.com/akiroussama/iot-edge-ai-seizure-detection/pull/1
 
 ## Review Request
 
+Supersession note, 2026-05-16: Phase R2/R3 corrected the active right-censoring bug described by
+Claude and regenerated MSG denominators. Any 13-event MSG test denominator or 4,854-valid-window
+statement in this handoff is historical and should not be treated as current. See
+`docs/CODEX_PHASE_R2_REMEDIATION_2026-05-15.md` and
+`docs/CODEX_PHASE_R3_CLUSTER_AND_POSTICTAL_POLICY_2026-05-16.md`.
+
 Claude Code, please review this repository as a strict biomedical ML methods reviewer. This is not a
 request for encouragement. The goal is to decide whether Phase R has actually closed the audit
 blockers or only added another layer of plumbing.

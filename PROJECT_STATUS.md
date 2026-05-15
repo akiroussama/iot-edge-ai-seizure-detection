@@ -17,8 +17,11 @@ Generated package status:
 - Calibration thresholding: implemented and tested.
 - A100 real-data training: not run. Labels, splits, leakage audit, and manual seizure timeline review are not yet clean/frozen.
 - Real SeizeIT2 parsing: BIDS-score `eventType/dateTime/recordingDuration` annotations are supported; local `sub-125` annotation import produced real pipeline-check labels.
-- Real MSG parsing: Zenodo `Mayo_*.zip` nested Empatica manifests, patient onset text files, recording intervals, event-to-segment matching, and partial-download handling are supported. The current local full-download pass produced 2070 wearable segments, 768 seizure onsets, and 510 onsets matched to downloaded wearable segments.
-- Real MSG transparent baseline support: HR window features are extractable from nested Empatica ZIPs without materializing all raw samples; the current local full-download HR extraction populated 49,562 / 49,596 one-hour windows.
+- Real MSG parsing: Zenodo `Mayo_*.zip` nested Empatica manifests, patient onset text files,
+  recording intervals, event-to-segment matching, exact duplicate segment resolution, and
+  partial-download handling are supported. The current local cleaned pass produced 2068 wearable
+  segments, 768 seizure onsets, and 510 onsets matched to downloaded wearable segments.
+- Real MSG transparent baseline support: HR window features are extractable from nested Empatica ZIPs without materializing all raw samples; the current local cleaned HR extraction populated the regenerated 49,577 one-hour windows.
 - Transparent rule baselines are now split-aware when a `split` column is present: robust feature
   statistics and score normalization default to train rows, and alarm thresholds default to
   validation rows. Reports include prediction metadata with fit/threshold scope.
@@ -57,22 +60,26 @@ Known limitations:
 - Recording-wise splits are only for single-patient/run-disjoint smoke checks. They do not support
   prospective or patient-generalization claims.
 - Current MSG local run uses the full Zenodo file list available through the downloader, but 258 seizure onsets are still unmatched to downloaded wearable segments and are excluded from metric denominators only when explicitly filtered.
-- After right-censoring SPH60/SOP1440 horizons against parsed Empatica recording ends, only 4,854
-  / 49,596 MSG one-hour windows remain valid; 44,708 windows are right-censored. This is a major
-  feasibility warning for 24-hour SOP evaluation on per-segment wearable files.
-- Current MSG temporal-recording split audit flags duplicate recording time ranges for patient
-  `2002`, including duplicated recording IDs with ` (1)` suffixes. This must be resolved before
-  split freeze.
+- After right-censoring SPH60/SOP1440 horizons against parsed Empatica recording ends and preserving
+  confirmed positives, 7,920 / 49,577 MSG one-hour windows remain valid; 44,689 windows are
+  right-censored. This is a major feasibility warning for 24-hour SOP evaluation on per-segment
+  wearable files.
+- The patient `2002` exact duplicate ` (1)` recording ranges have been resolved with the explicit
+  `drop_exact` policy for local audit artifacts. The raw duplicate files still require source-data
+  documentation before split freeze.
 - The current MSG temporal-recording elapsed-time split has 33,853 train windows, 5,415 validation
-  windows, and 10,328 test windows.
+  windows, and 10,309 test windows.
 - MSG patients 1219, 1675, and 1942 currently have seizure annotations but zero parsed wearable
   recordings in the local artifacts; they require source-data review before being treated as
   evaluable forecast events.
 - Current MSG random, cycle, and HR tachycardia metrics are pipeline checks only. Denominators now
   explicitly report source events, matched events, and prediction-coverable events.
-- MSG seizure end times are onset-only imputations in the current public annotation path; reports
-  now expose `seizure_end_imputed_events=768` and `imputed_duration_seconds_values=60.0` instead of
-  treating seizure duration as measured clinical ground truth.
+- MSG seizure end times are onset-only imputations in the current public annotation path. The real
+  label CLI now refuses to anchor postictal exclusion to imputed `seizure_end` values unless an
+  explicit override is supplied; current MSG labels use `--postictal-anchor seizure_start`.
+- Reports can now be generated with seizure-level or first-event cluster-level denominators. Current
+  MSG temporal-test matched/coverable denominators are 54 seizure events or 40 clusters under a
+  240-minute cluster-gap audit policy.
 - The split-aware HR tachycardia check uses train-fitted score statistics and validation-selected
   thresholds, but remains unaudited and should not be compared as a final result.
 - Current MSG cycle baseline metrics are split-filtered pipeline checks only; do not compare them

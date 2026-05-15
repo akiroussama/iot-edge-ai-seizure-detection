@@ -1,6 +1,6 @@
 # SOTA Review Snapshot - Wearable Seizure Forecasting
 
-Date checked: 2026-05-15
+Date checked: 2026-05-16
 
 This is a working SOTA snapshot for EpiTwin-Open. It is not a systematic review. It records the current evidence base used to frame the first paper and must be refreshed before submission.
 
@@ -93,7 +93,8 @@ not non-invasive public wearable HR/steps data. It is important SOTA for seizure
 and long-horizon risk framing, but it does not replace the need for open wearable benchmark
 infrastructure because its inputs are implant-derived biomarkers from a small patient set.
 
-The 2026 circadian phase-locking arXiv preprint uses single-patient wearable IBI and seizure diary
+The 2026 circadian phase-locking arXiv preprint was rechecked on 2026-05-16. It is not a phantom
+reference: arXiv lists it as a 2026 single-patient case study using wearable IBI and seizure diary
 data to test whether seizure onsets align with physiological circadian phase. It supports including
 cycle/phase baselines and interpretable rhythm features, while also emphasizing that single-patient
 wearable findings need multi-patient validation.

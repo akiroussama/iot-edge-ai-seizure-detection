@@ -12,9 +12,10 @@ Mitigation: paper focuses on forecastability boundaries and calibrated alarm bud
 
 Mitigation: tests, frozen splits, manual audit, event-level metrics.
 
-## R4 — Edge claims unsupported
+## R4 — Edge/TinyML claims unsupported
 
-Mitigation: Paper 1 makes no tibia claim. Edge appears only as reduced-modality simulation.
+Mitigation: Paper 1 makes no hardware deployment claim. Edge appears only as reduced-modality
+simulation until RAM, latency, and energy-proxy measurements exist.
 
 ## R5 — Buzzword stacking
 

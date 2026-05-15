@@ -53,5 +53,5 @@ Allowed:
 
 Forbidden:
 - “we predict all seizures”.
-- “tibia works” without tibia data.
+- “edge/TinyML works” without RAM, latency, and energy-proxy measurements.
 - “closed-loop VNS” without clinical protocol.

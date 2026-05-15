@@ -21,6 +21,6 @@ Convert public wearable seizure datasets from retrospective detection toward lea
 ## Not yet claimed
 
 - no seizure prediction performance claim;
-- no tibia claim;
+- no edge/TinyML hardware claim;
 - no clinical deployment claim;
 - no Liquid/Mamba/SNN claim before benchmark validation.
