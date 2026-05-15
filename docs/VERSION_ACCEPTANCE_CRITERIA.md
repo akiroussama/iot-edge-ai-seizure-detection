@@ -21,6 +21,9 @@ Not required:
 
 ## v1.0 - Real-Dataset-Ready Benchmark
 
+Status on 2026-05-15: implementation substantially present; final acceptance is blocked on manual
+timeline audit and any corrections it reveals.
+
 Required:
 
 - Canonical schema validation for metadata, events, recordings, windows, labels, modality availability, features, and predictions.
@@ -36,11 +39,11 @@ Required:
 - Reports include dataset summary, label distribution, baseline metrics, leakage audit, and human audit checklist.
 - Synthetic/mock reports are clearly labeled as non-clinical.
 
-Blocked until user provides data:
+Blocked until human audit:
 
-- Verified SeizeIT2 real artifacts.
-- Verified My Seizure Gauge real artifacts.
 - Manual seizure timeline audit.
+- Split freeze after audit.
+- Normalization/feature-fit scope audit before supervised training.
 
 ## v2.0 - Research-Grade Baselines And A100-Ready Package
 

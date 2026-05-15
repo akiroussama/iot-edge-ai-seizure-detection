@@ -18,6 +18,8 @@
 - `docs/PUBLICATION_PROPOSAL.md`: paper proposal and claim boundaries.
 - `docs/REAL_DATA_QUICKSTART.md`: real dataset command sequence.
 - `scripts/make_dataset_report.py`: dataset-specific report generator for real-data pipeline checks.
+- `scripts/extract_msg_features.py`: MSG nested Empatica HR/ACC window feature extraction.
+- `scripts/run_rule_baseline.py`: transparent HR tachycardia, ACC energy, and generic z-score rule baselines.
 
 ## Core source modules
 
@@ -34,9 +36,12 @@
 
 ## Tests
 
-- Tests cover labels, metrics, calibration, models, hazard, features, leakage, windowing, random baselines, schemas, threshold sweeps, label audit export, mock dataset parsers, BIDS-score SeizeIT2 events, and Zenodo MSG nested ZIP manifests.
+- Tests cover labels, metrics, calibration, models, hazard, features, leakage, windowing,
+  random/rule baselines, schemas, threshold sweeps, label audit export, mock dataset parsers,
+  BIDS-score SeizeIT2 events, Zenodo MSG nested ZIP manifests, and MSG Empatica HR/ACC feature extraction.
 
 ## Reports
 
 - `reports/synthetic_demo/`: generated synthetic demo outputs.
 - `reports/*_real_check/`: local real-data pipeline check reports. These are not paper results until manual audit is complete.
+- `reports/msg_hr_tachycardia_check/`: local full-download MSG HR-rule baseline check. This is an audit artifact, not a clinical result.

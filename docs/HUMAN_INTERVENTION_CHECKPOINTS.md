@@ -18,6 +18,10 @@ Inspect at least 5–10 seizures:
 - Confirm postictal windows are excluded.
 - Confirm no future information is used in features.
 
+Current local audit files:
+- SeizeIT2: `reports/seizeit2_sub125_label_audit.csv`
+- My Seizure Gauge: `reports/msg_full_label_audit.csv`
+
 ## Checkpoint 3 — Split freeze
 
 Freeze:
@@ -26,6 +30,10 @@ Freeze:
 - center-wise split if center metadata is present.
 
 No random window split is allowed as a primary result.
+
+Current local MSG split audits:
+- temporal: `reports/msg_full_leakage_audit.txt`
+- patient-wise: `reports/msg_full_patient_wise_leakage_audit.txt`
 
 ## Checkpoint 4 — A100 launch
 
