@@ -236,6 +236,15 @@ def test_parse_msg_zenodo_seizure_times_only_txt(tmp_path):
     ) == pd.Timedelta(seconds=60)
 
 
+def test_msg_modality_manifest_ignores_annotation_only_zip(tmp_path):
+    with ZipFile(tmp_path / "SeizureTimesOnly.zip", "w") as zf:
+        zf.writestr("SeizureTimesOnly/1942.txt", "1760055000\n")
+
+    availability = parse_msg_modality_availability(tmp_path)
+
+    assert availability.empty
+
+
 def test_prepare_mock_seizeit2_tables_writes_standard_artifacts(tmp_path):
     written = prepare_mock_seizeit2_tables(tmp_path)
 

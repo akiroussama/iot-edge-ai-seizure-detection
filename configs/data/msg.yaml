@@ -1,0 +1,5 @@
+name: my_seizure_gauge
+raw_root: data/raw/msg
+processed_root: data/processed/msg
+modalities: [hr, steps]
+notes: "Placeholder config for long-term wearable HR/steps forecasting."
