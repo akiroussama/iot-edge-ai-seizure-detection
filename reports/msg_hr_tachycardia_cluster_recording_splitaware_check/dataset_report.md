@@ -1,4 +1,4 @@
-# MSG HR Tachycardia Temporal-Recording Cluster Test Check Dataset Report
+# MSG-local Dataset Report
 
 ## Status
 
@@ -21,13 +21,13 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 | patients | recordings | windows | events | window_hours_sum |
 | --- | --- | --- | --- | --- |
-| 8.0 | 459.0 | 10309.0 | 40.0 | 10309.0 |
+| 8.0 | 2055.0 | 49577.0 | 40.0 | 49577.0 |
 
 ## Label Distribution
 
 | total_windows | valid_windows | excluded_windows | positive_windows | positive_fraction_valid |
 | --- | --- | --- | --- | --- |
-| 10309.0 | 1418.0 | 8891.0 | 373.0 | 0.2630465444287729 |
+| 49577.0 | 7920.0 | 41657.0 | 3326.0 | 0.41994949494949496 |
 
 ## Event Denominator
 
@@ -51,7 +51,7 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 | baseline | horizon | n_events | n_forecasted | sensitivity | far_per_hour | far_per_day | time_in_warning | median_lead_time_seconds | brier_score | ece |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| hr_tachycardia | SPH 60 / SOP 1440 | 40 | 33 | 0.825 | 0.04090267983074753 | 0.9816643159379407 | 0.11777150916784203 | 30661.0 | 0.3483308377776545 | 0.3782297705227501 |
+| hr_tachycardia | SPH 60 / SOP 1440 | 40 | 33 | 0.825 | 0.04442877291960508 | 1.0662905500705218 | 0.11777150916784203 | 30661.0 | 0.3483308377776545 | 0.3782297705227501 |
 
 ## Event Coverage
 

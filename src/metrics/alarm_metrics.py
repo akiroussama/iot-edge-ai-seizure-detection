@@ -94,8 +94,9 @@ def time_in_warning(predictions_df: pd.DataFrame) -> float:
 def _alarm_episodes(df: pd.DataFrame) -> list[pd.DataFrame]:
     """Collapse consecutive alarm windows into episodes per patient.
 
-    The gap threshold is inferred as 1.5x the median stride within a patient. This is a practical
-    episode definition for a v0.1 benchmark; later versions can use alarm refractory periods.
+    The gap threshold is inferred as 1.5x the median stride of all valid windows within a stream,
+    not from alarm windows only. Inferring stride from alarm starts would merge sparse alarms across
+    long silent gaps and undercount false alarm episodes.
     """
     df = _valid_predictions(df)
     episodes: list[pd.DataFrame] = []
@@ -104,27 +105,28 @@ def _alarm_episodes(df: pd.DataFrame) -> list[pd.DataFrame]:
 
     group_cols = _stream_group_columns(df)
     sort_cols = group_cols + ["window_start"] if group_cols else ["window_start"]
-    grouped = df.loc[df["alarm"]].sort_values(sort_cols)
-    group_iter = grouped.groupby(group_cols, sort=False) if group_cols else [(None, grouped)]
-    for _, g in group_iter:
-        if g.empty:
+    sorted_df = df.sort_values(sort_cols)
+    group_iter = sorted_df.groupby(group_cols, sort=False) if group_cols else [(None, sorted_df)]
+    for _, stream in group_iter:
+        alarms = stream.loc[stream["alarm"]].sort_values("window_start")
+        if alarms.empty:
             continue
-        starts = g["window_start"].reset_index(drop=True)
-        if len(starts) > 1:
-            stride = starts.diff().dropna().median()
+        stream_starts = stream["window_start"].drop_duplicates().sort_values().reset_index(drop=True)
+        if len(stream_starts) > 1:
+            stride = stream_starts.diff().dropna().median()
             max_gap = stride * 1.5 if pd.notna(stride) and stride > pd.Timedelta(0) else pd.Timedelta(0)
         else:
             max_gap = pd.Timedelta(0)
         cuts = [0]
-        prev_end = g.iloc[0]["window_end"]
-        for pos in range(1, len(g)):
-            row = g.iloc[pos]
+        prev_end = alarms.iloc[0]["window_end"]
+        for pos in range(1, len(alarms)):
+            row = alarms.iloc[pos]
             if row["window_start"] - prev_end > max_gap:
                 cuts.append(pos)
             prev_end = max(prev_end, row["window_end"])
-        cuts.append(len(g))
+        cuts.append(len(alarms))
         for a, b in zip(cuts[:-1], cuts[1:], strict=True):
-            episodes.append(g.iloc[a:b])
+            episodes.append(alarms.iloc[a:b])
     return episodes
 
 

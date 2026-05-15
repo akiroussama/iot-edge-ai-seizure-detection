@@ -70,3 +70,44 @@ def test_false_alarm_episodes_are_separate_by_recording():
     events = pd.DataFrame(columns=["patient_id", "recording_id", "seizure_start", "seizure_end"])
 
     assert false_alarm_count(preds, events, 5, 30) == 2
+
+
+def test_false_alarm_episodes_use_valid_window_stride_not_alarm_stride():
+    starts = pd.date_range("2026-01-01 00:00:00", periods=5, freq="10min")
+    preds = pd.DataFrame(
+        {
+            "patient_id": ["p1"] * 5,
+            "recording_id": ["r1"] * 5,
+            "window_start": starts,
+            "window_end": starts + pd.Timedelta(minutes=10),
+            "alarm": [True, False, False, True, False],
+            "is_excluded": [False] * 5,
+        }
+    )
+    events = pd.DataFrame(columns=["patient_id", "recording_id", "seizure_start", "seizure_end"])
+
+    assert false_alarm_count(preds, events, 5, 30) == 2
+
+
+def test_time_in_warning_merges_overlapping_alarm_windows():
+    preds = pd.DataFrame(
+        {
+            "patient_id": ["p1", "p1", "p1"],
+            "recording_id": ["r1", "r1", "r1"],
+            "window_start": [
+                pd.Timestamp("2026-01-01 00:00:00"),
+                pd.Timestamp("2026-01-01 00:05:00"),
+                pd.Timestamp("2026-01-01 00:15:00"),
+            ],
+            "window_end": [
+                pd.Timestamp("2026-01-01 00:10:00"),
+                pd.Timestamp("2026-01-01 00:15:00"),
+                pd.Timestamp("2026-01-01 00:25:00"),
+            ],
+            "alarm": [True, True, False],
+            "is_excluded": [False, False, False],
+        }
+    )
+
+    assert monitored_time_seconds(preds) == 25 * 60
+    assert time_in_warning(preds) == (15 * 60) / (25 * 60)

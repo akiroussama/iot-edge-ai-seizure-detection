@@ -1,4 +1,4 @@
-# MSG Matched Coverable Local Check Dataset Report
+# MSG-local Dataset Report
 
 ## Status
 
@@ -51,7 +51,7 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 | baseline | horizon | n_events | n_forecasted | sensitivity | far_per_hour | far_per_day | time_in_warning | median_lead_time_seconds | brier_score | ece |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| random_rate_matched | SPH 60 / SOP 1440 | 436 | 240 | 0.5504587155963303 | 0.03674242424242424 | 0.8818181818181818 | 0.1 | 35262.0 | 0.3015899425315694 | 0.20049106257335464 |
+| random_rate_matched | SPH 60 / SOP 1440 | 436 | 240 | 0.5504587155963303 | 0.05025252525252525 | 1.206060606060606 | 0.1 | 35262.0 | 0.3015899425315694 | 0.20049106257335464 |
 
 ## Event Coverage
 

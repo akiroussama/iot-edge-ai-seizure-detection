@@ -8,6 +8,8 @@ Generated package status:
   real-data `label_windows.py` path now requires `recording_end` unless explicitly overridden for
   legacy diagnostics.
 - Clinical metrics: implemented and tested.
+- False alarm episodes now infer stream stride from all valid windows, not alarm windows only, so
+  sparse alarms separated by silent windows are not merged into one false alarm episode.
 - Leakage-aware splits: implemented and tested, including patient-wise, temporal, center-wise, and
   recording-wise smoke-check splits.
 - Synthetic reports: generated.

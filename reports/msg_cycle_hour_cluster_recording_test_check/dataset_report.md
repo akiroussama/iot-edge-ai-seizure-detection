@@ -1,4 +1,4 @@
-# MSG Cycle Hour Temporal-Recording Cluster Test Check Dataset Report
+# MSG-local Dataset Report
 
 ## Status
 
@@ -21,13 +21,13 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 | patients | recordings | windows | events | window_hours_sum |
 | --- | --- | --- | --- | --- |
-| 8.0 | 459.0 | 10309.0 | 40.0 | 10309.0 |
+| 8.0 | 2055.0 | 49577.0 | 40.0 | 49577.0 |
 
 ## Label Distribution
 
 | total_windows | valid_windows | excluded_windows | positive_windows | positive_fraction_valid |
 | --- | --- | --- | --- | --- |
-| 10309.0 | 1418.0 | 8891.0 | 373.0 | 0.2630465444287729 |
+| 49577.0 | 7920.0 | 41657.0 | 3326.0 | 0.41994949494949496 |
 
 ## Event Denominator
 
