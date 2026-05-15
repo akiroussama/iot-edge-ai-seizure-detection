@@ -38,6 +38,11 @@ Recent work shows strong momentum in seizure forecasting, long-term seizure cycl
 
 This is the contribution EpiTwin-Open is designed to make.
 
+Important SOTA boundary: Nasseri et al. (Epilepsia 2025, DOI 10.1111/epi.18466) already report
+ultra-long-term non-invasive wearable seizure forecasting using HR/step data with EEG-confirmed
+seizures. EpiTwin-Open must therefore be framed as an open benchmark, audit, and forecastability
+framework, not as the first wearable seizure-forecasting system.
+
 ## Public Datasets
 
 SeizeIT2:
@@ -160,10 +165,17 @@ As of 2026-05-15:
 
 - Software scaffold: strong.
 - Mock SeizeIT2/MSG pathways: working.
-- Real dataset integration: ready to begin, not validated.
+- Real SeizeIT2 local integration: single-subject pipeline check produced labels/reports; not a cohort result.
+- Real MSG local integration: full Zenodo file list downloaded and parsed; 510 / 768 onsets are matched
+  to downloaded wearable segments; labels, random baseline, HR-rule baseline, and split audits exist.
 - Clinical result claims: not allowed yet.
 - A100 training: not cleared.
+- Next blocker: manual audit of 5-10 seizure timelines per dataset and correction of any parser/label issues.
 
 ## Bottom Line
 
-This can become a major scientific contribution if the real-data results validate the benchmark and expose meaningful forecastability/observability structure. The current defensible contribution is a rigorous open benchmark pipeline and methodology. The clinical/scientific impact claim must wait for real public dataset integration and audited results.
+This can become a major scientific contribution if the real-data audits validate the benchmark and
+the final experiments expose meaningful forecastability/observability structure. The current
+defensible contribution is a rigorous open benchmark pipeline with local public-data audit artifacts.
+The clinical/scientific impact claim must wait for manual label audit, frozen splits, validation-only
+thresholding, and final baseline tables.

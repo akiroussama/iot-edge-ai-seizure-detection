@@ -6,20 +6,20 @@ This is a working SOTA snapshot for EpiTwin-Open. It is not a systematic review.
 
 ## Sources Checked
 
-1. SeizeIT2 dataset paper/preprint  
-   https://arxiv.org/abs/2502.01224
+1. SeizeIT2 dataset paper  
+   https://www.nature.com/articles/s41597-025-05580-x
 
 2. My Seizure Gauge Long-term Wearable Data  
    https://zenodo.org/records/17380899
 
-3. Forecasting epileptic seizures with wearable devices: hybrid short- and long-horizon pseudo-prospective approach  
-   https://seermedical.com/research/forecasting-epileptic-seizures-with-wearable-devices/
+3. Forecasting epileptic seizures with wearable devices: A hybrid short- and long-horizon pseudo-prospective approach  
+   https://doi.org/10.1111/epi.18466
 
 4. Comparison between epileptic seizure prediction and forecasting based on machine learning  
    https://www.nature.com/articles/s41598-024-56019-z
 
-5. Seizure forecasting based on AI-supported analysis of multidien and circadian cycles in EEG and non-EEG long-term datasets  
-   https://link.springer.com/article/10.1007/s10309-024-00709-1
+5. Automated algorithms for seizure forecast: a systematic review and meta-analysis  
+   https://link.springer.com/article/10.1007/s00415-024-12655-z
 
 6. Seizure forecasting with ultra long-term EEG signals  
    https://www.sciencedirect.com/science/article/pii/S1388245724002761
@@ -38,19 +38,42 @@ This is a working SOTA snapshot for EpiTwin-Open. It is not a systematic review.
 
 ## Current Evidence
 
-SeizeIT2 is a key public wearable focal epilepsy dataset. The arXiv record states that it contains more than 11,000 hours of multimodal wearable data, including behind-the-ear EEG, ECG, EMG, accelerometer, and gyroscope, with 886 focal seizures from 125 patients across five European monitoring centers. The same record states that it is available on OpenNeuro in BIDS format.
+SeizeIT2 is a key public wearable focal epilepsy dataset. The Scientific Data article describes it
+as the first and largest public phase 3 clinical study containing multimodal wearable bte-EEG, ECG,
+EMG, ACC, and GYR data from focal epilepsy patients. The paper is explicit that the main objective
+is automated focal seizure detection in continuous wearable data and that the hospital recording
+environment does not fully mimic daily life. This supports using SeizeIT2 for multimodal observability,
+detection/early-warning baselines, and short-horizon exploration, but not for overclaiming long-term
+forecasting.
 
-My Seizure Gauge is a longitudinal wearable dataset. Zenodo describes 11 participants, heart rate and step count from wrist devices, EEG-confirmed seizures, and an average recording duration of 337 days.
+My Seizure Gauge is a longitudinal wearable dataset. Zenodo describes 11 participants, wrist-worn
+heart-rate and step-count data, EEG-confirmed seizures, and an average recording duration of 337
+days. The local full-download parser currently finds 768 seizure onsets and 510 onsets matched to
+downloaded wearable segments; this count is a local parser artifact requiring manual audit, not a
+published dataset statistic.
 
-Recent wearable forecasting work has moved beyond short hospital recordings. The Seer/Epilepsia summary reports ultra-long-term non-invasive wearable forecasting using heart rate and step count, with EEG-confirmed seizures and both short- and long-horizon models. This is directly relevant competition and a benchmark for framing.
+Recent wearable forecasting work has moved beyond short hospital recordings. Nasseri et al.
+(Epilepsia 2025, DOI 10.1111/epi.18466) report ultra-long-term non-invasive wearable forecasting
+using heart rate and step count with EEG-confirmed seizures, including hybrid short-horizon and
+long-horizon systems. This is direct competition. EpiTwin-Open therefore should not claim novelty as
+"first wearable seizure forecasting"; the defensible novelty is open, leakage-safe, reproducible
+benchmarking and forecastability/observability analysis on public data.
 
 The 2024 Scientific Reports paper explicitly contrasts seizure prediction and seizure forecasting. It argues that forecasting is probabilistic risk assessment rather than a crisp alarm-only preictal detector, and reports improved forecasting behavior over prediction in an EEG cohort.
 
-Recent reviews emphasize that long-term seizure risk is shaped by circadian and multidien cycles, and that wearable autonomic/movement signals are promising but not yet clinically settled. The Springer review explicitly states that clinical utility remains to be determined for wearable-based forecasts.
+The 2024 Journal of Neurology systematic review/meta-analysis reports severe heterogeneity in
+datasets, horizons, train/test strategies, and metrics. It reports an overall AUC around 0.71 and Brier
+Skill Score around 0.13 across eligible studies, while emphasizing probabilistic metrics, explicit
+forecast horizons, and pseudo-prospective evaluation. This strongly supports EpiTwin-Open's focus on
+calibration, Brier/ECE, Time-in-Warning, FAR/day, and leakage audits.
 
 The 2024 Frontiers review emphasizes unseen-data validation and clinically relevant evaluation dimensions such as sensitivity, false positives, and data deficiency. It also notes that wearable/non-EEG seizure technologies can suffer false positives from everyday activity and that multimodal sensing can help.
 
-Foundation models for wearable biosignals are active but not seizure-forecasting-specific. PaPaGei and ICLR 2024 wearable biosignal foundation-model work support the direction of self-supervised multimodal biosignal learning, but they do not solve seizure-risk forecasting from public epilepsy wearables.
+Foundation models for wearable biosignals are active but not seizure-forecasting-specific. ICLR 2024
+wearable biosignal foundation-model work used large-scale Apple Heart and Movement Study PPG/ECG
+data. PaPaGei reports an open PPG foundation model trained on more than 57,000 hours of public PPG
+data. These support the long-term foundation-model direction but do not remove the need for
+epilepsy-specific leakage-safe forecasting benchmarks.
 
 ## Gap Assessment
 
@@ -60,7 +83,7 @@ The strongest defensible gap is not "a new large model predicts seizures." The g
 - explicit separation of detection, early warning, short-horizon forecasting, and long-horizon forecasting;
 - calibration and alarm burden reporting;
 - modality/observability analysis across full wearable modalities and reduced edge modalities;
-- an open pipeline that can compare random, cycle, rule-based, classical ML, and small deep baselines before foundation-model scaling.
+- open reproduction of public-data baselines, including negative/weak baselines, before foundation-model scaling.
 
 ## Major-Contribution Test
 
@@ -81,11 +104,14 @@ Without real-data validation, it is only a strong benchmark infrastructure propo
 - EpiTwin-Open implements a leakage-safe open benchmark scaffold.
 - EpiTwin-Open operationalizes SPH/SOP labeling and clinical alarm metrics.
 - EpiTwin-Open is designed to test forecastability rather than assume all seizures are predictable.
+- EpiTwin-Open has produced local public-data pipeline checks for SeizeIT2 and MSG that are ready
+  for manual audit.
 
 ## Claims Not Allowed Yet
 
 - Any numeric clinical performance claim.
 - Any claim that public wearable signals reliably predict all focal seizures.
+- Any claim that EpiTwin-Open is the first wearable seizure-forecasting system.
 - Any claim of clinical deployment readiness.
 - Any edge/TinyML hardware claim.
 - Any claim that one backbone family is biologically superior.
