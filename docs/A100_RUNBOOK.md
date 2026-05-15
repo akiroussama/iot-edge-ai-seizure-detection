@@ -7,9 +7,10 @@ The A100 is not the bottleneck. Bad labels and leakage are the bottleneck.
 ## Stage A — smoke tests
 
 ```bash
-python -m pytest -q
-python scripts/run_synthetic_demo.py
-python scripts/train_epitwin_ssl.py --epochs 3 --backbone tcn
+uv run --extra dev --extra torch python -m pytest -q
+uv run --extra dev ruff check .
+uv run python scripts/run_synthetic_demo.py
+uv run --extra torch python scripts/train_epitwin_ssl.py --epochs 3 --backbone tcn
 ```
 
 ## Stage B — first real baseline
@@ -31,9 +32,34 @@ python scripts/inspect_labels.py \
   --events data/processed/seizeit2/events.parquet
 ```
 
+For MSG, also run the horizon viability audit before selecting a headline SPH/SOP:
+
+```bash
+make msg-horizon-viability
+```
+
+If SPH60/SOP1440 is coverage-limited, it can remain an exploratory or negative analysis, but it
+must not become the main table without advisor approval.
+
+## Stage B2 — blocking manual audit gate
+
+Generate and fill the review sheet:
+
+```bash
+make msg-label-audit-sheet
+```
+
+After a human has verified the source annotations and filled every decision column, run:
+
+```bash
+make msg-label-audit-check
+```
+
+This gate is expected to fail on an unfilled sheet. Do not bypass it for A100 training.
+
 ## Stage C — EpiTwin-SSL first real run
 
-Use only after Stage B passes manual audit.
+Use only after Stage B and Stage B2 pass manual audit.
 
 Recommended initial config:
 - Modalities: ECG + ACC + EMG features.

@@ -31,6 +31,13 @@ Generated package status:
 - Real MSG event-coverage audit support: `scripts/summarize_event_coverage.py` now reports
   per-patient matched/unmatched events, parsed recording hours, and seizure-cluster size. The
   current local report is `reports/msg_event_coverage_summary.md`.
+- Real MSG horizon-viability audit support: `scripts/summarize_horizon_viability.py` recomputes
+  candidate SPH/SOP label coverage and reports valid-window fraction, right-censoring burden, and
+  event coverability before a horizon is promoted to a main task. The current local report is
+  `reports/msg_horizon_viability.md`.
+- Manual label audit review support: `scripts/make_label_audit_review_sheet.py` creates a
+  one-row-per-event reviewer sheet, and `scripts/check_label_audit_review.py` blocks A100 training
+  until the sheet is filled with passing source/timeline/exclusion/right-censoring decisions.
 - Temporal split support now includes `--temporal-unit recording`, which keeps every recording in a
   single split while preserving per-patient chronological ordering. This should be preferred when
   within-recording split boundaries would create preprocessing or artifact leakage risk.
@@ -50,9 +57,10 @@ Run `uv run python -m pytest -q` for the current count.
 Next human action:
 
 1. Manually audit `reports/seizeit2_sub125_label_audit.csv` and `reports/msg_full_label_audit.csv`.
-2. Compare source seizure annotations against 5-10 exported seizure-centered timelines per dataset.
-3. Freeze patient/temporal splits only after the audit is clean.
-4. Rerun baselines and leakage audit after any parser or label correction before A100 training.
+2. Fill `reports/msg_label_audit_review_sheet.csv` and run `make msg-label-audit-check`.
+3. Compare source seizure annotations against 5-10 exported seizure-centered timelines per dataset.
+4. Freeze patient/temporal splits only after the audit is clean.
+5. Rerun baselines and leakage audit after any parser or label correction before A100 training.
 
 Known limitations:
 
@@ -62,8 +70,8 @@ Known limitations:
 - Current MSG local run uses the full Zenodo file list available through the downloader, but 258 seizure onsets are still unmatched to downloaded wearable segments and are excluded from metric denominators only when explicitly filtered.
 - After right-censoring SPH60/SOP1440 horizons against parsed Empatica recording ends and preserving
   confirmed positives, 7,920 / 49,577 MSG one-hour windows remain valid; 44,689 windows are
-  right-censored. This is a major feasibility warning for 24-hour SOP evaluation on per-segment
-  wearable files.
+  right-censored and 41,178 are right-censored unknown negatives. This is a major feasibility
+  warning for 24-hour SOP evaluation on per-segment wearable files.
 - The patient `2002` exact duplicate ` (1)` recording ranges have been resolved with the explicit
   `drop_exact` policy for local audit artifacts. The raw duplicate files still require source-data
   documentation before split freeze.

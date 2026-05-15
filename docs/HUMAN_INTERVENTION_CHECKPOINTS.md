@@ -9,6 +9,15 @@ Recommended initial horizons:
 - SeizeIT2 secondary: SPH 1 / SOP 5 and SPH 15 / SOP 30.
 - My Seizure Gauge: hourly risk.
 
+Before selecting MSG SPH/SOP for a main result, run:
+
+```bash
+make msg-horizon-viability
+```
+
+Current local MSG SPH60/SOP1440 is coverage-limited and should require advisor approval before it
+anchors the main paper table.
+
 ## Checkpoint 2 — Manual label audit
 
 Inspect at least 5–10 seizures:
@@ -21,6 +30,13 @@ Inspect at least 5–10 seizures:
 Current local audit files:
 - SeizeIT2: `reports/seizeit2_sub125_label_audit.csv`
 - My Seizure Gauge: `reports/msg_full_label_audit.csv`
+- My Seizure Gauge review sheet: `reports/msg_label_audit_review_sheet.csv`
+
+The review sheet must pass the blocking gate before A100 training:
+
+```bash
+make msg-label-audit-check
+```
 
 ## Checkpoint 3 — Split freeze
 
