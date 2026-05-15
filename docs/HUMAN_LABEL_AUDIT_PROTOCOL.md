@@ -19,6 +19,19 @@ uv run python scripts/audit_labels.py \
   --minutes-after 60
 ```
 
+Then create a one-row-per-event review sheet. This is the file the reviewer should fill:
+
+```bash
+uv run python scripts/make_label_audit_review_sheet.py \
+  --audit reports/seizeit2_label_audit.csv \
+  --out reports/seizeit2_label_audit_review_sheet.csv \
+  --max-events 10
+```
+
+By default, `--max-events` uses round-robin patient selection (`--selection-strategy
+patient_spread`) so the first manual audit is not accidentally limited to one patient.
+Use `--selection-strategy first` only when checking a specific sorted event sequence.
+
 Mock dry run:
 
 ```bash
@@ -34,6 +47,9 @@ uv run python scripts/audit_labels.py \
   --labels /tmp/epitwin_mock_seizeit2/forecast_labels.parquet \
   --events /tmp/epitwin_mock_seizeit2/events.parquet \
   --out /tmp/epitwin_mock_seizeit2/label_audit.csv
+uv run python scripts/make_label_audit_review_sheet.py \
+  --audit /tmp/epitwin_mock_seizeit2/label_audit.csv \
+  --out /tmp/epitwin_mock_seizeit2/label_audit_review_sheet.csv
 ```
 
 ## Manual Checks
@@ -49,6 +65,20 @@ For at least 5-10 real seizures:
 - Verify postictal windows are not used as preictal positives.
 - Verify patient and recording IDs match the original source file.
 - Verify timestamp timezone assumptions.
+
+Fill these review-sheet columns for every audited event:
+
+- `source_onset_verified`: `PASS`, `FAIL`, or `NEEDS_SOURCE_REVIEW`.
+- `source_recording_verified`: `PASS`, `FAIL`, or `NEEDS_SOURCE_REVIEW`.
+- `sph_sop_labels_pass`: `PASS`, `FAIL`, or `NEEDS_SOURCE_REVIEW`.
+- `ictal_exclusion_pass`: `PASS`, `FAIL`, or `NEEDS_SOURCE_REVIEW`.
+- `postictal_exclusion_pass`: `PASS`, `FAIL`, or `NEEDS_SOURCE_REVIEW`.
+- `right_censoring_pass`: `PASS`, `FAIL`, or `NEEDS_SOURCE_REVIEW`.
+- `decision`: `PASS`, `FAIL`, or `NEEDS_SOURCE_REVIEW`.
+- `notes`: exact source-file references and any timestamp or exclusion discrepancy.
+
+The precomputed columns `unexpected_ictal_not_excluded_rows` and
+`unexpected_postictal_not_excluded_rows` must be zero before the event can pass.
 
 ## Failure Conditions
 
