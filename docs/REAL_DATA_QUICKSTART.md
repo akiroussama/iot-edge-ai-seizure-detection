@@ -201,6 +201,35 @@ uv run python scripts/make_splits.py \
   --strategy temporal
 ```
 
+Extract transparent HR/ACC feature baselines after the patient ZIP downloads are complete enough for
+the target patients. For quick parser checks, use `--max-recordings`; omit it for the full run.
+
+```bash
+uv run python scripts/extract_msg_features.py \
+  --raw-dir data/raw/msg \
+  --windows data/processed/msg/labels_sph60_sop1440.parquet \
+  --out data/processed/msg/features_hr_acc_sph60_sop1440.parquet \
+  --modalities hr acc
+
+uv run python scripts/run_rule_baseline.py \
+  --features data/processed/msg/features_hr_acc_sph60_sop1440.parquet \
+  --out data/processed/msg/hr_tachycardia_predictions_sph60_sop1440.parquet \
+  --rule hr_tachycardia \
+  --target-tiw 0.1
+
+uv run python scripts/make_dataset_report.py \
+  --dataset-name MSG-local \
+  --windows data/processed/msg/windows_1h.parquet \
+  --labels data/processed/msg/labels_sph60_sop1440.parquet \
+  --events data/processed/msg/events.parquet \
+  --predictions data/processed/msg/hr_tachycardia_predictions_sph60_sop1440.parquet \
+  --baseline-name hr_tachycardia_tiw10 \
+  --event-filter recording_match_status=matched \
+  --out-dir reports/msg_hr_tachycardia_check \
+  --sph-minutes 60 \
+  --sop-minutes 1440
+```
+
 ## Stop Conditions
 
 Stop and fix parser assumptions if:

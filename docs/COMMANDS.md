@@ -146,6 +146,25 @@ uv run python scripts/make_splits.py \
   --strategy recording_wise
 ```
 
+## Transparent Rule Baselines
+
+MSG Empatica HR/ACC features can be extracted directly from nested ZIPs without writing all raw
+samples to a single table:
+
+```bash
+uv run python scripts/extract_msg_features.py \
+  --raw-dir data/raw/msg \
+  --windows data/processed/msg/labels_sph60_sop1440.parquet \
+  --out data/processed/msg/features_hr_acc_sph60_sop1440.parquet \
+  --modalities hr acc
+
+uv run python scripts/run_rule_baseline.py \
+  --features data/processed/msg/features_hr_acc_sph60_sop1440.parquet \
+  --out data/processed/msg/hr_tachycardia_predictions_sph60_sop1440.parquet \
+  --rule hr_tachycardia \
+  --target-tiw 0.1
+```
+
 ## A100 Policy
 
 Do not launch A100 training until:
