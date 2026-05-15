@@ -35,6 +35,12 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | seizure | 768 | 510 | 13 | recording_match_status=matched | split=test | True | recording_match_status=matched selects seizures whose onsets could be matched to parsed wearable recording intervals; report source totals separately and do not generalize to all annotated seizures without coverage audit | 240.0 | seizure_level_metrics_clusters_not_collapsed |
 
+## Event Annotation
+
+| events_source_total | seizure_end_imputed_events | seizure_end_imputed_fraction | imputed_duration_seconds_values |
+| --- | --- | --- | --- |
+| 768 | 768 | 1.0 | 60.0 |
+
 ## Prediction Metadata
 
 | prediction_rows | valid_prediction_rows | alarms | splits | score_fit_split | threshold_source_split | alarm_threshold_min | alarm_threshold_max |

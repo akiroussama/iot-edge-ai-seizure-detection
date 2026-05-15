@@ -4,6 +4,7 @@ import pandas as pd
 
 from scripts.make_dataset_report import (
     _event_denominator_table,
+    _event_annotation_table,
     _events_coverable_by_predictions,
     _prediction_metadata_table,
     _requires_bias_acknowledgement,
@@ -81,3 +82,18 @@ def test_event_denominator_table_makes_matched_subset_explicit() -> None:
     assert denominator.loc[0, "events_used_for_metrics"] == 1
     assert "wearable recording intervals" in denominator.loc[0, "denominator_warning"]
     assert denominator.loc[0, "cluster_policy"] == "seizure_level_metrics_clusters_not_collapsed"
+
+
+def test_event_annotation_table_reports_imputed_seizure_ends() -> None:
+    events = pd.DataFrame(
+        {
+            "seizure_end_imputed": [True, False, True],
+            "imputed_duration_seconds": [60.0, float("nan"), 60.0],
+        }
+    )
+
+    annotation = _event_annotation_table(events)
+
+    assert annotation.loc[0, "seizure_end_imputed_events"] == 2
+    assert annotation.loc[0, "seizure_end_imputed_fraction"] == 2 / 3
+    assert annotation.loc[0, "imputed_duration_seconds_values"] == "60.0"

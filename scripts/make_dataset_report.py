@@ -129,6 +129,23 @@ def _event_denominator_table(
     return pd.DataFrame([row])
 
 
+def _event_annotation_table(events_all: pd.DataFrame) -> pd.DataFrame:
+    row: dict[str, object] = {"events_source_total": len(events_all)}
+    if "seizure_end_imputed" in events_all.columns:
+        imputed = events_all["seizure_end_imputed"].fillna(False).astype(bool)
+        row["seizure_end_imputed_events"] = int(imputed.sum())
+        row["seizure_end_imputed_fraction"] = float(imputed.mean()) if len(imputed) else float("nan")
+    else:
+        row["seizure_end_imputed_events"] = "unknown"
+        row["seizure_end_imputed_fraction"] = "unknown"
+    if "imputed_duration_seconds" in events_all.columns:
+        values = pd.to_numeric(events_all["imputed_duration_seconds"], errors="coerce").dropna()
+        row["imputed_duration_seconds_values"] = ",".join(str(float(v)) for v in sorted(values.unique()))
+    else:
+        row["imputed_duration_seconds_values"] = "unknown"
+    return pd.DataFrame([row])
+
+
 def _baseline_table(
     predictions: pd.DataFrame,
     events: pd.DataFrame,
@@ -250,12 +267,14 @@ def main() -> None:
         event_unit=args.event_unit,
         cluster_gap_minutes=args.cluster_gap_minutes,
     )
+    annotation = _event_annotation_table(events_all)
 
     summary = dataset_summary(windows, events_eval)
     distribution = label_distribution(labels)
     write_table(summary, out_dir / "dataset_summary.csv")
     write_table(distribution, out_dir / "label_distribution.csv")
     write_table(denominator, out_dir / "event_denominator.csv")
+    write_table(annotation, out_dir / "event_annotation.csv")
 
     baseline = pd.DataFrame()
     prediction_metadata = _prediction_metadata_table(predictions)
@@ -307,6 +326,10 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 ## Event Denominator
 
 {_markdown_table(denominator)}
+
+## Event Annotation
+
+{_markdown_table(annotation)}
 
 ## Prediction Metadata
 

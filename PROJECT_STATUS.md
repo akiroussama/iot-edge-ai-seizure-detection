@@ -70,6 +70,9 @@ Known limitations:
   evaluable forecast events.
 - Current MSG random, cycle, and HR tachycardia metrics are pipeline checks only. Denominators now
   explicitly report source events, matched events, and prediction-coverable events.
+- MSG seizure end times are onset-only imputations in the current public annotation path; reports
+  now expose `seizure_end_imputed_events=768` and `imputed_duration_seconds_values=60.0` instead of
+  treating seizure duration as measured clinical ground truth.
 - The split-aware HR tachycardia check uses train-fitted score statistics and validation-selected
   thresholds, but remains unaudited and should not be compared as a final result.
 - Current MSG cycle baseline metrics are split-filtered pipeline checks only; do not compare them
