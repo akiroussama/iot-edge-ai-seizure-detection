@@ -19,6 +19,7 @@ from src.utils.io import read_table, write_table
 
 SAMPLE_COLUMNS = ["patient_id", "recording_id", "timestamp", "modality", "value", "source_file"]
 DEFAULT_ONSET_ONLY_SEIZURE_DURATION_SECONDS = 60
+MSG_DUPLICATE_RECORDING_POLICIES = {"error", "drop_exact"}
 EMPATICA_MODALITY_FILES = {
     "HR.csv": "hr",
     "ACC.csv": "acc",
@@ -210,7 +211,63 @@ def _read_empatica_header_and_count(zf: ZipFile, member_name: str) -> tuple[pd.T
     return start, sample_rate, sample_count
 
 
-def discover_msg_recordings(raw_root: str | Path) -> pd.DataFrame:
+def _duplicate_recording_range_mask(recordings: pd.DataFrame) -> pd.Series:
+    if recordings.empty:
+        return pd.Series(False, index=recordings.index)
+    required = {"patient_id", "recording_start", "recording_end"}
+    if not required.issubset(recordings.columns):
+        return pd.Series(False, index=recordings.index)
+    return recordings.duplicated(["patient_id", "recording_start", "recording_end"], keep=False)
+
+
+def resolve_msg_duplicate_recording_ranges(
+    recordings: pd.DataFrame,
+    duplicate_time_range_policy: str = "error",
+) -> pd.DataFrame:
+    """Resolve exact duplicate MSG recording ranges according to an explicit policy.
+
+    Duplicate ranges in MSG nested ZIPs usually indicate copied segment files such as ``(1)``
+    suffixes. Keeping both creates duplicated windows and ambiguous temporal splits. The default
+    is therefore to fail; ``drop_exact`` prefers non-copy filenames before ``(1)``-style copies and
+    records the policy in the output table.
+    """
+    if duplicate_time_range_policy not in MSG_DUPLICATE_RECORDING_POLICIES:
+        raise ValueError(
+            "duplicate_time_range_policy must be one of "
+            f"{sorted(MSG_DUPLICATE_RECORDING_POLICIES)}"
+        )
+    out = recordings.copy()
+    duplicate_mask = _duplicate_recording_range_mask(out)
+    if not duplicate_mask.any():
+        out["duplicate_time_range_policy"] = duplicate_time_range_policy
+        out["duplicate_time_range_dropped"] = False
+        return out
+    duplicates = out.loc[
+        duplicate_mask,
+        ["patient_id", "recording_id", "recording_start", "recording_end", "source_file"],
+    ].sort_values(["patient_id", "recording_start", "source_file"])
+    if duplicate_time_range_policy == "error":
+        raise ValueError(
+            "MSG duplicate recording time ranges detected; rerun with "
+            "duplicate_time_range_policy='drop_exact' only after documenting the duplicated files. "
+            f"First duplicates: {duplicates.head(10).to_dict('records')}"
+        )
+    out["_copy_suffix_rank"] = out["source_file"].astype(str).str.contains(r"\s\(\d+\)").astype(int)
+    out = out.sort_values(
+        ["patient_id", "recording_start", "recording_end", "_copy_suffix_rank", "source_file"]
+    ).copy()
+    out["duplicate_time_range_policy"] = duplicate_time_range_policy
+    out["duplicate_time_range_dropped"] = out.duplicated(
+        ["patient_id", "recording_start", "recording_end"],
+        keep="first",
+    )
+    return out.loc[~out["duplicate_time_range_dropped"]].drop(columns=["_copy_suffix_rank"]).reset_index(drop=True)
+
+
+def discover_msg_recordings(
+    raw_root: str | Path,
+    duplicate_time_range_policy: str = "error",
+) -> pd.DataFrame:
     """Discover Empatica segment intervals from complete MSG patient ZIP archives."""
     root = Path(raw_root)
     rows = []
@@ -263,12 +320,16 @@ def discover_msg_recordings(raw_root: str | Path) -> pd.DataFrame:
             "timing_sample_count",
         ],
     )
+    recordings = resolve_msg_duplicate_recording_ranges(recordings, duplicate_time_range_policy)
     validate_recordings(recordings, allow_empty=True)
     return recordings
 
 
-def discover_msg_metadata(raw_root: str | Path) -> pd.DataFrame:
-    recordings = discover_msg_recordings(raw_root)
+def discover_msg_metadata(
+    raw_root: str | Path,
+    duplicate_time_range_policy: str = "error",
+) -> pd.DataFrame:
+    recordings = discover_msg_recordings(raw_root, duplicate_time_range_policy)
     if recordings.empty:
         events = parse_msg_events(raw_root)
         metadata = events[["patient_id", "recording_id", "source_dataset"]].drop_duplicates().copy()
@@ -508,7 +569,11 @@ def parse_msg_wearable_samples(raw_root: str | Path) -> pd.DataFrame:
     return samples.sort_values(["patient_id", "timestamp", "modality"]).reset_index(drop=True)
 
 
-def prepare_msg_tables(raw_root: str | Path, processed_root: str | Path) -> dict[str, Path]:
+def prepare_msg_tables(
+    raw_root: str | Path,
+    processed_root: str | Path,
+    duplicate_time_range_policy: str = "error",
+) -> dict[str, Path]:
     """Write canonical MSG event and modality-availability tables from supported metadata."""
     root = Path(raw_root)
     if not root.exists():
@@ -520,7 +585,7 @@ def prepare_msg_tables(raw_root: str | Path, processed_root: str | Path) -> dict
     events_path = processed / "events.parquet"
     availability_path = processed / "modality_availability.parquet"
     samples_path = processed / "samples.parquet"
-    recordings = discover_msg_recordings(raw_root)
+    recordings = discover_msg_recordings(raw_root, duplicate_time_range_policy)
     events = assign_msg_events_to_recordings(parse_msg_events(raw_root), recordings)
     metadata = (
         recordings[["patient_id", "recording_id", "center_id", "source_dataset"]]

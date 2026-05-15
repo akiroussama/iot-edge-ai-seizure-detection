@@ -7,7 +7,7 @@ from zipfile import ZipFile
 
 import pandas as pd
 
-from src.baselines.simple_rules import ecg_tachycardia_score, normalize_score
+from src.baselines.simple_rules import ecg_tachycardia_score, generic_zscore_anomaly, normalize_score
 from src.features.msg_empatica import extract_msg_empatica_window_features
 from src.features.window_features import extract_window_features, make_feature_matrix
 from src.utils.io import read_table, write_table
@@ -170,3 +170,21 @@ def test_normalize_score_fails_on_empty_reference_rows() -> None:
         assert "empty reference rows" in str(exc)
     else:
         raise AssertionError("expected empty normalization reference to fail")
+
+
+def test_rule_scores_fail_on_missing_requested_features() -> None:
+    features = pd.DataFrame({"patient_id": ["p1"], "other_feature": [1.0]})
+
+    try:
+        ecg_tachycardia_score(features)
+    except ValueError as exc:
+        assert "hr_mean" in str(exc)
+    else:
+        raise AssertionError("expected missing HR feature to fail")
+
+    try:
+        generic_zscore_anomaly(features, ["missing_feature"])
+    except ValueError as exc:
+        assert "missing_feature" in str(exc)
+    else:
+        raise AssertionError("expected missing generic feature to fail")

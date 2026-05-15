@@ -12,6 +12,7 @@ from src.metrics.sweep import (
     select_threshold_under_constraints,
     sensitivity_at_fixed_far,
     sensitivity_at_fixed_time_in_warning,
+    scope_predictions_for_threshold_sweep,
     threshold_sweep_table,
 )
 
@@ -29,6 +30,7 @@ __all__ = [
     "reliability_table",
     "sensitivity_at_fixed_far",
     "sensitivity_at_fixed_time_in_warning",
+    "scope_predictions_for_threshold_sweep",
     "threshold_sweep_table",
     "select_threshold_under_constraints",
 ]

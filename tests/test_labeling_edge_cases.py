@@ -141,6 +141,35 @@ def test_right_censored_forecast_horizon_is_excluded():
     assert labeled["is_excluded"].tolist() == [False, True]
 
 
+def test_right_censored_confirmed_positive_is_not_excluded():
+    base = pd.Timestamp("2026-01-01 00:00:00")
+    windows = pd.DataFrame(
+        {
+            "patient_id": ["p1"],
+            "recording_id": ["r1"],
+            "recording_end": [base + pd.Timedelta(minutes=20)],
+            "window_start": [base],
+            "window_end": [base + pd.Timedelta(minutes=1)],
+        }
+    )
+    events = _events(
+        [
+            {
+                "patient_id": "p1",
+                "recording_id": "r1",
+                "seizure_start": base + pd.Timedelta(minutes=10),
+                "seizure_end": base + pd.Timedelta(minutes=11),
+            }
+        ]
+    )
+
+    labeled = label_forecast_windows(windows, events, sph_minutes=5, sop_minutes=30)
+
+    assert labeled.loc[0, "forecast_label"]
+    assert labeled.loc[0, "is_right_censored"]
+    assert not labeled.loc[0, "is_excluded"]
+
+
 def test_require_recording_end_for_right_censoring_fails_loudly():
     windows = pd.DataFrame(
         {

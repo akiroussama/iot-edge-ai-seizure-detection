@@ -28,10 +28,13 @@ def patient_specific_quantile_thresholds(
     """Compute one score threshold per patient from calibration predictions."""
     if patient_col not in predictions.columns or score_col not in predictions.columns:
         raise ValueError(f"predictions must contain {patient_col} and {score_col}")
-    return {
-        patient: quantile_threshold(group[score_col], warning_fraction)
-        for patient, group in predictions.groupby(patient_col)
-    }
+    thresholds = {}
+    for patient, group in predictions.groupby(patient_col):
+        threshold = quantile_threshold(group[score_col], warning_fraction)
+        if not np.isfinite(threshold):
+            raise ValueError(f"patient {patient!r} has no finite calibration scores for patient-specific threshold")
+        thresholds[patient] = threshold
+    return thresholds
 
 
 def apply_patient_thresholds(
@@ -39,8 +42,12 @@ def apply_patient_thresholds(
     thresholds: dict[object, float],
     patient_col: str = "patient_id",
     score_col: str = "risk_score",
+    allow_missing: bool = False,
 ) -> pd.DataFrame:
     df = predictions.copy()
+    missing = sorted(set(df[patient_col].dropna()) - set(thresholds), key=str)
+    if missing and not allow_missing:
+        raise ValueError(f"missing patient-specific thresholds for patients: {missing[:10]}")
     df["patient_threshold"] = df[patient_col].map(thresholds).astype(float)
     df["alarm"] = df[score_col].astype(float) >= df["patient_threshold"]
     return df

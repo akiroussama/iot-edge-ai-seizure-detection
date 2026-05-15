@@ -1,4 +1,4 @@
-# MSG-local-full-download-right-censored Dataset Report
+# MSG Full Local Check Dataset Report
 
 ## Status
 
@@ -13,7 +13,7 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 - SPH minutes: 60
 - SOP minutes: 1440
-- Event filter used for metrics: `recording_match_status=matched`
+- Event filter used for metrics: `none`
 - Prediction filter used for metrics: `none`
 - Events restricted to selected prediction horizon coverage: `False`
 
@@ -21,19 +21,19 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 | patients | recordings | windows | events | window_hours_sum |
 | --- | --- | --- | --- | --- |
-| 8.0 | 2057.0 | 49596.0 | 510.0 | 49596.0 |
+| 8.0 | 2055.0 | 49577.0 | 768.0 | 49577.0 |
 
 ## Label Distribution
 
 | total_windows | valid_windows | excluded_windows | positive_windows | positive_fraction_valid |
 | --- | --- | --- | --- | --- |
-| 49596.0 | 4854.0 | 44742.0 | 260.0 | 0.053564070869386075 |
+| 49577.0 | 7919.0 | 41658.0 | 3325.0 | 0.41987624700088394 |
 
 ## Event Denominator
 
 | event_unit | events_source_total | events_after_filter | events_used_for_metrics | event_filter | prediction_filter | restricted_to_prediction_coverage | denominator_warning | cluster_gap_minutes | cluster_policy |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| seizure | 768 | 510 | 510 | recording_match_status=matched | none | False | recording_match_status=matched selects seizures whose onsets could be matched to parsed wearable recording intervals; report source totals separately and do not generalize to all annotated seizures without coverage audit | 240.0 | seizure_level_metrics_clusters_not_collapsed |
+| seizure | 768 | 768 | 768 | none | none | False | none | 240.0 | seizure_level_metrics_clusters_not_collapsed |
 
 ## Event Annotation
 
@@ -43,15 +43,15 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 ## Prediction Metadata
 
-| prediction_rows | valid_prediction_rows | alarms |
-| --- | --- | --- |
-| 49596 | 4854 | 485 |
+| prediction_rows | valid_prediction_rows | alarms | splits |
+| --- | --- | --- | --- |
+| 49577 | 7919 | 792 | test,train,val |
 
 ## Baseline
 
 | baseline | horizon | n_events | n_forecasted | sensitivity | far_per_hour | far_per_day | time_in_warning | median_lead_time_seconds | brier_score | ece |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| random_rate_matched_tiw10_right_censored | SPH 60 / SOP 1440 | 510 | 36 | 0.07058823529411765 | 0.05892047795632468 | 1.4140914709517924 | 0.09991759373712403 | 51068.0 | 0.1528706004873169 | 0.24383059713913505 |
+| random_rate_matched | SPH 60 / SOP 1440 | 768 | 256 | 0.3333333333333333 | 0.03662078545270867 | 0.8788988508650083 | 0.10001262785705266 | 37285.5 | 0.30115339210073905 | 0.19954489191178557 |
 
 ## Event Coverage
 

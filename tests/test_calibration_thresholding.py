@@ -18,6 +18,17 @@ def test_patient_specific_thresholds() -> None:
     assert out["alarm"].sum() >= 2
 
 
+def test_apply_patient_thresholds_refuses_missing_patient_threshold() -> None:
+    df = pd.DataFrame({"patient_id": ["a", "b"], "risk_score": [0.1, 0.9]})
+
+    try:
+        apply_patient_thresholds(df, {"a": 0.5})
+    except ValueError as exc:
+        assert "missing patient-specific thresholds" in str(exc)
+    else:
+        raise AssertionError("expected missing patient threshold to fail")
+
+
 def test_empirical_risk_threshold() -> None:
     df = pd.DataFrame({"risk_score": [0.1, 0.2, 0.8, 0.9], "false_alarm_loss": [0, 0, 1, 1]})
     res = calibrate_threshold_by_empirical_risk(df, target_risk=0.5, thresholds=[0.0, 0.5, 0.85])

@@ -1,4 +1,4 @@
-# MSG-local-full-download-right-censored-elapsed-time Dataset Report
+# MSG HR Tachycardia Temporal-Recording Test Check Dataset Report
 
 ## Status
 
@@ -21,19 +21,19 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 | patients | recordings | windows | events | window_hours_sum |
 | --- | --- | --- | --- | --- |
-| 8.0 | 2057.0 | 49596.0 | 13.0 | 49596.0 |
+| 8.0 | 459.0 | 10309.0 | 54.0 | 10309.0 |
 
 ## Label Distribution
 
 | total_windows | valid_windows | excluded_windows | positive_windows | positive_fraction_valid |
 | --- | --- | --- | --- | --- |
-| 49596.0 | 4854.0 | 44742.0 | 260.0 | 0.053564070869386075 |
+| 10309.0 | 1418.0 | 8891.0 | 373.0 | 0.2630465444287729 |
 
 ## Event Denominator
 
 | event_unit | events_source_total | events_after_filter | events_used_for_metrics | event_filter | prediction_filter | restricted_to_prediction_coverage | denominator_warning | cluster_gap_minutes | cluster_policy |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| seizure | 768 | 510 | 13 | recording_match_status=matched | split=test | True | recording_match_status=matched selects seizures whose onsets could be matched to parsed wearable recording intervals; report source totals separately and do not generalize to all annotated seizures without coverage audit | 240.0 | seizure_level_metrics_clusters_not_collapsed |
+| seizure | 768 | 510 | 54 | recording_match_status=matched | split=test | True | recording_match_status=matched selects seizures whose onsets could be matched to parsed wearable recording intervals; report source totals separately and do not generalize to all annotated seizures without coverage audit | 240.0 | seizure_level_metrics_clusters_not_collapsed |
 
 ## Event Annotation
 
@@ -45,13 +45,13 @@ Forecasting labels use SPH/SOP: a window ending at `t` is positive when seizure 
 
 | prediction_rows | valid_prediction_rows | alarms | splits | score_fit_split | threshold_source_split | alarm_threshold_min | alarm_threshold_max |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 10328 | 1077 | 119 | test | train | val | 0.8655844347851801 | 0.8655844347851801 |
+| 10309 | 1418 | 167 | test | train | val | 0.8781217658712558 | 0.8781217658712558 |
 
 ## Baseline
 
 | baseline | horizon | n_events | n_forecasted | sensitivity | far_per_hour | far_per_day | time_in_warning | median_lead_time_seconds | brier_score | ece |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| hr_tachycardia_trainfit_valthreshold_recording_right_censored_testsplit_elapsed_time | SPH 60 / SOP 1440 | 13 | 11 | 0.8461538461538461 | 0.06220984215413185 | 1.4930362116991645 | 0.11049210770659239 | 63567.0 | 0.4132309207311703 | 0.6040359373400309 |
+| hr_tachycardia | SPH 60 / SOP 1440 | 54 | 46 | 0.8518518518518519 | 0.04090267983074753 | 0.9816643159379407 | 0.11777150916784203 | 34658.0 | 0.3483308377776545 | 0.3782297705227501 |
 
 ## Event Coverage
 

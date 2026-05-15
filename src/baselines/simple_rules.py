@@ -32,7 +32,7 @@ def ecg_tachycardia_score(
 ) -> pd.Series:
     """Relative tachycardia score per patient if HR features are available."""
     if hr_col not in features_df.columns:
-        return pd.Series(0.0, index=features_df.index)
+        raise ValueError(f"missing required HR feature column for tachycardia rule: {hr_col}")
     scores = []
     for _, group in features_df.groupby("patient_id", sort=False):
         score = robust_zscore(group[hr_col], _patient_reference_mask(group, reference_mask)).clip(lower=0)
@@ -47,7 +47,7 @@ def acc_energy_score(
 ) -> pd.Series:
     """Motion energy anomaly score per patient."""
     if energy_col not in features_df.columns:
-        return pd.Series(0.0, index=features_df.index)
+        raise ValueError(f"missing required ACC feature column for energy rule: {energy_col}")
     scores = []
     for _, group in features_df.groupby("patient_id", sort=False):
         score = robust_zscore(group[energy_col], _patient_reference_mask(group, reference_mask)).clip(lower=0)
@@ -62,8 +62,11 @@ def generic_zscore_anomaly(
 ) -> pd.Series:
     """Average positive robust z-score across available feature columns."""
     available = [c for c in feature_cols if c in features_df.columns]
+    missing = sorted(set(feature_cols) - set(available))
+    if missing:
+        raise ValueError(f"missing requested feature columns for generic z-score rule: {missing}")
     if not available:
-        return pd.Series(0.0, index=features_df.index)
+        raise ValueError("generic z-score rule requires at least one numeric feature column")
     scores = []
     for col in available:
         column_scores = []

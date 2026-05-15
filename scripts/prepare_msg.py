@@ -18,6 +18,12 @@ def main() -> None:
     parser.add_argument("--processed-dir", required=True)
     parser.add_argument("--inspect-only", action="store_true")
     parser.add_argument("--mock", action="store_true", help="Write deterministic mock artifacts.")
+    parser.add_argument(
+        "--duplicate-recording-policy",
+        choices=["error", "drop_exact"],
+        default="error",
+        help="MSG duplicate recording time-range policy. Use drop_exact only after documenting duplicated files.",
+    )
     args = parser.parse_args()
 
     if args.mock:
@@ -31,7 +37,11 @@ def main() -> None:
     if args.inspect_only:
         return
     try:
-        written = prepare_msg_tables(args.raw_dir, args.processed_dir)
+        written = prepare_msg_tables(
+            args.raw_dir,
+            args.processed_dir,
+            duplicate_time_range_policy=args.duplicate_recording_policy,
+        )
     except (FileNotFoundError, ValueError) as exc:
         raise SystemExit(f"My Seizure Gauge preparation failed: {exc}") from exc
     print({key: str(path) for key, path in written.items()})

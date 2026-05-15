@@ -14,6 +14,7 @@ from src.datasets.msg_loader import (
     parse_msg_modality_availability,
     parse_msg_wearable_samples,
     prepare_mock_msg_tables,
+    resolve_msg_duplicate_recording_ranges,
 )
 from src.datasets.schemas import (
     validate_events,
@@ -188,6 +189,34 @@ def test_parse_msg_nested_empatica_zip_manifest_and_recordings(tmp_path):
     assert recordings.loc[0, "recording_end"] == pd.Timestamp("2025-10-10 00:10:03")
     assert metadata.loc[0, "patient_id"] == "1869"
     assert set(availability.loc[availability["available"], "modality"]) == {"acc", "hr"}
+
+
+def test_msg_duplicate_recording_ranges_fail_closed_and_can_drop_exact():
+    base = pd.Timestamp("2025-10-10 00:10:00")
+    recordings = pd.DataFrame(
+        {
+            "patient_id": ["1869", "1869"],
+            "recording_id": ["1869_segment", "1869_segment (1)"],
+            "recording_start": [base, base],
+            "recording_end": [base + pd.Timedelta(minutes=10), base + pd.Timedelta(minutes=10)],
+            "center_id": [None, None],
+            "source_dataset": ["my_seizure_gauge", "my_seizure_gauge"],
+            "source_file": ["Mayo_1869/segment.zip", "Mayo_1869/segment (1).zip"],
+        }
+    )
+
+    try:
+        resolve_msg_duplicate_recording_ranges(recordings)
+    except ValueError as exc:
+        assert "duplicate recording time ranges" in str(exc)
+    else:
+        raise AssertionError("expected duplicate MSG recording ranges to fail by default")
+
+    resolved = resolve_msg_duplicate_recording_ranges(recordings, "drop_exact")
+
+    assert len(resolved) == 1
+    assert resolved.loc[0, "recording_id"] == "1869_segment"
+    assert set(resolved["duplicate_time_range_policy"]) == {"drop_exact"}
 
 
 def test_assign_msg_events_to_matching_recording_segment():

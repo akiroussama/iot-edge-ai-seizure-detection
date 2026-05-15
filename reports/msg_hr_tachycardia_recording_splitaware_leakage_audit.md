@@ -1,4 +1,4 @@
-# MSG Temporal-Recording Leakage Audit
+# MSG HR Tachycardia Prediction Leakage Audit
 
 ```text
 EpiTwin-Open leakage audit
@@ -11,9 +11,9 @@ Duplicate window intervals: False
 Duplicate recording time ranges: False
 Postictal positive labels not excluded: False
 Temporal ordering/overlap leakage: False
-Feature normalization leakage: UNVERIFIED_OR_FAILED [{'status': 'unverified', 'reason': 'missing score_fit_split/threshold_source_split metadata'}]
+Feature normalization leakage: metadata present (['score_fit_split', 'threshold_source_split']); no test-scope fit metadata detected
 Future-information feature leakage: requires manual feature audit
 ```
 
-Note: this label/split audit cannot verify feature fitting because labels do not carry
-`score_fit_split` or `threshold_source_split`. Prediction tables must be audited separately.
+This audit applies to the regenerated HR tachycardia prediction table, which records
+`score_fit_split=train` and `threshold_source_split=val`.

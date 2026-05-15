@@ -37,7 +37,8 @@ def label_forecast_windows(
     ignore them. The raw forecast label is still computed for transparency.
 
     If ``recording_end`` is present, windows whose full SPH/SOP horizon extends beyond the
-    recording boundary are marked ``is_right_censored`` and excluded. Use
+    recording boundary are marked ``is_right_censored``. They are excluded only when no seizure
+    onset is observed inside the SPH/SOP interval; a confirmed positive remains usable. Use
     ``require_recording_end=True`` in real-data label generation so unobserved future horizons
     cannot silently become true negatives.
     """
@@ -125,7 +126,8 @@ def label_forecast_windows(
         out.loc[idx, "is_postictal"] = post
         out.loc[idx, "forecast_label"] = label
 
-    out["is_excluded"] = out["is_postictal"] | out["is_right_censored"] | (out["is_ictal"] if ictal_exclusion else False)
+    right_censored_unknown = out["is_right_censored"] & ~out["forecast_label"]
+    out["is_excluded"] = out["is_postictal"] | right_censored_unknown | (out["is_ictal"] if ictal_exclusion else False)
     # Keep booleans as bool dtype.
     for col in ("is_ictal", "is_postictal", "is_right_censored", "forecast_label", "is_excluded"):
         out[col] = out[col].astype(bool)

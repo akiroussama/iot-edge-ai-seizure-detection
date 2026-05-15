@@ -121,6 +121,28 @@ def test_duplicate_recording_time_ranges_flag_reset_timestamps():
     assert {issue["recording_id"] for issue in audit["issues"]} == {"r1", "r2"}
 
 
+def test_temporal_split_refuses_duplicate_recording_time_ranges_by_default():
+    base = pd.Timestamp("2026-01-01 00:00:00")
+    rows = []
+    for recording in ("r1", "r2"):
+        rows.append(
+            {
+                "patient_id": "p1",
+                "recording_id": recording,
+                "window_start": base,
+                "window_end": base + pd.Timedelta(minutes=1),
+            }
+        )
+    windows = pd.DataFrame(rows)
+
+    try:
+        temporal_split_per_patient(windows)
+    except ValueError as exc:
+        assert "duplicate recording time ranges" in str(exc)
+    else:
+        raise AssertionError("expected duplicate recording ranges to fail temporal split")
+
+
 def test_postictal_label_contamination_check_detects_unexcluded_positive():
     df = pd.DataFrame(
         {

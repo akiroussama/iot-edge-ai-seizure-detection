@@ -42,6 +42,11 @@ def main() -> None:
         default="elapsed_time",
         help="When strategy=temporal, split by elapsed patient time or legacy row/recording count.",
     )
+    parser.add_argument(
+        "--allow-duplicate-recording-time-ranges",
+        action="store_true",
+        help="Diagnostic override only. Temporal splits fail by default when recording time ranges duplicate within a patient.",
+    )
     args = parser.parse_args()
 
     labels = read_table(args.labels)
@@ -53,6 +58,7 @@ def main() -> None:
             purge_overlap=not args.no_purge_overlap,
             split_unit=args.temporal_unit,
             split_basis=args.temporal_basis,
+            allow_duplicate_recording_time_ranges=args.allow_duplicate_recording_time_ranges,
         )
     elif args.strategy == "patient_wise":
         split = patient_wise_split(

@@ -1,4 +1,4 @@
-# MSG Full Label Audit Packet Right-Censored
+# MSG SPH60/SOP1440 Label Audit Packet
 
 This packet is for manual label audit only. It is not a clinical result.
 
@@ -23,20 +23,19 @@ State counts:
 | --- | --- |
 | forecast_positive | 2 |
 | ictal_excluded | 1 |
-| postictal_excluded | 3 |
+| postictal_excluded | 2 |
 | valid_negative | 1 |
 
 Timeline rows:
 
 | window_end | minutes_to_seizure | forecast_label | is_ictal | is_postictal | is_excluded | audit_state |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2020-08-29 10:17:59 | 128.87 | True | False | False | True | forecast_positive |
-| 2020-08-29 11:17:59 | 68.87 | True | False | False | True | forecast_positive |
+| 2020-08-29 10:17:59 | 128.87 | True | False | False | False | forecast_positive |
+| 2020-08-29 11:17:59 | 68.87 | True | False | False | False | forecast_positive |
 | 2020-08-29 12:17:59 | 8.87 | False | False | False | True | valid_negative |
 | 2020-08-29 13:17:59 | -51.13 | False | True | True | True | ictal_excluded |
 | 2020-08-29 14:17:59 | -111.13 | False | False | True | True | postictal_excluded |
 | 2020-08-29 15:17:59 | -171.13 | False | False | True | True | postictal_excluded |
-| 2020-08-29 16:17:59 | -231.13 | False | False | True | True | postictal_excluded |
 
 ## Event 2
 
@@ -51,20 +50,19 @@ State counts:
 | --- | --- |
 | forecast_positive | 2 |
 | ictal_excluded | 1 |
-| postictal_excluded | 3 |
+| postictal_excluded | 2 |
 | valid_negative | 1 |
 
 Timeline rows:
 
 | window_end | minutes_to_seizure | forecast_label | is_ictal | is_postictal | is_excluded | audit_state |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2020-08-29 10:17:59 | 131.82 | True | False | False | True | forecast_positive |
-| 2020-08-29 11:17:59 | 71.82 | True | False | False | True | forecast_positive |
+| 2020-08-29 10:17:59 | 131.82 | True | False | False | False | forecast_positive |
+| 2020-08-29 11:17:59 | 71.82 | True | False | False | False | forecast_positive |
 | 2020-08-29 12:17:59 | 11.82 | False | False | False | True | valid_negative |
 | 2020-08-29 13:17:59 | -48.18 | False | True | True | True | ictal_excluded |
 | 2020-08-29 14:17:59 | -108.18 | False | False | True | True | postictal_excluded |
 | 2020-08-29 15:17:59 | -168.18 | False | False | True | True | postictal_excluded |
-| 2020-08-29 16:17:59 | -228.18 | False | False | True | True | postictal_excluded |
 
 ## Event 3
 
@@ -79,20 +77,19 @@ State counts:
 | --- | --- |
 | forecast_positive | 2 |
 | ictal_excluded | 1 |
-| postictal_excluded | 3 |
+| postictal_excluded | 2 |
 | valid_negative | 1 |
 
 Timeline rows:
 
 | window_end | minutes_to_seizure | forecast_label | is_ictal | is_postictal | is_excluded | audit_state |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2020-08-29 10:17:59 | 133.9 | True | False | False | True | forecast_positive |
-| 2020-08-29 11:17:59 | 73.9 | True | False | False | True | forecast_positive |
+| 2020-08-29 10:17:59 | 133.9 | True | False | False | False | forecast_positive |
+| 2020-08-29 11:17:59 | 73.9 | True | False | False | False | forecast_positive |
 | 2020-08-29 12:17:59 | 13.9 | False | False | False | True | valid_negative |
 | 2020-08-29 13:17:59 | -46.1 | False | True | True | True | ictal_excluded |
 | 2020-08-29 14:17:59 | -106.1 | False | False | True | True | postictal_excluded |
 | 2020-08-29 15:17:59 | -166.1 | False | False | True | True | postictal_excluded |
-| 2020-08-29 16:17:59 | -226.1 | False | False | True | True | postictal_excluded |
 
 ## Event 4
 
@@ -113,9 +110,9 @@ Timeline rows:
 
 | window_end | minutes_to_seizure | forecast_label | is_ictal | is_postictal | is_excluded | audit_state |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2020-09-07 08:40:16 | 137.55 | True | False | False | True | forecast_positive |
-| 2020-09-07 09:40:16 | 77.55 | True | False | False | True | forecast_positive |
-| 2020-09-07 10:40:16 | 17.55 | True | False | False | True | forecast_positive |
+| 2020-09-07 08:40:16 | 137.55 | True | False | False | False | forecast_positive |
+| 2020-09-07 09:40:16 | 77.55 | True | False | False | False | forecast_positive |
+| 2020-09-07 10:40:16 | 17.55 | True | False | False | False | forecast_positive |
 | 2020-09-07 11:40:16 | -42.45 | False | True | True | True | ictal_excluded |
 | 2020-09-07 12:40:16 | -102.45 | False | True | True | True | ictal_excluded |
 | 2020-09-07 13:40:16 | -162.45 | False | False | True | True | postictal_excluded |
@@ -139,8 +136,8 @@ Timeline rows:
 
 | window_end | minutes_to_seizure | forecast_label | is_ictal | is_postictal | is_excluded | audit_state |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2020-09-07 09:40:16 | 134.57 | True | False | False | True | forecast_positive |
-| 2020-09-07 10:40:16 | 74.57 | True | False | False | True | forecast_positive |
+| 2020-09-07 09:40:16 | 134.57 | True | False | False | False | forecast_positive |
+| 2020-09-07 10:40:16 | 74.57 | True | False | False | False | forecast_positive |
 | 2020-09-07 11:40:16 | 14.57 | False | True | True | True | ictal_excluded |
 | 2020-09-07 12:40:16 | -45.43 | False | True | True | True | ictal_excluded |
 | 2020-09-07 13:40:16 | -105.43 | False | False | True | True | postictal_excluded |
@@ -164,8 +161,8 @@ Timeline rows:
 
 | window_end | minutes_to_seizure | forecast_label | is_ictal | is_postictal | is_excluded | audit_state |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2020-09-07 09:40:16 | 145.43 | True | False | False | True | forecast_positive |
-| 2020-09-07 10:40:16 | 85.43 | True | False | False | True | forecast_positive |
+| 2020-09-07 09:40:16 | 145.43 | True | False | False | False | forecast_positive |
+| 2020-09-07 10:40:16 | 85.43 | True | False | False | False | forecast_positive |
 | 2020-09-07 11:40:16 | 25.43 | False | True | True | True | ictal_excluded |
 | 2020-09-07 12:40:16 | -34.57 | False | True | True | True | ictal_excluded |
 | 2020-09-07 13:40:16 | -94.57 | False | False | True | True | postictal_excluded |
@@ -189,8 +186,8 @@ Timeline rows:
 
 | window_end | minutes_to_seizure | forecast_label | is_ictal | is_postictal | is_excluded | audit_state |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2020-09-07 09:40:16 | 172.32 | True | False | False | True | forecast_positive |
-| 2020-09-07 10:40:16 | 112.32 | True | False | False | True | forecast_positive |
+| 2020-09-07 09:40:16 | 172.32 | True | False | False | False | forecast_positive |
+| 2020-09-07 10:40:16 | 112.32 | True | False | False | False | forecast_positive |
 | 2020-09-07 11:40:16 | 52.32 | False | True | True | True | ictal_excluded |
 | 2020-09-07 12:40:16 | -7.68 | False | True | True | True | ictal_excluded |
 | 2020-09-07 13:40:16 | -67.68 | False | False | True | True | postictal_excluded |
@@ -208,7 +205,7 @@ State counts:
 | --- | --- |
 | forecast_positive | 2 |
 | ictal_excluded | 1 |
-| postictal_excluded | 3 |
+| postictal_excluded | 2 |
 | valid_negative | 1 |
 
 Timeline rows:
@@ -221,7 +218,6 @@ Timeline rows:
 | 2020-10-01 09:44:30 | -12.62 | False | True | True | True | ictal_excluded |
 | 2020-10-01 10:44:30 | -72.62 | False | False | True | True | postictal_excluded |
 | 2020-10-01 11:44:30 | -132.62 | False | False | True | True | postictal_excluded |
-| 2020-10-01 12:44:30 | -192.62 | False | False | True | True | postictal_excluded |
 
 ## Event 9
 
@@ -236,7 +232,7 @@ State counts:
 | --- | --- |
 | forecast_positive | 2 |
 | ictal_excluded | 1 |
-| postictal_excluded | 3 |
+| postictal_excluded | 2 |
 | valid_negative | 1 |
 
 Timeline rows:
@@ -249,7 +245,6 @@ Timeline rows:
 | 2020-10-01 09:44:30 | -9.6 | False | True | True | True | ictal_excluded |
 | 2020-10-01 10:44:30 | -69.6 | False | False | True | True | postictal_excluded |
 | 2020-10-01 11:44:30 | -129.6 | False | False | True | True | postictal_excluded |
-| 2020-10-01 12:44:30 | -189.6 | False | False | True | True | postictal_excluded |
 
 ## Event 10
 
@@ -270,7 +265,57 @@ Timeline rows:
 
 | window_end | minutes_to_seizure | forecast_label | is_ictal | is_postictal | is_excluded | audit_state |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2020-10-09 12:34:39 | 136.2 | True | False | False | True | forecast_positive |
-| 2020-10-09 13:34:39 | 76.2 | True | False | False | True | forecast_positive |
+| 2020-10-09 12:34:39 | 136.2 | True | False | False | False | forecast_positive |
+| 2020-10-09 13:34:39 | 76.2 | True | False | False | False | forecast_positive |
 | 2020-10-09 14:34:39 | 16.2 | False | False | False | True | valid_negative |
 | 2020-10-09 15:34:39 | -43.8 | False | True | True | True | ictal_excluded |
+
+## Event 11
+
+- Patient: `1110`
+- Recording: `1110_1602106469_A02294`
+- Seizure start: `2020-10-09 14:57:18`
+- Seizure end: `2020-10-09 14:58:18`
+
+State counts:
+
+| audit_state | rows |
+| --- | --- |
+| forecast_positive | 2 |
+| ictal_excluded | 1 |
+| valid_negative | 1 |
+
+Timeline rows:
+
+| window_end | minutes_to_seizure | forecast_label | is_ictal | is_postictal | is_excluded | audit_state |
+| --- | --- | --- | --- | --- | --- | --- |
+| 2020-10-09 12:34:39 | 142.65 | True | False | False | False | forecast_positive |
+| 2020-10-09 13:34:39 | 82.65 | True | False | False | False | forecast_positive |
+| 2020-10-09 14:34:39 | 22.65 | False | False | False | True | valid_negative |
+| 2020-10-09 15:34:39 | -37.35 | False | True | True | True | ictal_excluded |
+
+## Event 12
+
+- Patient: `1110`
+- Recording: `1110_1604525961_A02294`
+- Seizure start: `2020-11-05 11:10:02`
+- Seizure end: `2020-11-05 11:11:02`
+
+State counts:
+
+| audit_state | rows |
+| --- | --- |
+| forecast_positive | 3 |
+| ictal_excluded | 1 |
+| postictal_excluded | 2 |
+
+Timeline rows:
+
+| window_end | minutes_to_seizure | forecast_label | is_ictal | is_postictal | is_excluded | audit_state |
+| --- | --- | --- | --- | --- | --- | --- |
+| 2020-11-05 08:39:31 | 150.52 | True | False | False | False | forecast_positive |
+| 2020-11-05 09:39:31 | 90.52 | True | False | False | False | forecast_positive |
+| 2020-11-05 10:39:31 | 30.52 | True | False | False | False | forecast_positive |
+| 2020-11-05 11:39:31 | -29.48 | True | True | True | True | ictal_excluded |
+| 2020-11-05 12:39:31 | -89.48 | True | False | True | True | postictal_excluded |
+| 2020-11-05 13:39:31 | -149.48 | False | False | True | True | postictal_excluded |

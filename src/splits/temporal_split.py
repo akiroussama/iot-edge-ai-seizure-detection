@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pandas as pd
 
+from src.splits.leakage_checks import check_duplicate_recording_time_ranges
 from src.utils.time import ensure_datetime
 
 
@@ -13,6 +14,7 @@ def temporal_split_per_patient(
     purge_label: str = "purge",
     split_unit: str = "window",
     split_basis: str = "elapsed_time",
+    allow_duplicate_recording_time_ranges: bool = False,
 ) -> pd.DataFrame:
     """Pseudo-prospective split: train on past, validate/test on future per patient.
 
@@ -27,6 +29,9 @@ def temporal_split_per_patient(
     ``split_basis="elapsed_time"`` uses each patient's observed time span for boundaries. The
     legacy ``count`` basis is available only for explicit diagnostics because dense and sparse
     windows should not receive equal temporal weight by default.
+
+    Exact duplicate recording time ranges within a patient fail closed by default. They usually
+    indicate duplicated files or timestamp resets that make temporal ordering ambiguous.
     """
     if not {"patient_id", "window_start", "window_end"}.issubset(df.columns):
         raise ValueError("df must contain patient_id, window_start, and window_end")
@@ -39,6 +44,14 @@ def temporal_split_per_patient(
     out = df.copy()
     out["window_start"] = ensure_datetime(out["window_start"])
     out["window_end"] = ensure_datetime(out["window_end"])
+    if "recording_id" in out.columns and not allow_duplicate_recording_time_ranges:
+        duplicate_ranges = check_duplicate_recording_time_ranges(out)
+        if duplicate_ranges["has_leakage"]:
+            raise ValueError(
+                "duplicate recording time ranges detected; temporal split is unsafe until duplicated "
+                "recordings or timestamp resets are resolved. First issues: "
+                f"{duplicate_ranges['issues'][:5]}"
+            )
     out["split"] = "train"
 
     for patient, g in out.sort_values(["window_start", "window_end"]).groupby("patient_id"):
