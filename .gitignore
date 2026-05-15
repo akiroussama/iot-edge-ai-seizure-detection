@@ -26,4 +26,5 @@ __pycache__/
 /reports/**/*.parquet
 /reports/**/*.csv
 /reports/leakage_audit.txt
+/reports/*_leakage_audit.txt
 /reports/48h_milestone.md

@@ -114,11 +114,16 @@ def leakage_audit(df: pd.DataFrame, split_col: str = "split", split_strategy: st
     lines.append(f"Postictal positive labels not excluded: {postictal['has_leakage']}")
     if postictal["issues"]:
         lines.append(str(postictal["issues"][:10]))
-    if {"window_start", "window_end", split_col}.issubset(df.columns):
+    if split_strategy in {"temporal", "auto"} and {"window_start", "window_end", split_col}.issubset(df.columns):
         temporal = check_temporal_leakage(df, split_col)
         lines.append(f"Temporal ordering/overlap leakage: {temporal['has_leakage']}")
         if temporal["issues"]:
             lines.append(str(temporal["issues"][:10]))
+    elif {"window_start", "window_end", split_col}.issubset(df.columns):
+        lines.append(
+            "Temporal ordering/overlap leakage: not evaluated "
+            f"(strategy={split_strategy}; use temporal splits for prospective claims)"
+        )
     lines.append("Feature normalization leakage: not machine-checkable without fit metadata")
     lines.append("Future-information feature leakage: requires manual feature audit")
     return "\n".join(lines)

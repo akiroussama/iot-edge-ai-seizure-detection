@@ -5,7 +5,8 @@ Generated package status:
 - Benchmark scaffold: implemented.
 - SPH/SOP labeling: implemented and tested.
 - Clinical metrics: implemented and tested.
-- Leakage-aware splits: implemented and tested.
+- Leakage-aware splits: implemented and tested, including patient-wise, temporal, center-wise, and
+  recording-wise smoke-check splits.
 - Synthetic reports: generated.
 - EpiTwin-SSL CPU smoke model: implemented and tested.
 - Hazard head: implemented and tested.
@@ -31,6 +32,8 @@ Next human action:
 Known limitations:
 
 - Current SeizeIT2 local run uses one downloaded/local subject and fetched annotation TSVs; it is not a cohort result.
+- Recording-wise splits are only for single-patient/run-disjoint smoke checks. They do not support
+  prospective or patient-generalization claims.
 - Current MSG run is partial because the Zenodo download is still in progress; unmatched seizure onsets are excluded from metric denominators only when explicitly filtered.
 - Real reports are pipeline checks only until manual seizure timeline audit, split freezing, and leakage audit are complete.
 - `docs/SOTA_REVIEW_2026.md` and `docs/PUBLICATION_PROPOSAL.md` summarize the current publication framing and its evidence limits.

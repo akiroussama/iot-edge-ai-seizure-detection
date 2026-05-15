@@ -82,6 +82,25 @@ uv run python scripts/audit_labels.py \
   --out reports/seizeit2_label_audit.csv
 ```
 
+Split and leakage audit. Prefer temporal or patient-wise splits for actual evaluation. If a local
+SeizeIT2 smoke check contains only one patient and recordings with reset/dummy timestamps, use
+`recording_wise` only to verify that runs are not shared across splits; do not treat it as a
+prospective clinical split.
+
+```bash
+uv run python scripts/make_splits.py \
+  --labels data/processed/seizeit2/forecast_labels.parquet \
+  --out data/processed/seizeit2/split_temporal.parquet \
+  --audit-out reports/seizeit2_leakage_audit.txt \
+  --strategy temporal
+
+uv run python scripts/make_splits.py \
+  --labels data/processed/seizeit2/forecast_labels.parquet \
+  --out data/processed/seizeit2/split_recording.parquet \
+  --audit-out reports/seizeit2_recording_leakage_audit.txt \
+  --strategy recording_wise
+```
+
 ## My Seizure Gauge
 
 Download from the current Zenodo record with resumable `curl`:
@@ -172,6 +191,16 @@ uv run python scripts/make_dataset_report.py \
   --out-dir reports/msg_real_check \
   --sph-minutes 60 \
   --sop-minutes 1440
+```
+
+Then generate a temporal leakage audit:
+
+```bash
+uv run python scripts/make_splits.py \
+  --labels data/processed/msg/labels_sph60_sop1440.parquet \
+  --out data/processed/msg/split_temporal.parquet \
+  --audit-out reports/msg_leakage_audit.txt \
+  --strategy temporal
 ```
 
 ## Stop Conditions

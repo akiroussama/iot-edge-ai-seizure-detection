@@ -9,6 +9,7 @@ from src.splits.leakage_checks import (
     check_temporal_leakage,
     leakage_audit,
 )
+from src.splits.recording_split import recording_wise_split
 from src.splits.temporal_split import temporal_split_per_patient
 
 
@@ -83,3 +84,27 @@ def test_postictal_label_contamination_check_detects_unexcluded_positive():
     )
 
     assert check_postictal_label_contamination(df)["has_leakage"]
+
+
+def test_recording_wise_split_keeps_recordings_disjoint():
+    base = pd.Timestamp("2026-01-01 00:00:00")
+    rows = []
+    for rec in range(10):
+        for i in range(3):
+            rows.append(
+                {
+                    "patient_id": "single_patient",
+                    "recording_id": f"run-{rec:02d}",
+                    "window_start": base + pd.Timedelta(minutes=i),
+                    "window_end": base + pd.Timedelta(minutes=i + 1),
+                }
+            )
+    windows = pd.DataFrame(rows)
+
+    split = recording_wise_split(windows, test_fraction=0.2, val_fraction=0.1, seed=7)
+    report = leakage_audit(split, split_strategy="recording_wise")
+
+    assert split.groupby("recording_id")["split"].nunique().max() == 1
+    assert "Patient overlap across splits: True" in report
+    assert "Recording overlap across splits: False" in report
+    assert "Temporal ordering/overlap leakage: not evaluated" in report

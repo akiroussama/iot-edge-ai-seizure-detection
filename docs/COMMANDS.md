@@ -124,6 +124,28 @@ uv run python scripts/make_dataset_report.py \
 For MSG partial downloads, pass `--event-filter recording_match_status=matched` so events outside
 downloaded wearable segments are reported as coverage gaps rather than false model failures.
 
+Create temporal splits and a leakage audit:
+
+```bash
+uv run python scripts/make_splits.py \
+  --labels data/processed/seizeit2/forecast_labels.parquet \
+  --out data/processed/seizeit2/split_temporal.parquet \
+  --audit-out reports/seizeit2_leakage_audit.txt \
+  --strategy temporal
+```
+
+For single-patient SeizeIT2 smoke checks with recordings that reset to dummy dates, create a
+recording-wise split to confirm no run appears in more than one split. This is not a substitute for
+patient-wise or prospective temporal evaluation.
+
+```bash
+uv run python scripts/make_splits.py \
+  --labels data/processed/seizeit2/forecast_labels.parquet \
+  --out data/processed/seizeit2/split_recording.parquet \
+  --audit-out reports/seizeit2_recording_leakage_audit.txt \
+  --strategy recording_wise
+```
+
 ## A100 Policy
 
 Do not launch A100 training until:
