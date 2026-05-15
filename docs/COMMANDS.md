@@ -106,6 +106,16 @@ uv run python scripts/audit_labels.py \
   --minutes-after 60
 ```
 
+Create a compact Markdown packet for manual review:
+
+```bash
+uv run python scripts/make_audit_packet.py \
+  --audit reports/seizeit2_label_audit.csv \
+  --out reports/seizeit2_audit_packet.md \
+  --max-events 10 \
+  --title "SeizeIT2 Label Audit Packet"
+```
+
 Generate a dataset-specific pipeline-check report:
 
 ```bash

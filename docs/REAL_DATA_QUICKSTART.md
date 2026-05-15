@@ -79,6 +79,12 @@ uv run python scripts/audit_labels.py \
   --labels data/processed/seizeit2/forecast_labels.parquet \
   --events data/processed/seizeit2/events.parquet \
   --out reports/seizeit2_label_audit.csv
+
+uv run python scripts/make_audit_packet.py \
+  --audit reports/seizeit2_label_audit.csv \
+  --out reports/seizeit2_audit_packet.md \
+  --max-events 10 \
+  --title "SeizeIT2 Label Audit Packet"
 ```
 
 Split and leakage audit. Prefer temporal or patient-wise splits for actual evaluation. If a local
@@ -199,6 +205,23 @@ uv run python scripts/make_splits.py \
   --out data/processed/msg/split_temporal.parquet \
   --audit-out reports/msg_leakage_audit.txt \
   --strategy temporal
+```
+
+Export a compact Markdown packet for manual review:
+
+```bash
+uv run python scripts/audit_labels.py \
+  --labels data/processed/msg/labels_sph60_sop1440.parquet \
+  --events data/processed/msg/events.parquet \
+  --out reports/msg_full_label_audit.csv \
+  --minutes-before 180 \
+  --minutes-after 240
+
+uv run python scripts/make_audit_packet.py \
+  --audit reports/msg_full_label_audit.csv \
+  --out reports/msg_full_audit_packet.md \
+  --max-events 10 \
+  --title "MSG Full Label Audit Packet"
 ```
 
 Extract transparent HR/ACC feature baselines after the patient ZIP downloads are complete enough for
