@@ -36,6 +36,14 @@ This is a working SOTA snapshot for EpiTwin-Open. It is not a systematic review.
 10. Circadian Phase Locking of Epilepsy Seizures in Wearable Data  
     https://arxiv.org/abs/2604.18297
 
+11. ECG-Based Detection of Epileptic Seizures in Real-World Wearable Settings: Insights from the
+    SeizeIT2 Dataset  
+    https://www.mdpi.com/1424-8220/25/24/7687
+
+12. SeizureFormer: A Multi-Scale Transformer for Seizure Risk Forecasting from RNS-Derived
+    Biomarkers  
+    https://psb.stanford.edu/psb-online/proceedings/psb26/abstracts/2026_p85.html
+
 ## Current Evidence
 
 SeizeIT2 is a key public wearable focal epilepsy dataset. The Scientific Data article describes it
@@ -75,6 +83,21 @@ data. PaPaGei reports an open PPG foundation model trained on more than 57,000 h
 data. These support the long-term foundation-model direction but do not remove the need for
 epilepsy-specific leakage-safe forecasting benchmarks.
 
+Recent SeizeIT2 follow-up work includes ECG-based seizure detection benchmarking on the public
+dataset. This reinforces the detection/forecasting separation: SeizeIT2 is already useful for
+wearable seizure detection baselines, while EpiTwin-Open must justify any forecasting experiments
+with explicit SPH/SOP horizons, postictal exclusions, and alarm burden metrics.
+
+SeizureFormer (PSB 2026) reports long-horizon seizure risk forecasting from RNS-derived biomarkers,
+not non-invasive public wearable HR/steps data. It is important SOTA for seizure forecasting models
+and long-horizon risk framing, but it does not replace the need for open wearable benchmark
+infrastructure because its inputs are implant-derived biomarkers from a small patient set.
+
+The 2026 circadian phase-locking arXiv preprint uses single-patient wearable IBI and seizure diary
+data to test whether seizure onsets align with physiological circadian phase. It supports including
+cycle/phase baselines and interpretable rhythm features, while also emphasizing that single-patient
+wearable findings need multi-patient validation.
+
 ## Gap Assessment
 
 The strongest defensible gap is not "a new large model predicts seizures." The gap is:
@@ -94,6 +117,7 @@ EpiTwin-Open can be a major contribution if the real-data experiments demonstrat
 - event-level metrics reported with FAR/day and Time-in-Warning;
 - baselines that include random rate-matched and cycle/rhythm models;
 - calibrated threshold selection on validation data only;
+- fit/normalization metadata showing that test windows were not used to compute feature statistics;
 - observability analysis showing what is and is not forecastable from each modality set;
 - transparent negative results when a horizon or modality is not forecastable.
 

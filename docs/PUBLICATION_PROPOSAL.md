@@ -71,6 +71,7 @@ My Seizure Gauge:
    - Lead time.
    - Brier score and ECE.
    - Threshold sweeps under FAR/TIW budgets.
+   - Prediction metadata documenting score-fit and threshold-selection splits.
 
 3. **Forecastability-aware baselines**
    - Random rate-matched alarms.
@@ -137,6 +138,7 @@ The paper is submission-ready only if:
 - random rate-matched baseline has run;
 - at least one clinically interpretable baseline table is generated;
 - thresholds are selected on validation splits only;
+- feature statistics and normalization are fit without validation/test leakage;
 - negative/weak results are reported honestly.
 
 ## Reviewer Attack Points And Defenses
@@ -148,7 +150,8 @@ Attack: Window-level accuracy hides class imbalance.
 Defense: Do not use accuracy as a primary metric; report event sensitivity, FAR/day, TIW, lead time, Brier, and ECE.
 
 Attack: Leakage through random windows or normalization.  
-Defense: Default patient-wise/temporal splits, purge overlaps, audit split leakage, and record normalization fit scope.
+Defense: Default patient-wise/temporal splits, purge overlaps, recording-boundary temporal split
+option, audit split leakage, and record score-fit/threshold-selection scope.
 
 Attack: Postictal periods contaminate preictal labels.  
 Defense: Ictal/postictal exclusions are explicit, tested, and audited.
@@ -170,6 +173,12 @@ As of 2026-05-15:
   to downloaded wearable segments; labels, random baseline, HR-rule baseline, and split audits exist.
 - A split-safe hour-of-day cycle baseline now exists and uses validation-only thresholding, but the
   current unaudited temporal-test check has low event sensitivity.
+- A recording-boundary temporal split now exists for MSG and the local audit reports no recording
+  overlap or temporal overlap across train/validation/test.
+- A split-aware HR tachycardia pipeline check now fits score statistics on train, selects threshold
+  on validation, and reports on test only. Its local numbers are audit signals only, not paper
+  results, because event matching, seizure timelines, cluster handling, and normalization policy
+  are not manually cleared.
 - Clinical result claims: not allowed yet.
 - A100 training: not cleared.
 - Next blocker: manual audit of 5-10 seizure timelines per dataset and correction of any parser/label issues.
@@ -177,7 +186,8 @@ As of 2026-05-15:
 ## Bottom Line
 
 This can become a major scientific contribution if the real-data audits validate the benchmark and
-the final experiments expose meaningful forecastability/observability structure. The current
-defensible contribution is a rigorous open benchmark pipeline with local public-data audit artifacts.
-The clinical/scientific impact claim must wait for manual label audit, frozen splits, validation-only
-thresholding, and final baseline tables.
+the final experiments expose meaningful forecastability/observability structure. As of this snapshot,
+the contribution is not yet "without doubt" scientifically proven; the defensible claim is a rigorous
+open benchmark pipeline with local public-data audit artifacts. The clinical/scientific impact claim
+must wait for manual label audit, frozen splits, validation-only thresholding, leakage-checked feature
+normalization, and final baseline tables.
