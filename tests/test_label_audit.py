@@ -14,7 +14,9 @@ from src.reports.label_audit import (
 
 def test_build_label_audit_table_contains_seizure_context_states() -> None:
     _, windows, events = make_synthetic_seizeit2_tables()
-    labels = label_forecast_windows(windows, events, 5, 30, postictal_exclusion_minutes=5)
+    labels = label_forecast_windows(
+        windows, events, 5, 30, postictal_exclusion_minutes=5, require_recording_end=False
+    )
 
     audit = build_label_audit_table(labels, events, minutes_before=40, minutes_after=10)
 
@@ -29,7 +31,9 @@ def test_build_label_audit_table_contains_seizure_context_states() -> None:
 
 def test_build_label_audit_review_sheet_creates_one_row_per_event() -> None:
     _, windows, events = make_synthetic_seizeit2_tables()
-    labels = label_forecast_windows(windows, events, 5, 30, postictal_exclusion_minutes=5)
+    labels = label_forecast_windows(
+        windows, events, 5, 30, postictal_exclusion_minutes=5, require_recording_end=False
+    )
     audit = build_label_audit_table(labels, events, minutes_before=40, minutes_after=10)
 
     sheet = build_label_audit_review_sheet(audit, max_events=1)
@@ -45,7 +49,9 @@ def test_build_label_audit_review_sheet_creates_one_row_per_event() -> None:
 
 def test_build_label_audit_review_sheet_flags_unexcluded_ictal_rows() -> None:
     _, windows, events = make_synthetic_seizeit2_tables()
-    labels = label_forecast_windows(windows, events, 5, 30, postictal_exclusion_minutes=5)
+    labels = label_forecast_windows(
+        windows, events, 5, 30, postictal_exclusion_minutes=5, require_recording_end=False
+    )
     audit = build_label_audit_table(labels, events, minutes_before=40, minutes_after=10)
     ictal_idx = audit.index[audit["is_ictal"]].tolist()[0]
     audit.loc[ictal_idx, "is_excluded"] = False
@@ -82,7 +88,9 @@ def test_build_label_audit_review_sheet_spreads_events_across_patients() -> None
 
 def test_validate_label_audit_review_sheet_passes_completed_sheet() -> None:
     _, windows, events = make_synthetic_seizeit2_tables()
-    labels = label_forecast_windows(windows, events, 5, 30, postictal_exclusion_minutes=5)
+    labels = label_forecast_windows(
+        windows, events, 5, 30, postictal_exclusion_minutes=5, require_recording_end=False
+    )
     audit = build_label_audit_table(labels, events, minutes_before=40, minutes_after=10)
     sheet = build_label_audit_review_sheet(audit, max_events=1)
     for column in REVIEW_DECISION_COLUMNS:
@@ -95,7 +103,9 @@ def test_validate_label_audit_review_sheet_passes_completed_sheet() -> None:
 
 def test_validate_label_audit_review_sheet_blocks_incomplete_sheet() -> None:
     _, windows, events = make_synthetic_seizeit2_tables()
-    labels = label_forecast_windows(windows, events, 5, 30, postictal_exclusion_minutes=5)
+    labels = label_forecast_windows(
+        windows, events, 5, 30, postictal_exclusion_minutes=5, require_recording_end=False
+    )
     audit = build_label_audit_table(labels, events, minutes_before=40, minutes_after=10)
     sheet = build_label_audit_review_sheet(audit, max_events=1)
 
@@ -107,7 +117,9 @@ def test_validate_label_audit_review_sheet_blocks_incomplete_sheet() -> None:
 
 def test_validate_label_audit_review_sheet_blocks_anomaly_counts() -> None:
     _, windows, events = make_synthetic_seizeit2_tables()
-    labels = label_forecast_windows(windows, events, 5, 30, postictal_exclusion_minutes=5)
+    labels = label_forecast_windows(
+        windows, events, 5, 30, postictal_exclusion_minutes=5, require_recording_end=False
+    )
     audit = build_label_audit_table(labels, events, minutes_before=40, minutes_after=10)
     sheet = build_label_audit_review_sheet(audit, max_events=1)
     for column in REVIEW_DECISION_COLUMNS:

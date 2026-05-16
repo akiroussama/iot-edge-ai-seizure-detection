@@ -14,7 +14,9 @@ from src.metrics.alarm_metrics import (
 
 def test_time_in_warning_fraction():
     _, windows, events = make_synthetic_seizeit2_tables()
-    preds = label_forecast_windows(windows, events, 5, 30, postictal_exclusion_minutes=5)
+    preds = label_forecast_windows(
+        windows, events, 5, 30, postictal_exclusion_minutes=5, require_recording_end=False
+    )
     preds["risk_score"] = 0.0
     preds["alarm"] = False
     valid = preds.loc[~preds["is_excluded"]]
@@ -25,7 +27,9 @@ def test_time_in_warning_fraction():
 
 def test_false_alarm_rate_counts_non_associated_episode():
     _, windows, events = make_synthetic_seizeit2_tables()
-    preds = label_forecast_windows(windows, events, 5, 30, postictal_exclusion_minutes=5)
+    preds = label_forecast_windows(
+        windows, events, 5, 30, postictal_exclusion_minutes=5, require_recording_end=False
+    )
     preds["risk_score"] = 0.0
     preds["alarm"] = False
     # Very early alarm not associated with seizure at 10:40 for SPH 5/SOP 30.

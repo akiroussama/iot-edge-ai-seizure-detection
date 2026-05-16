@@ -26,7 +26,7 @@ def label_forecast_windows(
     sop_minutes: float,
     postictal_exclusion_minutes: float = 60,
     ictal_exclusion: bool = True,
-    require_recording_end: bool = False,
+    require_recording_end: bool = True,
     postictal_anchor: str = "seizure_end",
 ) -> pd.DataFrame:
     """Label windows for seizure forecasting using SPH/SOP.
@@ -39,9 +39,10 @@ def label_forecast_windows(
 
     If ``recording_end`` is present, windows whose full SPH/SOP horizon extends beyond the
     recording boundary are marked ``is_right_censored``. They are excluded only when no seizure
-    onset is observed inside the SPH/SOP interval; a confirmed positive remains usable. Use
-    ``require_recording_end=True`` in real-data label generation so unobserved future horizons
-    cannot silently become true negatives.
+    onset is observed inside the SPH/SOP interval; a confirmed positive remains usable.
+    ``require_recording_end`` defaults to ``True`` so a real-data caller cannot silently turn
+    unobserved future horizons into true negatives; pass ``False`` only for synthetic or legacy
+    windows that carry no ``recording_end``.
     """
     _validate_columns(windows_df, REQUIRED_WINDOW_COLUMNS, "windows_df")
     _validate_columns(events_df, REQUIRED_EVENT_COLUMNS, "events_df")
@@ -131,7 +132,17 @@ def label_forecast_windows(
 
     right_censored_unknown = out["is_right_censored"] & ~out["forecast_label"]
     out["is_excluded"] = out["is_postictal"] | right_censored_unknown | (out["is_ictal"] if ictal_exclusion else False)
+    # Stamp whether right-censoring was actually applied, so a downstream report
+    # cannot mistake un-censored labels for censored ones (Phase R audit C2).
+    out["right_censoring_applied"] = "recording_end" in windows_df.columns
     # Keep booleans as bool dtype.
-    for col in ("is_ictal", "is_postictal", "is_right_censored", "forecast_label", "is_excluded"):
+    for col in (
+        "is_ictal",
+        "is_postictal",
+        "is_right_censored",
+        "forecast_label",
+        "is_excluded",
+        "right_censoring_applied",
+    ):
         out[col] = out[col].astype(bool)
     return out

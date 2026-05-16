@@ -10,7 +10,9 @@ from src.metrics.alarm_metrics import median_lead_time
 
 def test_event_level_sensitivity_detects_valid_forecast_alarm():
     _, windows, events = make_synthetic_seizeit2_tables()
-    preds = label_forecast_windows(windows, events, 5, 30, postictal_exclusion_minutes=5)
+    preds = label_forecast_windows(
+        windows, events, 5, 30, postictal_exclusion_minutes=5, require_recording_end=False
+    )
     preds["risk_score"] = 0.0
     preds["alarm"] = False
     # Alarm window ending 10:30 forecasts the seizure at 10:40 for SPH 5 / SOP 30.
@@ -26,7 +28,9 @@ def test_event_level_sensitivity_detects_valid_forecast_alarm():
 
 def test_event_level_sensitivity_ignores_late_alarm():
     _, windows, events = make_synthetic_seizeit2_tables()
-    preds = label_forecast_windows(windows, events, 5, 30, postictal_exclusion_minutes=5)
+    preds = label_forecast_windows(
+        windows, events, 5, 30, postictal_exclusion_minutes=5, require_recording_end=False
+    )
     preds["risk_score"] = 0.0
     preds["alarm"] = False
     # Too late: seizure at 10:40, alarm at 10:39 violates SPH=5.

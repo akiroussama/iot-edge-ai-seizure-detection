@@ -27,7 +27,7 @@ def test_no_seizure_patient_has_negative_unexcluded_labels():
     )
     events = _events([])
 
-    labeled = label_forecast_windows(windows, events, 5, 30)
+    labeled = label_forecast_windows(windows, events, 5, 30, require_recording_end=False)
 
     assert not labeled["forecast_label"].any()
     assert not labeled["is_excluded"].any()
@@ -54,7 +54,7 @@ def test_recording_scope_prevents_cross_recording_event_labeling():
         ]
     )
 
-    labeled = label_forecast_windows(windows, events, 5, 30)
+    labeled = label_forecast_windows(windows, events, 5, 30, require_recording_end=False)
 
     assert not labeled.loc[0, "forecast_label"]
 
@@ -86,7 +86,9 @@ def test_multiple_seizures_use_next_event_and_any_forecast_event():
         ]
     )
 
-    labeled = label_forecast_windows(windows, events, 5, 30, postictal_exclusion_minutes=5)
+    labeled = label_forecast_windows(
+        windows, events, 5, 30, postictal_exclusion_minutes=5, require_recording_end=False
+    )
 
     assert labeled.loc[0, "time_to_next_seizure_seconds"] == 9 * 60
     assert labeled["forecast_label"].tolist() == [True, True]
@@ -119,7 +121,9 @@ def test_postictal_preictal_overlap_remains_excluded():
         ]
     )
 
-    labeled = label_forecast_windows(windows, events, 5, 30, postictal_exclusion_minutes=10)
+    labeled = label_forecast_windows(
+        windows, events, 5, 30, postictal_exclusion_minutes=10, require_recording_end=False
+    )
 
     assert labeled.loc[0, "forecast_label"]
     assert labeled.loc[0, "is_postictal"]
@@ -147,7 +151,9 @@ def test_postictal_anchor_can_use_onset_for_onset_only_events():
         ]
     )
 
-    end_anchor = label_forecast_windows(windows, events, 5, 30, postictal_exclusion_minutes=1)
+    end_anchor = label_forecast_windows(
+        windows, events, 5, 30, postictal_exclusion_minutes=1, require_recording_end=False
+    )
     start_anchor = label_forecast_windows(
         windows,
         events,
@@ -155,6 +161,7 @@ def test_postictal_anchor_can_use_onset_for_onset_only_events():
         30,
         postictal_exclusion_minutes=1,
         postictal_anchor="seizure_start",
+        require_recording_end=False,
     )
 
     assert end_anchor.loc[0, "is_postictal"]
@@ -221,7 +228,9 @@ def test_require_recording_end_for_right_censoring_fails_loudly():
     events = _events([])
 
     try:
-        label_forecast_windows(windows, events, 5, 30, require_recording_end=True)
+        # require_recording_end defaults to True (Phase R audit C2 item 7), so a
+        # windows table with no recording_end must fail loudly with no override.
+        label_forecast_windows(windows, events, 5, 30)
     except ValueError as exc:
         assert "recording_end" in str(exc)
     else:
@@ -274,3 +283,31 @@ def test_label_windows_cli_refuses_imputed_end_postictal_without_policy(tmp_path
 
     assert result.returncode != 0
     assert "imputed seizure_end" in result.stderr
+
+
+def test_right_censoring_applied_column_stamps_whether_censoring_ran():
+    """Phase R audit C2: labels carry a right_censoring_applied stamp so a
+    downstream report cannot mistake un-censored labels for censored ones.
+
+    Fails if the stamp is absent or does not reflect recording_end presence.
+    """
+    base = pd.Timestamp("2026-01-01 00:00:00")
+    with_end = pd.DataFrame(
+        {
+            "patient_id": ["p1"],
+            "recording_id": ["r1"],
+            "recording_end": [base + pd.Timedelta(minutes=30)],
+            "window_start": [base],
+            "window_end": [base + pd.Timedelta(minutes=1)],
+        }
+    )
+    without_end = with_end.drop(columns=["recording_end"])
+    events = _events([])
+
+    censored = label_forecast_windows(with_end, events, 5, 30)
+    uncensored = label_forecast_windows(
+        without_end, events, 5, 30, require_recording_end=False
+    )
+
+    assert censored["right_censoring_applied"].all()
+    assert not uncensored["right_censoring_applied"].any()

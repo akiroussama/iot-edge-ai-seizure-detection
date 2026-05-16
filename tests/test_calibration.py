@@ -10,7 +10,9 @@ from src.metrics.calibration import brier_score, expected_calibration_error, rel
 
 def test_calibration_metrics_are_finite():
     _, windows, events = make_synthetic_seizeit2_tables()
-    labeled = label_forecast_windows(windows, events, 5, 30, postictal_exclusion_minutes=5)
+    labeled = label_forecast_windows(
+        windows, events, 5, 30, postictal_exclusion_minutes=5, require_recording_end=False
+    )
     preds = generate_random_rate_matched_alarms(labeled, 0.1, seed=1)
     assert brier_score(preds) >= 0
     assert expected_calibration_error(preds) >= 0

@@ -8,7 +8,9 @@ from src.labeling.sph_sop import label_forecast_windows
 
 def test_ictal_and_postictal_exclusion():
     _, windows, events = make_synthetic_seizeit2_tables()
-    labeled = label_forecast_windows(windows, events, 5, 30, postictal_exclusion_minutes=5)
+    labeled = label_forecast_windows(
+        windows, events, 5, 30, postictal_exclusion_minutes=5, require_recording_end=False
+    )
 
     ictal = labeled.loc[labeled["is_ictal"]]
     assert not ictal.empty

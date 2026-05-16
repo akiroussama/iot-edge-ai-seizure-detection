@@ -14,6 +14,7 @@ def test_sph_sop_labeling_exact_boundaries():
         sph_minutes=5,
         sop_minutes=30,
         postictal_exclusion_minutes=5,
+        require_recording_end=False,
     )
     seizure_start = events.iloc[0]["seizure_start"]
     positive_ends = set(labeled.loc[labeled["forecast_label"], "window_end"])
@@ -32,7 +33,9 @@ def test_sph_sop_labeling_exact_boundaries():
 
 def test_time_to_next_and_since_last_seizure():
     _, windows, events = make_synthetic_seizeit2_tables()
-    labeled = label_forecast_windows(windows, events, 5, 30, postictal_exclusion_minutes=5)
+    labeled = label_forecast_windows(
+        windows, events, 5, 30, postictal_exclusion_minutes=5, require_recording_end=False
+    )
     row = labeled.loc[labeled["window_end"].eq(pd.Timestamp("2026-01-01 10:10:00"))].iloc[0]
     assert row["time_to_next_seizure_seconds"] == 30 * 60
     post = labeled.loc[labeled["window_end"].eq(pd.Timestamp("2026-01-01 10:50:00"))].iloc[0]
