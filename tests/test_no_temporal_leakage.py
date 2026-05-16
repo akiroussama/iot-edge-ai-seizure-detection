@@ -88,7 +88,9 @@ def test_leakage_audit_marks_temporal_patient_overlap_as_contextual():
 
     assert "Patient overlap across splits: True" in report
     assert "Temporal ordering/overlap leakage: False" in report
-    assert "Feature normalization leakage: UNVERIFIED_OR_FAILED" in report
+    # The split table carries no predictions, so fit-scope is NOT_APPLICABLE,
+    # not a metadata failure (Phase R audit H2 third state).
+    assert "Feature normalization leakage: NOT_APPLICABLE" in report
 
 
 def test_duplicate_window_check_detects_repeated_intervals():
@@ -248,3 +250,44 @@ def test_fit_scope_metadata_passes_train_val_scope() -> None:
     audit = check_fit_scope_metadata(df)
 
     assert not audit["has_leakage"]
+
+
+def test_fit_scope_metadata_distinguishes_not_applicable_from_failed():
+    """Phase R audit H2: a table with no predictions is NOT_APPLICABLE, not a
+    metadata failure. A predictions table without fit metadata is the failure.
+
+    Fails if the two are conflated into one UNVERIFIED_OR_FAILED state.
+    """
+    labels_only = pd.DataFrame({"patient_id": ["p1"], "split": ["train"]})
+    not_applicable = check_fit_scope_metadata(labels_only)
+    assert not_applicable["status"] == "not_applicable"
+    assert not not_applicable["has_leakage"]
+
+    preds_no_metadata = pd.DataFrame({"patient_id": ["p1"], "risk_score": [0.4]})
+    failed = check_fit_scope_metadata(preds_no_metadata)
+    assert failed["status"] == "unverified_or_failed"
+    assert failed["has_leakage"]
+
+
+def test_leakage_audit_marks_temporal_unreliable_on_duplicate_ranges():
+    """Phase R audit H3 gap 2: with duplicate recording time ranges present, the
+    temporal-leakage verdict must read UNRELIABLE, not a bare True/False.
+
+    Fails if check_temporal_leakage's verdict is reported without consulting
+    the duplicate-range check.
+    """
+    base = pd.Timestamp("2026-01-01 00:00:00")
+    # p1 recordings r1 and r2 share an identical time range (reset clock).
+    df = pd.DataFrame(
+        {
+            "patient_id": ["p1"] * 4,
+            "recording_id": ["r1", "r1", "r2", "r2"],
+            "window_start": [base, base + pd.Timedelta(hours=1)] * 2,
+            "window_end": [base + pd.Timedelta(hours=1), base + pd.Timedelta(hours=2)] * 2,
+            "split": ["train", "train", "test", "test"],
+        }
+    )
+
+    report = leakage_audit(df, split_strategy="temporal")
+
+    assert "Temporal ordering/overlap leakage: UNRELIABLE" in report

@@ -108,12 +108,27 @@ def check_temporal_leakage(
 
 
 def check_fit_scope_metadata(df: pd.DataFrame) -> dict[str, object]:
-    """Inspect score-fit and threshold-selection metadata when a prediction table carries it."""
+    """Inspect score-fit and threshold-selection metadata when a prediction table carries it.
+
+    Returns a three-state ``status``: ``not_applicable`` when the table carries
+    no predictions at all (there is no model fit to verify), ``unverified_or_failed``
+    when predictions are present without trustworthy fit metadata, and
+    ``verified`` when fit metadata is present and non-test (Phase R audit H2 —
+    do not conflate "nothing to audit" with "audit failed").
+    """
     metadata_cols = [col for col in ["score_fit_split", "threshold_source_split"] if col in df.columns]
     if not metadata_cols:
+        has_predictions = any(col in df.columns for col in ("risk_score", "alarm"))
+        if not has_predictions:
+            return {
+                "has_leakage": False,
+                "status": "not_applicable",
+                "issues": [{"status": "not_applicable", "reason": "table carries no predictions; no model fit to verify"}],
+            }
         return {
             "has_leakage": True,
-            "issues": [{"status": "unverified", "reason": "missing score_fit_split/threshold_source_split metadata"}],
+            "status": "unverified_or_failed",
+            "issues": [{"status": "unverified", "reason": "predictions present without score_fit_split/threshold_source_split metadata"}],
         }
     issues = []
     for col in metadata_cols:
@@ -122,7 +137,12 @@ def check_fit_scope_metadata(df: pd.DataFrame) -> dict[str, object]:
             issues.append({"column": col, "status": "empty"})
         if "test" in values:
             issues.append({"column": col, "status": "test_scope_used", "values": values})
-    return {"has_leakage": bool(issues), "issues": issues, "metadata_columns": metadata_cols}
+    return {
+        "has_leakage": bool(issues),
+        "status": "unverified_or_failed" if issues else "verified",
+        "issues": issues,
+        "metadata_columns": metadata_cols,
+    }
 
 
 def leakage_audit(df: pd.DataFrame, split_col: str = "split", split_strategy: str = "auto") -> str:
@@ -164,17 +184,28 @@ def leakage_audit(df: pd.DataFrame, split_col: str = "split", split_strategy: st
         lines.append(str(postictal["issues"][:10]))
     is_temporal_strategy = split_strategy == "auto" or split_strategy.startswith("temporal")
     if is_temporal_strategy and {"window_start", "window_end", split_col}.issubset(df.columns):
-        temporal = check_temporal_leakage(df, split_col)
-        lines.append(f"Temporal ordering/overlap leakage: {temporal['has_leakage']}")
-        if temporal["issues"]:
-            lines.append(str(temporal["issues"][:10]))
+        if duplicate_ranges["has_leakage"]:
+            lines.append(
+                "Temporal ordering/overlap leakage: UNRELIABLE (duplicate recording "
+                "time ranges detected; temporal ordering cannot be trusted)"
+            )
+        else:
+            temporal = check_temporal_leakage(df, split_col)
+            lines.append(f"Temporal ordering/overlap leakage: {temporal['has_leakage']}")
+            if temporal["issues"]:
+                lines.append(str(temporal["issues"][:10]))
     elif {"window_start", "window_end", split_col}.issubset(df.columns):
         lines.append(
             "Temporal ordering/overlap leakage: not evaluated "
             f"(strategy={split_strategy}; use temporal splits for prospective claims)"
         )
     fit_scope = check_fit_scope_metadata(df)
-    if fit_scope["has_leakage"]:
+    if fit_scope["status"] == "not_applicable":
+        lines.append(
+            "Feature normalization leakage: NOT_APPLICABLE "
+            "(table carries no predictions; no model fit to verify)"
+        )
+    elif fit_scope["has_leakage"]:
         lines.append(f"Feature normalization leakage: UNVERIFIED_OR_FAILED {fit_scope['issues'][:10]}")
     else:
         lines.append(
