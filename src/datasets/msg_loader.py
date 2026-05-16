@@ -88,7 +88,7 @@ def inspect_msg_raw_layout(raw_root: str | Path) -> dict[str, object]:
         "complete_patient_zip_files": len(complete_zip_files),
         "incomplete_patient_zip_files": [p.name for p in incomplete_zip_files],
         "seizure_time_files": [p.name for p in seizure_files],
-        "seizure_txt_files": [str(p.relative_to(root)) for p in seizure_txt_files[:20]],
+        "seizure_txt_files": [p.relative_to(root).as_posix() for p in seizure_txt_files[:20]],
         "seizure_txt_files_in_zips": seizure_zip_files[:20],
         "example_zip_files": [p.name for p in zip_files[:5]],
         "next_action": (
