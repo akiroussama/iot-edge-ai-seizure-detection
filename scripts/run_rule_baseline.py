@@ -81,6 +81,13 @@ def main() -> None:
         default=None,
         help="Split used to select alarm threshold. Defaults to val when available.",
     )
+    parser.add_argument(
+        "--reference-scope",
+        choices=["patient", "population"],
+        default="patient",
+        help="Reference for robust feature statistics. 'population' pools all "
+        "fit-split rows so held-out patients stay scorable on patient-wise splits.",
+    )
     args = parser.parse_args()
 
     features = read_table(args.features)
@@ -88,14 +95,25 @@ def main() -> None:
     threshold_split = _default_existing_split(features, args.threshold_split, "val")
     score_reference_mask = _split_mask(features, score_fit_split)
     if args.rule == "hr_tachycardia":
-        raw_score = ecg_tachycardia_score(features, hr_col="hr_mean", reference_mask=score_reference_mask)
+        raw_score = ecg_tachycardia_score(
+            features,
+            hr_col="hr_mean",
+            reference_mask=score_reference_mask,
+            reference_scope=args.reference_scope,
+        )
     elif args.rule == "acc_energy":
-        raw_score = acc_energy_score(features, energy_col="acc_energy", reference_mask=score_reference_mask)
+        raw_score = acc_energy_score(
+            features,
+            energy_col="acc_energy",
+            reference_mask=score_reference_mask,
+            reference_scope=args.reference_scope,
+        )
     else:
         raw_score = generic_zscore_anomaly(
             features,
             args.feature_cols or _generic_feature_columns(features),
             reference_mask=score_reference_mask,
+            reference_scope=args.reference_scope,
         )
 
     raw_score = pd.to_numeric(raw_score, errors="coerce")
@@ -103,6 +121,7 @@ def main() -> None:
     preds["risk_score"] = normalize_score(raw_score, reference_mask=score_reference_mask).fillna(0.0).astype(float)
     preds["score_fit_split"] = score_fit_split or "all"
     preds["threshold_source_split"] = threshold_split or "all"
+    preds["reference_scope"] = args.reference_scope
     valid_mask = ~preds.get("is_excluded", pd.Series(False, index=preds.index)).fillna(False).astype(bool)
     evidence_mask = raw_score.notna() & np.isfinite(raw_score.astype(float))
     threshold_mask = _split_mask(preds, threshold_split)
@@ -138,6 +157,7 @@ def main() -> None:
             "target_tiw": args.target_tiw,
             "score_fit_split": score_fit_split or "all",
             "threshold_source_split": threshold_split or "all",
+            "reference_scope": args.reference_scope,
         }
     )
 

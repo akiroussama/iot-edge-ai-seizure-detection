@@ -7,7 +7,12 @@ from zipfile import ZipFile
 
 import pandas as pd
 
-from src.baselines.simple_rules import ecg_tachycardia_score, generic_zscore_anomaly, normalize_score
+from src.baselines.simple_rules import (
+    acc_energy_score,
+    ecg_tachycardia_score,
+    generic_zscore_anomaly,
+    normalize_score,
+)
 from src.features.msg_empatica import extract_msg_empatica_window_features
 from src.features.window_features import extract_window_features, make_feature_matrix
 from src.utils.io import read_table, write_table
@@ -141,6 +146,7 @@ def test_run_rule_baseline_defaults_to_train_fit_and_val_threshold(tmp_path) -> 
     preds = read_table(out_path)
     assert set(preds["score_fit_split"]) == {"train"}
     assert set(preds["threshold_source_split"]) == {"val"}
+    assert set(preds["reference_scope"]) == {"patient"}
 
 
 def test_rule_baseline_fails_on_patient_without_reference_rows() -> None:
@@ -183,8 +189,45 @@ def test_rule_scores_fail_on_missing_requested_features() -> None:
         raise AssertionError("expected missing HR feature to fail")
 
     try:
+        acc_energy_score(features)
+    except ValueError as exc:
+        assert "acc_energy" in str(exc)
+    else:
+        raise AssertionError("expected missing ACC feature to fail")
+
+    try:
         generic_zscore_anomaly(features, ["missing_feature"])
     except ValueError as exc:
         assert "missing_feature" in str(exc)
     else:
         raise AssertionError("expected missing generic feature to fail")
+
+
+def test_population_reference_scope_scores_held_out_patient() -> None:
+    """Phase R audit C3 Gap 2: reference_scope='population' pools the reference
+    rows so a held-out patient with none of its own stays scorable. 'patient'
+    scope still fails closed on a patient that has no reference rows.
+    """
+    features = pd.DataFrame(
+        {
+            "patient_id": ["train_patient", "train_patient", "heldout_patient"],
+            "hr_mean": [60.0, 64.0, 95.0],
+        }
+    )
+    reference_mask = pd.Series([True, True, False])
+
+    try:
+        ecg_tachycardia_score(
+            features, reference_mask=reference_mask, reference_scope="patient"
+        )
+    except ValueError as exc:
+        assert "empty reference rows" in str(exc)
+    else:
+        raise AssertionError("expected patient-scope held-out patient to fail")
+
+    scored = ecg_tachycardia_score(
+        features, reference_mask=reference_mask, reference_scope="population"
+    )
+    assert len(scored) == 3
+    assert scored.notna().all()
+    assert scored.loc[2] > 0
