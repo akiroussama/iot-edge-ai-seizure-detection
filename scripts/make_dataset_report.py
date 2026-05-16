@@ -61,8 +61,19 @@ def _filter_column(expression: str) -> str:
     return expression.split("=", maxsplit=1)[0]
 
 
+_UNBIASED_EVENT_FILTER_COLUMNS: set[str] = set()
+
+
 def _requires_bias_acknowledgement(expression: str | None) -> bool:
-    return expression == "recording_match_status=matched"
+    """Any event filter selects a non-random event subset, so it must be
+    acknowledged as a potential selection bias unless its column is on the
+    (currently empty) allowlist of filters known to be unbiased. Phase R audit
+    C4: the previous exact match on recording_match_status=matched let every
+    other biased event filter through unacknowledged.
+    """
+    if not expression or "=" not in expression:
+        return False
+    return _filter_column(expression) not in _UNBIASED_EVENT_FILTER_COLUMNS
 
 
 def _events_coverable_by_predictions(
@@ -176,6 +187,11 @@ def _baseline_table(
     baseline_name: str,
 ) -> pd.DataFrame:
     sens = event_level_sensitivity(predictions, events, sph_minutes, sop_minutes)
+    # Render sensitivity with its denominator inline so a reader cannot copy a
+    # bare rate and lose the event count it rests on (Phase R audit C4).
+    sensitivity_inline = (
+        f"{sens['sensitivity']:.3f} ({sens['n_forecasted']}/{sens['n_events']} events)"
+    )
     return pd.DataFrame(
         [
             {
@@ -183,7 +199,7 @@ def _baseline_table(
                 "horizon": f"SPH {sph_minutes:g} / SOP {sop_minutes:g}",
                 "n_events": sens["n_events"],
                 "n_forecasted": sens["n_forecasted"],
-                "sensitivity": sens["sensitivity"],
+                "sensitivity": sensitivity_inline,
                 "far_per_hour": false_alarm_rate_per_hour(predictions, events, sph_minutes, sop_minutes),
                 "far_per_day": false_alarm_rate_per_day(predictions, events, sph_minutes, sop_minutes),
                 "time_in_warning": time_in_warning(predictions),

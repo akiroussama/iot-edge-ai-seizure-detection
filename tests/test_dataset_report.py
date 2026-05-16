@@ -3,6 +3,7 @@ from __future__ import annotations
 import pandas as pd
 
 from scripts.make_dataset_report import (
+    _baseline_table,
     _event_denominator_table,
     _event_annotation_table,
     _events_coverable_by_predictions,
@@ -126,3 +127,49 @@ def test_event_annotation_table_reports_imputed_seizure_ends() -> None:
     assert annotation.loc[0, "seizure_end_imputed_events"] == 2
     assert annotation.loc[0, "seizure_end_imputed_fraction"] == 2 / 3
     assert annotation.loc[0, "imputed_duration_seconds_values"] == "60.0"
+
+
+def test_baseline_table_renders_sensitivity_with_inline_denominator() -> None:
+    """Phase R audit C4: the baseline table's sensitivity cell must carry its
+    event denominator inline, so a reader cannot copy a bare rate and lose the
+    event count. Fails if sensitivity is rendered as a bare number.
+    """
+    base = pd.Timestamp("2026-01-01 00:00:00")
+    predictions = pd.DataFrame(
+        {
+            "patient_id": ["p1"] * 3,
+            "recording_id": ["r1"] * 3,
+            "window_start": [base + pd.Timedelta(minutes=i) for i in range(3)],
+            "window_end": [base + pd.Timedelta(minutes=i + 1) for i in range(3)],
+            "risk_score": [0.9, 0.2, 0.1],
+            "alarm": [True, False, False],
+            "forecast_label": [True, False, False],
+            "is_excluded": [False, False, False],
+        }
+    )
+    events = pd.DataFrame(
+        {
+            "patient_id": ["p1"],
+            "recording_id": ["r1"],
+            "seizure_start": [base + pd.Timedelta(minutes=8)],
+            "seizure_end": [base + pd.Timedelta(minutes=9)],
+        }
+    )
+
+    table = _baseline_table(predictions, events, 5, 30, "rule_x")
+    sensitivity_cell = str(table.loc[0, "sensitivity"])
+
+    assert "events)" in sensitivity_cell
+    assert "/" in sensitivity_cell
+
+
+def test_any_event_filter_requires_bias_acknowledgement() -> None:
+    """Phase R audit C4: any event filter selects a non-random subset and must
+    require acknowledgement, not only recording_match_status=matched.
+
+    Fails if the guard exact-matches a single filter string.
+    """
+    assert _requires_bias_acknowledgement("recording_match_status=matched")
+    assert _requires_bias_acknowledgement("patient_id=p1")
+    assert _requires_bias_acknowledgement("seizure_type=focal")
+    assert not _requires_bias_acknowledgement(None)
