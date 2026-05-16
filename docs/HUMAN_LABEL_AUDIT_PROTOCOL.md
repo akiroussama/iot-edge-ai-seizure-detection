@@ -6,33 +6,82 @@ This protocol is mandatory before A100 training or paper claims on real data.
 
 Confirm that event times, SPH/SOP labels, ictal exclusions, and postictal exclusions are correct around real seizure onsets.
 
-## Export Audit Timelines
+## Generate the review sheet (per dataset)
 
-After generating `forecast_labels.parquet`, export seizure-centered windows:
+The review sheet is one row per seizure and is the file the reviewer fills.
+Generate it per dataset from the processed `windows` and `events` tables —
+`docs/COMMANDS.md` covers `prepare_seizeit2.py` / `prepare_msg.py` and
+`make_windows.py`. Regenerate labels with current code first: a label file
+produced before the Phase R P0 fix is stale.
+
+Real windows carry `recording_end`, so `label_windows.py` right-censors
+unobserved horizons by default — do not pass `--allow-missing-recording-end`
+for real data.
+
+### SeizeIT2
 
 ```bash
+uv run python scripts/label_windows.py \
+  --windows data/processed/seizeit2/windows.parquet \
+  --events data/processed/seizeit2/events.parquet \
+  --output data/processed/seizeit2/forecast_labels.parquet \
+  --sph-minutes 5 \
+  --sop-minutes 30 \
+  --postictal-exclusion-minutes 60
+
 uv run python scripts/audit_labels.py \
   --labels data/processed/seizeit2/forecast_labels.parquet \
   --events data/processed/seizeit2/events.parquet \
   --out reports/seizeit2_label_audit.csv \
   --minutes-before 60 \
   --minutes-after 60
-```
 
-Then create a one-row-per-event review sheet. This is the file the reviewer should fill:
-
-```bash
 uv run python scripts/make_label_audit_review_sheet.py \
   --audit reports/seizeit2_label_audit.csv \
   --out reports/seizeit2_label_audit_review_sheet.csv \
   --max-events 10
 ```
 
-By default, `--max-events` uses round-robin patient selection (`--selection-strategy
-patient_spread`) so the first manual audit is not accidentally limited to one patient.
-Use `--selection-strategy first` only when checking a specific sorted event sequence.
+### My Seizure Gauge (MSG)
 
-Mock dry run:
+MSG annotations are onset-only, so `seizure_end` is imputed. Anchor postictal
+exclusion to the onset with `--postictal-anchor seizure_start`;
+`label_windows.py` fails closed on imputed `seizure_end` otherwise. The MSG
+long-horizon is SPH 60 / SOP 1440 on hourly windows.
+
+```bash
+uv run python scripts/label_windows.py \
+  --windows data/processed/msg/windows_1h.parquet \
+  --events data/processed/msg/events.parquet \
+  --output data/processed/msg/labels_sph60_sop1440.parquet \
+  --sph-minutes 60 \
+  --sop-minutes 1440 \
+  --postictal-exclusion-minutes 240 \
+  --postictal-anchor seizure_start
+
+# --minutes-before spans the full SPH+SOP horizon (60 + 1440) so the timeline
+# shows every positive window around each onset.
+uv run python scripts/audit_labels.py \
+  --labels data/processed/msg/labels_sph60_sop1440.parquet \
+  --events data/processed/msg/events.parquet \
+  --out reports/msg_label_audit.csv \
+  --minutes-before 1500 \
+  --minutes-after 60
+
+uv run python scripts/make_label_audit_review_sheet.py \
+  --audit reports/msg_label_audit.csv \
+  --out reports/msg_label_audit_review_sheet.csv \
+  --max-events 10
+```
+
+`--max-events` defaults to round-robin patient selection (`--selection-strategy
+patient_spread`) so the first audit is not limited to one patient. Use
+`--selection-strategy first` only to check a specific sorted event sequence.
+
+### Mock dry run
+
+A synthetic end-to-end check of the pipeline only — it cannot validate real
+seizure timelines.
 
 ```bash
 uv run python scripts/prepare_seizeit2.py --mock --processed-dir /tmp/epitwin_mock_seizeit2
@@ -80,7 +129,8 @@ Fill these review-sheet columns for every audited event:
 The precomputed columns `unexpected_ictal_not_excluded_rows` and
 `unexpected_postictal_not_excluded_rows` must be zero before the event can pass.
 
-After filling the sheet, run the blocking gate:
+After filling each dataset's sheet, run the blocking gate once per dataset
+(SeizeIT2 shown; repeat with the `msg_` paths for My Seizure Gauge):
 
 ```bash
 uv run python scripts/check_label_audit_review.py \
