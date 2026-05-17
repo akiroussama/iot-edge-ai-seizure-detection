@@ -69,6 +69,13 @@ def scope_predictions_for_threshold_sweep(
             "(CLI: pass --sweep-filter split=val). "
             "Do not sweep thresholds on the full table."
         )
+    filter_column = sweep_filter.split("=", maxsplit=1)[0].strip()
+    if filter_column != "split":
+        raise ValueError(
+            f"sweep_filter must scope to the split column, e.g. 'split=val'; got {sweep_filter!r}. "
+            "A non-split filter such as score_fit_split=train selects a constant column and would "
+            "sweep thresholds across train/val/test (Phase R audit C1 Gap 2)."
+        )
     value = _split_value(sweep_filter)
     if value == "test" and not allow_test_sweep:
         raise ValueError(

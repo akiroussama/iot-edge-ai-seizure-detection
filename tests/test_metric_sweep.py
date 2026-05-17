@@ -135,3 +135,34 @@ def test_threshold_sweep_library_refuses_test_split_by_default():
         assert "split=test" in str(exc)
     else:
         raise AssertionError("expected test threshold sweep to fail")
+
+
+def test_threshold_sweep_library_refuses_non_split_filter():
+    """Phase R audit C1 Gap 2: a non-split sweep filter (e.g. the constant
+    score_fit_split column run_rule_baseline.py writes) must raise, not sweep
+    thresholds across train/val/test rows.
+    """
+    base = pd.Timestamp("2026-01-01 00:00:00")
+    preds = pd.DataFrame(
+        {
+            "patient_id": ["p1", "p1"],
+            "recording_id": ["r1", "r1"],
+            "window_start": [base, base + pd.Timedelta(minutes=1)],
+            "window_end": [base + pd.Timedelta(minutes=1), base + pd.Timedelta(minutes=2)],
+            "risk_score": [0.5, 0.5],
+            "forecast_label": [False, False],
+            "is_excluded": [False, False],
+            "split": ["train", "test"],
+            "score_fit_split": ["train", "train"],
+        }
+    )
+    events = pd.DataFrame(columns=["patient_id", "recording_id", "seizure_start", "seizure_end"])
+
+    try:
+        threshold_sweep_table(
+            preds, events, 2, 5, thresholds=[0.0, 1.0], sweep_filter="score_fit_split=train"
+        )
+    except ValueError as exc:
+        assert "split column" in str(exc)
+    else:
+        raise AssertionError("expected non-split sweep filter to fail")

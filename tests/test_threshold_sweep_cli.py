@@ -113,3 +113,31 @@ def test_sweep_thresholds_records_validation_scope(tmp_path) -> None:
     assert set(sweep["sweep_filter"]) == {"split=val"}
     assert set(sweep["publishable_threshold_tuning"]) == {True}
     assert "falsifiability" in sweep.columns
+
+
+def test_sweep_thresholds_refuses_non_split_filter(tmp_path) -> None:
+    """Phase R audit C1 Gap 2: a non-split --sweep-filter must be refused, not
+    swept across all splits."""
+    predictions_path, events_path = _write_inputs(tmp_path)
+    out_path = tmp_path / "sweep.csv"
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "scripts/sweep_thresholds.py",
+            "--predictions",
+            str(predictions_path),
+            "--events",
+            str(events_path),
+            "--output",
+            str(out_path),
+            "--sweep-filter",
+            "score_fit_split=train",
+        ],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode != 0
+    assert "scope to the split column" in result.stderr
