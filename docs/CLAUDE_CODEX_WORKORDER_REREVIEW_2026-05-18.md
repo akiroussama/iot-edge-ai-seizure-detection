@@ -122,11 +122,48 @@ obsolete; it should be removed or rewritten ("citation verified real,
 2026-05-18") so a future reader does not re-chase a resolved item. This is a
 `PLAYBOOK.md` edit and is left to Oussama (§12 — playbook maintenance).
 
+## R1/R2 closure re-review — 2026-05-19
+
+Codex delivered the R1/R2 remediation candidate in commit `a3aa98e`
+("fix(audit): harden SeizeIT2 onset fidelity checks"). Claude Code
+re-review:
+
+- **R1 (cross-OS path separator) — CLOSED.** Raw onset keys now use
+  `tsv.relative_to(raw_root).as_posix()`; the `event_source_file` read
+  from `events.parquet` is normalised backslash to forward slash by the
+  new `_seizeit2_source_file` helper. An independent code-reviewer
+  subagent confirmed no unnormalised separator can enter a
+  `Seizeit2OnsetKey` on either side. Falsification test:
+  `test_seizeit2_onset_audit_accepts_backslash_source_file`.
+- **R2 (multiset check skipped when recordings.parquet absent) — CLOSED.**
+  `_audit_seizeit2_onsets` now runs the onset-key multiset comparison
+  unconditionally, before the `recordings.parquet` guard; only the
+  `seizure_start - recording_start` offset sub-check stays gated. The
+  subagent confirmed a dropped or added onset is still flagged when
+  `recordings.parquet` is absent. Falsification test:
+  `test_seizeit2_onset_audit_checks_multiset_without_recordings`.
+
+Verification basis: independent code-reviewer subagent (R1/R2 correct,
+both new tests discriminating, no new defect); `uv run --extra dev pytest
+tests/test_label_fidelity_audit.py` — 7 passed; full-data run of
+`scripts/audit_label_fidelity.py` on the Hetzner server still PASSES
+(MSG 768/768; SeizeIT2 883/883 count, 883/883 onset multiset, offset OK;
+exit 0).
+
+Minor, non-blocking observation: the R1 test does not catch a revert of
+the raw-side `.as_posix()` on a Linux runner (`PosixPath` stringifies
+with forward slashes regardless), so on Linux only the parsed-side fix is
+exercised. The parsed-side normalisation alone is sufficient to prevent
+the cross-OS false mismatch; a raw-side falsification test is optional
+hardening, not a blocker.
+
 ## Status
 
-- Task 2: closed.
-- Task 1: the onset-fidelity finding is verified on full data; the audit
-  script has two P2 robustness defects (R1, R2) handed back to Codex.
+- Task 1: **CLOSED** — onset-level SeizeIT2 fidelity verified on the full
+  125-subject data; R1 and R2 closed (above).
+  `scripts/audit_label_fidelity.py` has no open findings.
+- Task 2: **CLOSED**.
+- Codex's 2026-05-18 work order is **fully closed**.
 - The EpiTwin critical path is unchanged — still gated on the Gate A policy
   sign-offs and the Phase B manual label audit (Oussama). This closure does
   not move a gate.
