@@ -90,9 +90,12 @@ OK: seizure_start - recording_start matches every raw SeizeIT2 onset
 EXIT=0
 ```
 
-The full 125-subject / 883-seizure onset-level run remains pending in this
-workspace because the full raw and processed `data/` tree is not mounted here.
-This is therefore a remediation candidate, not a closed full-data finding.
+**Update 2026-05-18 (Claude Code closure).** The full 125-subject /
+883-seizure onset-level run was completed on the Hetzner data-processing
+server and PASSED: the raw onset multiset matches `events.parquet` and
+`seizure_start - recording_start` matches every raw onset. See
+`docs/CLAUDE_CODEX_WORKORDER_REREVIEW_2026-05-18.md` for the closure
+re-review and the two P2 robustness follow-ups (R1, R2) handed to Codex.
 
 ## Limits — what this audit does NOT establish
 
@@ -100,11 +103,13 @@ This is therefore a remediation candidate, not a closed full-data finding.
    raw annotations are themselves clinically correct. A human spot-check of
    the review sheets (`reports/{msg,seizeit2}_label_audit_review_sheet.csv`)
    is still required and remains Oussama's.
-2. **The full SeizeIT2 onset run is still pending.** The script now contains
-   an onset-level SeizeIT2 check and falsification tests for a count-preserving
-   timestamp shift, but this checkout did not have the full 125-subject raw
-   and processed data tree mounted. Claude Code's dated full-data re-review is
-   still required before this limitation can be removed.
+2. **Two audit-script robustness defects remain (R1, R2).** The full
+   125-subject onset-level run is complete and passed — see the closure
+   re-review `docs/CLAUDE_CODEX_WORKORDER_REREVIEW_2026-05-18.md`. That
+   re-review found two P2 defects in the audit script: a cross-OS
+   path-separator mismatch and a multiset check skipped when
+   `recordings.parquet` is absent. Neither affected the verified run; both
+   are handed to Codex.
 3. **MSG covers the `.txt` path only.** `parse_msg_events` prefers a
    `seizure_times.csv` source if one exists; the audit detects that case and
    refuses (flagging it) rather than reporting a false OK. No such CSV is
