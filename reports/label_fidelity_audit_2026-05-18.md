@@ -24,6 +24,7 @@ compares the result against `events.parquet`:
 |---|---|---|---|
 | MSG | onset `.txt` inside the patient `.zip` archives | `(patient_id, unix_second)` set equality | onset-level |
 | SeizeIT2 | `*events.tsv` (BIDS) | seizure-row count, overall and per patient | count-level |
+| SeizeIT2 onset extension | `*events.tsv` (BIDS) + processed `recordings.parquet` | `(patient_id, recording_id, event_source_file, onset)` multiset and `seizure_start - recording_start == raw onset` | onset-level |
 
 ## Result (run on the project's Hetzner data-processing server)
 
@@ -45,18 +46,65 @@ swap (one onset dropped and a different one introduced) that equal counts
 would hide. The SeizeIT2 check is a per-patient count match across all 125
 subjects.
 
+## Codex remediation candidate — SeizeIT2 onset-level extension
+
+`scripts/audit_label_fidelity.py` now keeps the existing SeizeIT2 count check
+and adds an onset-level arm. The added comparison is deliberately
+parser-internal-free: it does not import `_parse_recording_start`; it compares
+the raw BIDS `onset` value with `events.parquet.seizure_start -
+recordings.parquet.recording_start`, keyed by patient, recording/run, source
+`*events.tsv`, and onset. Missing raw roots, missing processed parquet,
+missing onset columns, missing source-file keys, and missing/ambiguous
+recording starts are flagged as audit findings rather than passing silently.
+
+Local verification in this checkout:
+
+```
+uv run --extra dev ruff check scripts/audit_label_fidelity.py tests/test_label_fidelity_audit.py
+All checks passed!
+
+uv run --extra dev pytest tests/test_label_fidelity_audit.py
+5 passed
+
+uv run --extra dev python scripts/audit_label_fidelity.py
+EXIT=1
+MISMATCH: MSG missing data/processed/msg/events.parquet
+MISMATCH: SeizeIT2 missing data/processed/seizeit2/events.parquet
+```
+
+The only mounted raw SeizeIT2 BIDS tree found locally was the sibling
+`/mnt/c/doctorat/iot/epitwin-open/datasets` subset (`sub-125`, 85 event TSVs).
+The onset extension passes on that mounted subset:
+
+```
+uv run --extra dev python scripts/audit_label_fidelity.py \
+  --dataset seizeit2 \
+  --repo-root /mnt/c/doctorat/iot/epitwin-open \
+  --seizeit2-raw-root /mnt/c/doctorat/iot/epitwin-open/datasets
+
+raw *events.tsv seizures: 2  |  events.parquet: 2
+OK: raw seizure counts match events.parquet, overall and per patient
+raw onset keys: 2  |  events.parquet onset keys: 2
+OK: raw onset multiset matches events.parquet patient/recording/source/onset keys
+OK: seizure_start - recording_start matches every raw SeizeIT2 onset
+EXIT=0
+```
+
+The full 125-subject / 883-seizure onset-level run remains pending in this
+workspace because the full raw and processed `data/` tree is not mounted here.
+This is therefore a remediation candidate, not a closed full-data finding.
+
 ## Limits — what this audit does NOT establish
 
 1. **Not a clinical audit.** It checks raw→parquet fidelity, not whether the
    raw annotations are themselves clinically correct. A human spot-check of
    the review sheets (`reports/{msg,seizeit2}_label_audit_review_sheet.csv`)
    is still required and remains Oussama's.
-2. **SeizeIT2 is count-level, not onset-level.** A same-count timestamp shift
-   would not be caught by the SeizeIT2 arm. Timestamp-ordering sanity
-   (`seizure_end >= seizure_start`, recording/window bounds) is covered
-   separately by `scripts/verify_processed_data.py`. An onset-level SeizeIT2
-   check is a candidate follow-up; it needs the parser's `recording_start`
-   reconstruction to convert BIDS-relative onsets to absolute time.
+2. **The full SeizeIT2 onset run is still pending.** The script now contains
+   an onset-level SeizeIT2 check and falsification tests for a count-preserving
+   timestamp shift, but this checkout did not have the full 125-subject raw
+   and processed data tree mounted. Claude Code's dated full-data re-review is
+   still required before this limitation can be removed.
 3. **MSG covers the `.txt` path only.** `parse_msg_events` prefers a
    `seizure_times.csv` source if one exists; the audit detects that case and
    refuses (flagging it) rather than reporting a false OK. No such CSV is

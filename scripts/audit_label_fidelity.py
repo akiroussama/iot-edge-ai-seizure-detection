@@ -8,29 +8,123 @@ Exits non-zero on any mismatch.
 
 NOT a human clinical audit: it verifies parser fidelity (raw source ->
 events.parquet), not the clinical correctness of the source annotations
-themselves. The SeizeIT2 arm compares seizure counts per patient (catches
-dropped, added, or mis-assigned seizures, not sub-second timestamp shifts);
-the MSG arm compares onset timestamps. A human clinical spot-check remains
-recommended regardless.
+themselves. The MSG arm compares onset timestamps. The SeizeIT2 arm keeps the
+per-patient count check and also compares raw BIDS onset rows to processed
+relative onsets (seizure_start - recording_start). A human clinical spot-check
+remains recommended regardless.
 
 The MSG-source helpers below are copied verbatim from src/datasets/msg_loader.py
 so the audit's raw-file discovery matches the parser it audits.
 """
 from __future__ import annotations
 
+import argparse
 import sys
+from collections import Counter
+from dataclasses import dataclass
 from pathlib import Path
 from zipfile import BadZipFile, ZipFile
 
 import pandas as pd
 
 REPO = Path(__file__).resolve().parents[1]
+MSG_RAW_ROOT_OVERRIDE: Path | None = None
+MSG_EVENTS_PATH_OVERRIDE: Path | None = None
+SEIZEIT2_RAW_ROOT_OVERRIDE: Path | None = None
+SEIZEIT2_EVENTS_PATH_OVERRIDE: Path | None = None
+SEIZEIT2_RECORDINGS_PATH_OVERRIDE: Path | None = None
 findings: list[str] = []
+SEIZURE_PATTERNS = ("seizure", "ictal", "sz")
+NON_SEIZURE_EVENT_TYPES = {"bckg", "background", "impd", "artifact", "artefact", "n/a", "nan", ""}
+ONSET_TOLERANCE_US = 1
 
 
 def flag(msg: str) -> None:
     findings.append(msg)
     print(f"  MISMATCH: {msg}")
+
+
+def _read_required_parquet(path: Path, label: str) -> pd.DataFrame | None:
+    if not path.exists():
+        flag(f"{label}: missing required parquet: {path}")
+        return None
+    try:
+        return pd.read_parquet(path)
+    except Exception as exc:  # noqa: BLE001 - report any unreadable audit input
+        flag(f"{label}: failed to read {path}: {exc}")
+        return None
+
+
+def _configured_path(override: Path | None, default: Path) -> Path:
+    return override if override is not None else default
+
+
+def _msg_raw_root() -> Path:
+    return _configured_path(MSG_RAW_ROOT_OVERRIDE, REPO / "data/raw/msg")
+
+
+def _msg_events_path() -> Path:
+    return _configured_path(MSG_EVENTS_PATH_OVERRIDE, REPO / "data/processed/msg/events.parquet")
+
+
+def _seizeit2_raw_root() -> Path:
+    return _configured_path(SEIZEIT2_RAW_ROOT_OVERRIDE, REPO / "data/raw/seizeit2")
+
+
+def _seizeit2_events_path() -> Path:
+    return _configured_path(SEIZEIT2_EVENTS_PATH_OVERRIDE, REPO / "data/processed/seizeit2/events.parquet")
+
+
+def _seizeit2_recordings_path() -> Path:
+    return _configured_path(
+        SEIZEIT2_RECORDINGS_PATH_OVERRIDE,
+        REPO / "data/processed/seizeit2/recordings.parquet",
+    )
+
+
+@dataclass(frozen=True)
+class Seizeit2OnsetKey:
+    patient_id: str
+    recording_id: str
+    event_source_file: str
+    onset_us: int
+
+
+def _seconds_to_us(value: object, src: str) -> int | None:
+    try:
+        seconds = float(value)
+    except (TypeError, ValueError):
+        flag(f"{src}: non-numeric onset {value!r}")
+        return None
+    if pd.isna(seconds):
+        flag(f"{src}: missing onset")
+        return None
+    return int(round(seconds * 1_000_000))
+
+
+def _is_seizeit2_seizure_event_type(value: object) -> bool:
+    """Local lexical classifier; deliberately does not import parser internals."""
+    event_type = str(value).strip().lower()
+    if event_type in NON_SEIZURE_EVENT_TYPES:
+        return False
+    return any(pattern in event_type for pattern in SEIZURE_PATTERNS)
+
+
+def _seizeit2_event_type_column(table: pd.DataFrame) -> str | None:
+    return next((col for col in ("trial_type", "event_type", "eventType") if col in table.columns), None)
+
+
+def _seizeit2_patient_id(tsv: Path, table: pd.DataFrame) -> str:
+    pid = next((p for p in tsv.parts if p.startswith("sub-")), None)
+    if pid is not None:
+        return str(pid)
+    if "patient_id" in table.columns and len(table):
+        return str(table["patient_id"].iloc[0])
+    return tsv.parent.name
+
+
+def _seizeit2_recording_id(tsv: Path) -> str:
+    return tsv.name.removesuffix("_events.tsv")
 
 
 def _looks_like_msg_seizure_text(path_name: str) -> bool:
@@ -94,13 +188,15 @@ def msg_raw_onsets(raw_root: Path) -> set[tuple[str, int]]:
 
 def audit_msg() -> None:
     print("=== MSG parser fidelity (events.parquet vs raw onsets) ===")
-    ev = pd.read_parquet(REPO / "data/processed/msg/events.parquet")
+    ev = _read_required_parquet(_msg_events_path(), "MSG")
+    if ev is None:
+        return
     # seizure_start is tz-naive UTC wall-clock; .value is ns-since-epoch (UTC).
     parsed = {
         (str(row.patient_id), int(pd.Timestamp(row.seizure_start).value // 10**9))
         for row in ev.itertuples()
     }
-    raw = msg_raw_onsets(REPO / "data/raw/msg")
+    raw = msg_raw_onsets(_msg_raw_root())
     if not raw:
         print("  MSG fidelity NOT verified (see flag above)")
         return
@@ -117,31 +213,46 @@ def audit_msg() -> None:
 
 def audit_seizeit2() -> None:
     print("=== SeizeIT2 parser fidelity (events.parquet vs raw *events.tsv) ===")
-    ev = pd.read_parquet(REPO / "data/processed/seizeit2/events.parquet")
-    seizure_patterns = ("seizure", "ictal", "sz")
-    non_seizure = {"bckg", "background", "impd", "artifact", "artefact", "n/a", "nan", ""}
+    ev = _read_required_parquet(_seizeit2_events_path(), "SeizeIT2")
+    if ev is None:
+        return
     raw_per_patient: dict[str, int] = {}
+    raw_onsets: list[Seizeit2OnsetKey] = []
     raw_total = 0
-    for tsv in sorted((REPO / "data/raw/seizeit2").rglob("*events.tsv")):
+    raw_root = _seizeit2_raw_root()
+    if not raw_root.exists():
+        flag(f"SeizeIT2: raw root missing: {raw_root}")
+        return
+    raw_event_files = sorted(raw_root.rglob("*events.tsv"))
+    if not raw_event_files:
+        flag(f"SeizeIT2: no raw *events.tsv files found under {raw_root}")
+        return
+    for tsv in raw_event_files:
         try:
             table = pd.read_csv(tsv, sep="\t")
         except Exception as exc:  # noqa: BLE001 - report any unreadable annotation
             flag(f"SeizeIT2 {tsv.name}: read failed: {exc}")
             continue
-        pid = next((p for p in tsv.parts if p.startswith("sub-")), None)
-        if pid is None:  # mirror parse_bids_like_seizeit2_events fallback
-            if "patient_id" in table.columns and len(table):
-                pid = str(table["patient_id"].iloc[0])
-            else:
-                pid = tsv.parent.name
-        col = next((c for c in ("trial_type", "event_type", "eventType") if c in table.columns), None)
+        pid = _seizeit2_patient_id(tsv, table)
+        recording_id = _seizeit2_recording_id(tsv)
+        source_file = str(tsv.relative_to(raw_root))
+        col = _seizeit2_event_type_column(table)
         if col is None:
-            n = len(table)
+            seizure_rows = table
         else:
             vals = table[col].astype(str).str.strip().str.lower()
-            n = int(vals.map(lambda v: v not in non_seizure and any(p in v for p in seizure_patterns)).sum())
+            seizure_rows = table.loc[vals.map(_is_seizeit2_seizure_event_type)]
+        n = len(seizure_rows)
         raw_per_patient[pid] = raw_per_patient.get(pid, 0) + n
         raw_total += n
+        if "onset" not in seizure_rows.columns and n:
+            flag(f"SeizeIT2 {source_file}: {n} seizure row(s) lack raw onset; onset fidelity unverified")
+            continue
+        for raw_idx, row in seizure_rows.iterrows():
+            onset_us = _seconds_to_us(row.get("onset"), f"SeizeIT2 {source_file} row {raw_idx}")
+            if onset_us is None:
+                continue
+            raw_onsets.append(Seizeit2OnsetKey(pid, recording_id, source_file, onset_us))
     parsed_total = len(ev)
     parsed_per_patient = ev.groupby(ev["patient_id"].astype(str)).size().to_dict()
     print(f"  raw *events.tsv seizures: {raw_total}  |  events.parquet: {parsed_total}")
@@ -156,12 +267,149 @@ def audit_seizeit2() -> None:
              f"{[(p, raw_per_patient.get(p, 0), parsed_per_patient.get(p, 0)) for p in mismatched[:5]]}")
     if raw_total == parsed_total and not mismatched:
         print("  OK: raw seizure counts match events.parquet, overall and per patient")
+    _audit_seizeit2_onsets(ev, raw_onsets)
 
 
-def main() -> None:
-    audit_msg()
-    print()
-    audit_seizeit2()
+def _audit_seizeit2_onsets(ev: pd.DataFrame, raw_onsets: list[Seizeit2OnsetKey]) -> None:
+    required_event_cols = {
+        "patient_id",
+        "recording_id",
+        "seizure_start",
+        "event_source_file",
+        "event_onset_seconds",
+    }
+    missing_event_cols = required_event_cols - set(ev.columns)
+    if missing_event_cols:
+        flag(f"SeizeIT2: events.parquet missing onset-audit column(s): {sorted(missing_event_cols)}")
+        return
+
+    rec_path = _seizeit2_recordings_path()
+    if not rec_path.exists():
+        flag("SeizeIT2: recordings.parquet missing; cannot verify seizure_start - recording_start")
+        return
+    recordings = _read_required_parquet(rec_path, "SeizeIT2")
+    if recordings is None:
+        return
+    required_rec_cols = {"patient_id", "recording_id", "recording_start"}
+    missing_rec_cols = required_rec_cols - set(recordings.columns)
+    if missing_rec_cols:
+        flag(f"SeizeIT2: recordings.parquet missing onset-audit column(s): {sorted(missing_rec_cols)}")
+        return
+
+    rec_starts: dict[tuple[str, str], pd.Timestamp] = {}
+    for (patient_id, recording_id), group in recordings.groupby(
+        [recordings["patient_id"].astype(str), recordings["recording_id"].astype(str)],
+        dropna=False,
+    ):
+        starts = pd.to_datetime(group["recording_start"]).dropna().drop_duplicates()
+        if len(starts) != 1:
+            flag(
+                "SeizeIT2: recording_start is not uniquely verifiable for "
+                f"{patient_id}/{recording_id}: {starts.astype(str).tolist()}"
+            )
+            continue
+        rec_starts[(str(patient_id), str(recording_id))] = starts.iloc[0]
+
+    parsed_onsets: list[Seizeit2OnsetKey] = []
+    offset_mismatch = False
+    offset_unverified = False
+    for row_idx, row in enumerate(ev.itertuples(index=False)):
+        patient_id = str(row.patient_id)
+        recording_id = str(row.recording_id)
+        if pd.isna(row.event_source_file) or not str(row.event_source_file).strip():
+            offset_unverified = True
+            flag(f"SeizeIT2 events.parquet row {row_idx}: missing event_source_file")
+            continue
+        source_file = str(row.event_source_file)
+        onset_us = _seconds_to_us(row.event_onset_seconds, f"SeizeIT2 events.parquet row {row_idx}")
+        if onset_us is None:
+            offset_unverified = True
+            continue
+        parsed_onsets.append(Seizeit2OnsetKey(patient_id, recording_id, source_file, onset_us))
+
+        rec_start = rec_starts.get((patient_id, recording_id))
+        if rec_start is None:
+            offset_unverified = True
+            flag(f"SeizeIT2 events.parquet row {row_idx}: missing recording_start for {patient_id}/{recording_id}")
+            continue
+        seizure_start = pd.to_datetime(row.seizure_start)
+        if pd.isna(seizure_start):
+            offset_unverified = True
+            flag(f"SeizeIT2 events.parquet row {row_idx}: missing seizure_start")
+            continue
+        parsed_offset_us = int(round((seizure_start - rec_start).total_seconds() * 1_000_000))
+        if abs(parsed_offset_us - onset_us) > ONSET_TOLERANCE_US:
+            offset_mismatch = True
+            flag(
+                f"SeizeIT2 {patient_id}/{recording_id} {source_file}: relative onset mismatch "
+                f"raw/event_onset={onset_us / 1_000_000:.6f}s vs "
+                f"seizure_start-recording_start={parsed_offset_us / 1_000_000:.6f}s"
+            )
+
+    raw_counts = Counter(raw_onsets)
+    parsed_counts = Counter(parsed_onsets)
+    missing = raw_counts - parsed_counts
+    extra = parsed_counts - raw_counts
+    print(f"  raw onset keys: {sum(raw_counts.values())}  |  events.parquet onset keys: {sum(parsed_counts.values())}")
+    if missing:
+        examples = [(key, count) for key, count in missing.items()][:3]
+        flag(f"SeizeIT2: {sum(missing.values())} raw onset row(s) absent from events.parquet, e.g. {examples}")
+    if extra:
+        examples = [(key, count) for key, count in extra.items()][:3]
+        flag(f"SeizeIT2: {sum(extra.values())} events.parquet onset row(s) not in raw source, e.g. {examples}")
+    if not missing and not extra:
+        print("  OK: raw onset multiset matches events.parquet patient/recording/source/onset keys")
+    if not offset_mismatch and not offset_unverified:
+        print("  OK: seizure_start - recording_start matches every raw SeizeIT2 onset")
+
+
+def _parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--dataset",
+        choices=("all", "msg", "seizeit2"),
+        default="all",
+        help="Dataset arm to audit.",
+    )
+    parser.add_argument(
+        "--repo-root",
+        type=Path,
+        default=REPO,
+        help="Repository/data root containing data/raw and data/processed.",
+    )
+    parser.add_argument("--msg-raw-root", type=Path, default=None)
+    parser.add_argument("--msg-events", type=Path, default=None)
+    parser.add_argument("--seizeit2-raw-root", type=Path, default=None)
+    parser.add_argument("--seizeit2-events", type=Path, default=None)
+    parser.add_argument("--seizeit2-recordings", type=Path, default=None)
+    return parser.parse_args()
+
+
+def main(
+    repo_root: Path | None = None,
+    dataset: str = "all",
+    msg_raw_root: Path | None = None,
+    msg_events: Path | None = None,
+    seizeit2_raw_root: Path | None = None,
+    seizeit2_events: Path | None = None,
+    seizeit2_recordings: Path | None = None,
+) -> None:
+    global REPO  # noqa: PLW0603 - CLI override keeps existing audit helpers simple.
+    global MSG_EVENTS_PATH_OVERRIDE, MSG_RAW_ROOT_OVERRIDE
+    global SEIZEIT2_EVENTS_PATH_OVERRIDE, SEIZEIT2_RAW_ROOT_OVERRIDE, SEIZEIT2_RECORDINGS_PATH_OVERRIDE
+    if repo_root is not None:
+        REPO = repo_root.resolve()
+    MSG_RAW_ROOT_OVERRIDE = msg_raw_root.resolve() if msg_raw_root else None
+    MSG_EVENTS_PATH_OVERRIDE = msg_events.resolve() if msg_events else None
+    SEIZEIT2_RAW_ROOT_OVERRIDE = seizeit2_raw_root.resolve() if seizeit2_raw_root else None
+    SEIZEIT2_EVENTS_PATH_OVERRIDE = seizeit2_events.resolve() if seizeit2_events else None
+    SEIZEIT2_RECORDINGS_PATH_OVERRIDE = seizeit2_recordings.resolve() if seizeit2_recordings else None
+    if dataset in {"all", "msg"}:
+        audit_msg()
+    if dataset == "all":
+        print()
+    if dataset in {"all", "seizeit2"}:
+        audit_seizeit2()
     print("\n===== summary =====")
     if findings:
         print(f"{len(findings)} parser-fidelity finding(s):")
@@ -173,4 +421,13 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    args = _parse_args()
+    main(
+        repo_root=args.repo_root,
+        dataset=args.dataset,
+        msg_raw_root=args.msg_raw_root,
+        msg_events=args.msg_events,
+        seizeit2_raw_root=args.seizeit2_raw_root,
+        seizeit2_events=args.seizeit2_events,
+        seizeit2_recordings=args.seizeit2_recordings,
+    )
