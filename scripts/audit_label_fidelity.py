@@ -90,6 +90,16 @@ class Seizeit2OnsetKey:
     onset_us: int
 
 
+@dataclass(frozen=True)
+class Seizeit2ParsedOnset:
+    row_idx: int
+    patient_id: str
+    recording_id: str
+    event_source_file: str
+    onset_us: int
+    seizure_start: object
+
+
 def _seconds_to_us(value: object, src: str) -> int | None:
     try:
         seconds = float(value)
@@ -125,6 +135,12 @@ def _seizeit2_patient_id(tsv: Path, table: pd.DataFrame) -> str:
 
 def _seizeit2_recording_id(tsv: Path) -> str:
     return tsv.name.removesuffix("_events.tsv")
+
+
+def _seizeit2_source_file(value: object) -> str | None:
+    if pd.isna(value) or not str(value).strip():
+        return None
+    return str(value).replace("\\", "/")
 
 
 def _looks_like_msg_seizure_text(path_name: str) -> bool:
@@ -235,7 +251,7 @@ def audit_seizeit2() -> None:
             continue
         pid = _seizeit2_patient_id(tsv, table)
         recording_id = _seizeit2_recording_id(tsv)
-        source_file = str(tsv.relative_to(raw_root))
+        source_file = tsv.relative_to(raw_root).as_posix()
         col = _seizeit2_event_type_column(table)
         if col is None:
             seizure_rows = table
@@ -271,17 +287,59 @@ def audit_seizeit2() -> None:
 
 
 def _audit_seizeit2_onsets(ev: pd.DataFrame, raw_onsets: list[Seizeit2OnsetKey]) -> None:
-    required_event_cols = {
+    required_key_cols = {
         "patient_id",
         "recording_id",
-        "seizure_start",
         "event_source_file",
         "event_onset_seconds",
     }
-    missing_event_cols = required_event_cols - set(ev.columns)
-    if missing_event_cols:
-        flag(f"SeizeIT2: events.parquet missing onset-audit column(s): {sorted(missing_event_cols)}")
+    missing_key_cols = required_key_cols - set(ev.columns)
+    if missing_key_cols:
+        flag(f"SeizeIT2: events.parquet missing onset-audit key column(s): {sorted(missing_key_cols)}")
         return
+
+    parsed_onsets: list[Seizeit2ParsedOnset] = []
+    offset_mismatch = False
+    offset_unverified = False
+    for row_idx, row in enumerate(ev.itertuples(index=False)):
+        patient_id = str(row.patient_id)
+        recording_id = str(row.recording_id)
+        source_file = _seizeit2_source_file(row.event_source_file)
+        if source_file is None:
+            offset_unverified = True
+            flag(f"SeizeIT2 events.parquet row {row_idx}: missing event_source_file")
+            continue
+        onset_us = _seconds_to_us(row.event_onset_seconds, f"SeizeIT2 events.parquet row {row_idx}")
+        if onset_us is None:
+            offset_unverified = True
+            continue
+        parsed_onsets.append(
+            Seizeit2ParsedOnset(
+                row_idx,
+                patient_id,
+                recording_id,
+                source_file,
+                onset_us,
+                getattr(row, "seizure_start", None),
+            )
+        )
+
+    raw_counts = Counter(raw_onsets)
+    parsed_counts = Counter(
+        Seizeit2OnsetKey(row.patient_id, row.recording_id, row.event_source_file, row.onset_us)
+        for row in parsed_onsets
+    )
+    missing = raw_counts - parsed_counts
+    extra = parsed_counts - raw_counts
+    print(f"  raw onset keys: {sum(raw_counts.values())}  |  events.parquet onset keys: {sum(parsed_counts.values())}")
+    if missing:
+        examples = [(key, count) for key, count in missing.items()][:3]
+        flag(f"SeizeIT2: {sum(missing.values())} raw onset row(s) absent from events.parquet, e.g. {examples}")
+    if extra:
+        examples = [(key, count) for key, count in extra.items()][:3]
+        flag(f"SeizeIT2: {sum(extra.values())} events.parquet onset row(s) not in raw source, e.g. {examples}")
+    if not missing and not extra:
+        print("  OK: raw onset multiset matches events.parquet patient/recording/source/onset keys")
 
     rec_path = _seizeit2_recordings_path()
     if not rec_path.exists():
@@ -294,6 +352,9 @@ def _audit_seizeit2_onsets(ev: pd.DataFrame, raw_onsets: list[Seizeit2OnsetKey])
     missing_rec_cols = required_rec_cols - set(recordings.columns)
     if missing_rec_cols:
         flag(f"SeizeIT2: recordings.parquet missing onset-audit column(s): {sorted(missing_rec_cols)}")
+        return
+    if "seizure_start" not in ev.columns:
+        flag("SeizeIT2: events.parquet missing onset-offset column(s): ['seizure_start']")
         return
 
     rec_starts: dict[tuple[str, str], pd.Timestamp] = {}
@@ -310,55 +371,26 @@ def _audit_seizeit2_onsets(ev: pd.DataFrame, raw_onsets: list[Seizeit2OnsetKey])
             continue
         rec_starts[(str(patient_id), str(recording_id))] = starts.iloc[0]
 
-    parsed_onsets: list[Seizeit2OnsetKey] = []
-    offset_mismatch = False
-    offset_unverified = False
-    for row_idx, row in enumerate(ev.itertuples(index=False)):
-        patient_id = str(row.patient_id)
-        recording_id = str(row.recording_id)
-        if pd.isna(row.event_source_file) or not str(row.event_source_file).strip():
-            offset_unverified = True
-            flag(f"SeizeIT2 events.parquet row {row_idx}: missing event_source_file")
-            continue
-        source_file = str(row.event_source_file)
-        onset_us = _seconds_to_us(row.event_onset_seconds, f"SeizeIT2 events.parquet row {row_idx}")
-        if onset_us is None:
-            offset_unverified = True
-            continue
-        parsed_onsets.append(Seizeit2OnsetKey(patient_id, recording_id, source_file, onset_us))
-
-        rec_start = rec_starts.get((patient_id, recording_id))
+    for row in parsed_onsets:
+        rec_start = rec_starts.get((row.patient_id, row.recording_id))
         if rec_start is None:
             offset_unverified = True
-            flag(f"SeizeIT2 events.parquet row {row_idx}: missing recording_start for {patient_id}/{recording_id}")
+            flag(f"SeizeIT2 events.parquet row {row.row_idx}: missing recording_start for "
+                 f"{row.patient_id}/{row.recording_id}")
             continue
         seizure_start = pd.to_datetime(row.seizure_start)
         if pd.isna(seizure_start):
             offset_unverified = True
-            flag(f"SeizeIT2 events.parquet row {row_idx}: missing seizure_start")
+            flag(f"SeizeIT2 events.parquet row {row.row_idx}: missing seizure_start")
             continue
         parsed_offset_us = int(round((seizure_start - rec_start).total_seconds() * 1_000_000))
-        if abs(parsed_offset_us - onset_us) > ONSET_TOLERANCE_US:
+        if abs(parsed_offset_us - row.onset_us) > ONSET_TOLERANCE_US:
             offset_mismatch = True
             flag(
-                f"SeizeIT2 {patient_id}/{recording_id} {source_file}: relative onset mismatch "
-                f"raw/event_onset={onset_us / 1_000_000:.6f}s vs "
+                f"SeizeIT2 {row.patient_id}/{row.recording_id} {row.event_source_file}: relative onset mismatch "
+                f"raw/event_onset={row.onset_us / 1_000_000:.6f}s vs "
                 f"seizure_start-recording_start={parsed_offset_us / 1_000_000:.6f}s"
             )
-
-    raw_counts = Counter(raw_onsets)
-    parsed_counts = Counter(parsed_onsets)
-    missing = raw_counts - parsed_counts
-    extra = parsed_counts - raw_counts
-    print(f"  raw onset keys: {sum(raw_counts.values())}  |  events.parquet onset keys: {sum(parsed_counts.values())}")
-    if missing:
-        examples = [(key, count) for key, count in missing.items()][:3]
-        flag(f"SeizeIT2: {sum(missing.values())} raw onset row(s) absent from events.parquet, e.g. {examples}")
-    if extra:
-        examples = [(key, count) for key, count in extra.items()][:3]
-        flag(f"SeizeIT2: {sum(extra.values())} events.parquet onset row(s) not in raw source, e.g. {examples}")
-    if not missing and not extra:
-        print("  OK: raw onset multiset matches events.parquet patient/recording/source/onset keys")
     if not offset_mismatch and not offset_unverified:
         print("  OK: seizure_start - recording_start matches every raw SeizeIT2 onset")
 

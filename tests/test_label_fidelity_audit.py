@@ -9,6 +9,8 @@ def _write_seizeit2_audit_fixture(
     root,
     *,
     processed_offsets: list[float],
+    processed_event_onsets: list[float] | None = None,
+    use_backslash_source_file: bool = False,
     write_recordings: bool = True,
 ) -> None:
     raw_root = root / "data/raw/seizeit2"
@@ -30,18 +32,23 @@ def _write_seizeit2_audit_fixture(
     base = pd.Timestamp("2000-01-01 00:00:00")
     recording_id = "sub-P001_ses-01_task-szMonitoring_run-01"
     source_file = str(event_path.relative_to(raw_root))
+    if use_backslash_source_file:
+        source_file = source_file.replace("/", "\\")
+    event_onsets = processed_event_onsets if processed_event_onsets is not None else [60.0, 120.0]
+    if len(event_onsets) != len(processed_offsets):
+        raise ValueError("processed_event_onsets must match processed_offsets length")
     pd.DataFrame(
         {
-            "patient_id": ["sub-P001", "sub-P001"],
-            "recording_id": [recording_id, recording_id],
+            "patient_id": ["sub-P001"] * len(processed_offsets),
+            "recording_id": [recording_id] * len(processed_offsets),
             "seizure_start": [base + pd.to_timedelta(offset, unit="s") for offset in processed_offsets],
             "seizure_end": [base + pd.to_timedelta(offset + 10.0, unit="s") for offset in processed_offsets],
-            "seizure_type": ["sz_foc_a", "seizure"],
-            "center_id": [None, None],
-            "source_dataset": ["seizeit2", "seizeit2"],
-            "event_source_file": [source_file, source_file],
-            "event_onset_seconds": [60.0, 120.0],
-            "recording_duration_seconds": [300.0, 300.0],
+            "seizure_type": ["sz_foc_a", "seizure"][: len(processed_offsets)],
+            "center_id": [None] * len(processed_offsets),
+            "source_dataset": ["seizeit2"] * len(processed_offsets),
+            "event_source_file": [source_file] * len(processed_offsets),
+            "event_onset_seconds": event_onsets,
+            "recording_duration_seconds": [300.0] * len(processed_offsets),
         }
     ).to_parquet(processed_root / "events.parquet")
     if write_recordings:
@@ -90,6 +97,32 @@ def test_seizeit2_onset_audit_flags_unverifiable_missing_recording_start(tmp_pat
 
     findings = _run_seizeit2_audit(tmp_path, monkeypatch)
 
+    assert any("recordings.parquet missing" in finding for finding in findings)
+
+
+def test_seizeit2_onset_audit_accepts_backslash_source_file(tmp_path, monkeypatch):
+    _write_seizeit2_audit_fixture(
+        tmp_path,
+        processed_offsets=[60.0, 120.0],
+        use_backslash_source_file=True,
+    )
+
+    findings = _run_seizeit2_audit(tmp_path, monkeypatch)
+
+    assert findings == []
+
+
+def test_seizeit2_onset_audit_checks_multiset_without_recordings(tmp_path, monkeypatch):
+    _write_seizeit2_audit_fixture(
+        tmp_path,
+        processed_offsets=[60.0],
+        processed_event_onsets=[60.0],
+        write_recordings=False,
+    )
+
+    findings = _run_seizeit2_audit(tmp_path, monkeypatch)
+
+    assert any("raw onset row(s) absent from events.parquet" in finding for finding in findings)
     assert any("recordings.parquet missing" in finding for finding in findings)
 
 
