@@ -1,48 +1,60 @@
 # SOTA Review Snapshot - Wearable Seizure Forecasting
 
-Date checked: 2026-05-16
+Date checked: 2026-05-18
 
 This is a working SOTA snapshot for EpiTwin-Open. It is not a systematic review. It records the current evidence base used to frame the first paper and must be refreshed before submission.
 
 ## Sources Checked
 
-1. SeizeIT2 dataset paper  
+1. SeizeIT2 dataset paper
    https://www.nature.com/articles/s41597-025-05580-x
+   Verified 2026-05-18: resolves to the Scientific Data SeizeIT2 data descriptor and matches the dataset/detection framing.
 
-2. My Seizure Gauge Long-term Wearable Data  
+2. My Seizure Gauge Long-term Wearable Data
    https://zenodo.org/records/17380899
+   Verified 2026-05-18: resolves to the Zenodo dataset record and matches the MSG wearable-data description.
 
-3. Forecasting epileptic seizures with wearable devices: A hybrid short- and long-horizon pseudo-prospective approach  
+3. Forecasting epileptic seizures with wearable devices: A hybrid short- and long-horizon pseudo-prospective approach
    https://doi.org/10.1111/epi.18466
+   Verified 2026-05-18: DOI matches the Epilepsia 2025 article via institutional metadata and supports the direct-competition statement.
 
-4. Comparison between epileptic seizure prediction and forecasting based on machine learning  
+4. Comparison between epileptic seizure prediction and forecasting based on machine learning
    https://www.nature.com/articles/s41598-024-56019-z
+   Verified 2026-05-18: resolves to the Scientific Reports 2024 article and supports the prediction-vs-forecasting distinction.
 
-5. Automated algorithms for seizure forecast: a systematic review and meta-analysis  
+5. Automated algorithms for seizure forecast: a systematic review and meta-analysis
    https://link.springer.com/article/10.1007/s00415-024-12655-z
+   Verified 2026-05-18: resolves to the Journal of Neurology 2024 review/meta-analysis and supports the heterogeneity/metrics claims.
 
-6. Seizure forecasting with ultra long-term EEG signals  
+6. Seizure forecasting with ultra long-term EEG signals
    https://www.sciencedirect.com/science/article/pii/S1388245724002761
+   Verified 2026-05-18: resolves to Clinical Neurophysiology 2024 and supports ultra-long-term EEG forecasting context.
 
-7. The present and future of seizure detection, prediction, and forecasting with machine learning  
+7. The present and future of seizure detection, prediction, and forecasting with machine learning
    https://www.frontiersin.org/journals/neurology/articles/10.3389/fneur.2024.1425490/full
+   Verified 2026-05-18: resolves to Frontiers in Neurology 2024 and supports unseen-data, sensitivity, false-positive, and deficiency-time evaluation claims.
 
-8. PaPaGei: Open Foundation Models for Optical Physiological Signals  
+8. PaPaGei: Open Foundation Models for Optical Physiological Signals
    https://github.com/Nokia-Bell-Labs/papagei-foundation-model
+   Verified 2026-05-18: resolves to the public PaPaGei repository and supports the PPG foundation-model context.
 
-9. Large-scale Training of Foundation Models for Wearable Biosignals  
+9. Large-scale Training of Foundation Models for Wearable Biosignals
    https://iclr.cc/virtual/2024/poster/17787
+   Verified 2026-05-18: resolves to the ICLR 2024 poster page and supports the AHMS PPG/ECG foundation-model context.
 
-10. Circadian Phase Locking of Epilepsy Seizures in Wearable Data  
+10. Circadian Phase Locking of Epilepsy Seizures in Wearable Data
     https://arxiv.org/abs/2604.18297
+    Verified 2026-05-18: resolves to arXiv:2604.18297 and matches the single-patient wearable IBI/seizure-diary circadian-phase claim.
 
 11. ECG-Based Detection of Epileptic Seizures in Real-World Wearable Settings: Insights from the
-    SeizeIT2 Dataset  
+    SeizeIT2 Dataset
     https://www.mdpi.com/1424-8220/25/24/7687
+    Verified 2026-05-18: resolves to Sensors 2025 and supports the ECG-based SeizeIT2 detection-baseline statement.
 
 12. SeizureFormer: A Multi-Scale Transformer for Seizure Risk Forecasting from RNS-Derived
-    Biomarkers  
+    Biomarkers
     https://psb.stanford.edu/psb-online/proceedings/psb26/abstracts/2026_p85.html
+    Verified 2026-05-18: resolves to the PSB 2026 abstract and supports the RNS-biomarker long-horizon forecasting statement.
 
 ## Current Evidence
 
@@ -93,7 +105,7 @@ not non-invasive public wearable HR/steps data. It is important SOTA for seizure
 and long-horizon risk framing, but it does not replace the need for open wearable benchmark
 infrastructure because its inputs are implant-derived biomarkers from a small patient set.
 
-The 2026 circadian phase-locking arXiv preprint was rechecked on 2026-05-16. It is not a phantom
+The 2026 circadian phase-locking arXiv preprint was rechecked on 2026-05-18. It is not a phantom
 reference: arXiv lists it as a 2026 single-patient case study using wearable IBI and seizure diary
 data to test whether seizure onsets align with physiological circadian phase. It supports including
 cycle/phase baselines and interpretable rhythm features, while also emphasizing that single-patient
