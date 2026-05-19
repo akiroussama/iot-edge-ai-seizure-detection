@@ -121,8 +121,9 @@ correction it surfaces applied and committed; packets regenerated.
 Decide and write the split policy; freeze the splits; run the fail-closed
 leakage audit; `git tag` the frozen benchmark. Then **pre-register** the frozen
 protocol and the planned Phase D–F analyses (Zenodo DOI) — this must precede any
-reported run, so Phases D–F are confirmatory, not post-hoc. **DECISION REQUIRED
-inside C** — how to frame the MSG long-horizon. The pre-remediation figure of
+reported run, so Phases D–F are confirmatory, not post-hoc. **DECISION RECORDED
+(2026-05-19, `docs/GATE_A_DECISIONS_2026-05-19.md`)** — how to frame the
+MSG long-horizon. The pre-remediation figure of
 13 coverable test events (docs/CODEX_TO_CLAUDE_PHASE_R_REVIEW_2026-05-15.md)
 was an artifact of the P0 over-exclusion bug; after the P0 fix, label
 regeneration, and cluster-metric reporting (Codex Phase R2/R3) the
@@ -130,10 +131,10 @@ temporal-recording test split carries 54 seizure-level / 40 cluster-level
 matched-coverable events — coverage-limited, not a collapse. Both
 denominators and their per-baseline forecasted counts are recorded in
 docs/CODEX_PHASE_R3_CLUSTER_AND_POSTICTAL_POLICY_2026-05-16.md (HR-tachycardia
-46/54 seizure-level, 33/40 cluster-level). Decide with the advisor: report
-the MSG long-horizon as a coverage-limited result with its matched-event
-denominator stated explicitly, or anchor headline results on SeizeIT2 and
-shorter MSG horizons.
+46/54 seizure-level, 33/40 cluster-level). Decision: SPH60/SOP1440 is
+presented as a coverage-limited demonstration with its matched-event
+denominator stated inline, AND SOP 240 min (4 h) is also run as a
+well-powered comparison horizon.
 **Gate C** — split policy and the MSG-horizon decision both documented; frozen
 splits committed and tagged; leakage audit clean with fit-scope metadata
 present; the frozen protocol and planned analyses pre-registered with a DOI.
@@ -294,3 +295,4 @@ violated under time pressure:
 |---|---|
 | 2026-05-15 | Initial playbook (revision 1). Gated path to a benchmark-first Paper 1, deep models deferred to a Paper 2. |
 | 2026-05-15 | Revision 2. Objective reframed to a published, verifiably-SOTA contribution with the manuscript as a downstream formality. Scope decision recorded (section 3): Oussama chose the full package — benchmark + deep baselines + EpiTwin-SSL + A100 in one paper. Added Phase G (certification) and Phase H (manuscript); added the Claude/Codex kaizen (section 8) and the three Codex mistakes (section 9) from the Phase R audit. |
+| 2026-05-19 | Gate A policy half closed — the four Phase R policy decisions recorded in docs/GATE_A_DECISIONS_2026-05-19.md. MSG horizon: coverage-limited 24 h plus an added SOP 240 min comparison. Cluster metric: cluster-level primary, cluster_gap_minutes 240. Event denominator: both reported, coverable-matched primary. Postictal anchor: onset + 120 min (StatPearls NBK526004, Pottkämper et al. 2020). Remaining Gate A blocker: the Phase B manual label audit. |
