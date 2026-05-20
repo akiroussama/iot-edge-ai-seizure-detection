@@ -522,6 +522,7 @@ def make_synthetic_seizeit2_tables() -> tuple[pd.DataFrame, pd.DataFrame, pd.Dat
     """Create a tiny deterministic SeizeIT2-like synthetic dataset for demos/tests."""
     base = pd.Timestamp("2026-01-01 10:00:00")
     windows = []
+    recording_end = base + pd.Timedelta(minutes=90)
     for i in range(90):
         start = base + pd.Timedelta(minutes=i)
         windows.append(
@@ -529,6 +530,8 @@ def make_synthetic_seizeit2_tables() -> tuple[pd.DataFrame, pd.DataFrame, pd.Dat
                 "patient_id": "P001",
                 "recording_id": "R001",
                 "center_id": "C001",
+                "recording_start": base,
+                "recording_end": recording_end,
                 "window_start": start,
                 "window_end": start + pd.Timedelta(minutes=1),
             }

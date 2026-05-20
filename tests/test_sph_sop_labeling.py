@@ -31,6 +31,22 @@ def test_sph_sop_labeling_exact_boundaries():
     assert max(positive_ends) == pd.Timestamp("2026-01-01 10:35:00")
 
 
+def test_synthetic_seizeit2_tables_are_right_censoring_ready():
+    _, windows, events = make_synthetic_seizeit2_tables()
+
+    labeled = label_forecast_windows(
+        windows,
+        events,
+        sph_minutes=5,
+        sop_minutes=30,
+        postictal_exclusion_minutes=5,
+    )
+
+    assert "recording_end" in windows.columns
+    assert labeled["right_censoring_applied"].all()
+    assert labeled["is_right_censored"].any()
+
+
 def test_time_to_next_and_since_last_seizure():
     _, windows, events = make_synthetic_seizeit2_tables()
     labeled = label_forecast_windows(
