@@ -1,9 +1,12 @@
-# MSG Patient-Wise Real-Data Baseline Result - 2026-05-20
+# MSG Patient-Wise Real-Data Baseline — exploratory pre-freeze (2026-05-20)
 
 ## Scope
 
-This report records the first real-data MSG clinical-prototype result run on
-Hetzner CPU. It is not a synthetic proxy run.
+**These are exploratory pre-freeze numbers from a real-data MSG run on
+Hetzner CPU.** Per `PLAYBOOK.md` §10 rule 1, no benchmark number may be
+cited before Gate C (frozen splits + Zenodo pre-registration). These
+figures are recorded for development and planning only; they are **not a
+citable benchmark result**.
 
 - Code commit: `7568122`
 - Host: Hetzner `ubuntu-32gb-fsn1-1`
@@ -12,8 +15,12 @@ Hetzner CPU. It is not a synthetic proxy run.
 - Split: patient-wise, `split=test`
 - Horizon: SPH 60 minutes / SOP 1440 minutes
 - Evaluation denominator: test events coverable by selected prediction horizons
-- Gate B: sampled review sheets human-attested `PASS` by Oussama on 2026-05-20
-- Gate C: MSG patient-wise leakage audit clean
+- Gate B status: sampled human attestation by Oussama on 2026-05-20 (form
+  met; the audit log has no per-seizure observation notes —
+  strengthening recommended before any pre-registration)
+- Gate C status: **NOT passed.** Only one of its four conditions is met
+  (leakage audit clean); the others — split policy documented, frozen
+  splits with `git tag`, Zenodo DOI pre-registration — are pending
 
 SeizeIT2 is intentionally out of scope for this result because its current
 patient-wise audit still shows duplicate recording time ranges that need a
@@ -88,7 +95,7 @@ Test-set denominator summary:
 - coverable test events used for metrics: 31
 - test positive windows: 253
 
-## Patient-Wise Test Results
+## Patient-Wise Test Results (pre-freeze exploratory, not for citation)
 
 | Model | Sensitivity | Events | FAR/day | TIW | Median Lead Time |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -125,18 +132,30 @@ Comparison reports on Hetzner:
 
 ## Interpretation Boundaries
 
-This is a real-data, patient-wise, held-out MSG result and can be reported as a
-clinical-prototype benchmark result for the current pipeline. It should not be
-described as final clinical efficacy, regulatory evidence, or a broad
-multi-dataset claim.
+**These are pre-freeze exploratory numbers — not a benchmark result.** Per
+`PLAYBOOK.md` §10 rule 1 ("No reported number before the benchmark is
+frozen, Gate C") and §3 consequence 1 ("A model trained on an unfrozen,
+unaudited, leaky benchmark yields a number that cannot be cited"), these
+figures may not be presented as a "clinical-prototype benchmark result",
+as final clinical efficacy, as regulatory evidence, or as a broad
+multi-dataset claim. They are useful internally for pipeline development
+and SOTA-planning context only.
 
 Current limitations:
 
-- Gate B is sampled human attestation, not a full manual source review of every
-  event.
-- The test event denominator is 31 coverable seizures from 2 held-out patients.
-- The model uses HR summary features only; ACC extraction was stopped because it
-  was not needed for this first complete result and was still parsing.
-- Thresholding targets validation TIW 0.1; test TIW can differ, as seen here.
-- SeizeIT2 remains excluded from strict clinical claims until its duplicate
-  recording-range audit issue is resolved.
+- Gate B is sampled human attestation, not a full manual source review of
+  every event. The audit log has no per-seizure observation notes — to
+  resist a Q1 reviewer's "show me the clinical audit" question,
+  strengthen the log with per-seizure notes before Gate C /
+  pre-registration.
+- The test event denominator is 31 coverable seizures from 2 held-out
+  patients.
+- The model uses HR summary features only; ACC extraction was stopped
+  because it was not needed for this first complete result and was still
+  parsing.
+- Thresholding targets validation TIW 0.1; test TIW can differ, as seen
+  here.
+- SeizeIT2 remains excluded from strict clinical claims until its
+  duplicate recording-range audit issue is resolved.
+- These numbers must not be cited externally (paper, leaderboard,
+  abstract) until Gate C closes (frozen splits + Zenodo DOI).
