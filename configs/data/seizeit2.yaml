@@ -1,0 +1,5 @@
+name: seizeit2
+raw_root: data/raw/seizeit2
+processed_root: data/processed/seizeit2
+modalities: [bte_eeg, ecg, emg, acc, gyr]
+notes: "Placeholder config. Use official SeizeIT2 files/loaders when data are available."

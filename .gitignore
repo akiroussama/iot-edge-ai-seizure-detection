@@ -1,55 +1,31 @@
-# Python
 __pycache__/
 *.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Virtual Environment
+.pytest_cache/
+.pytest_tmp/
+.ruff_cache/
 .venv/
-venv/
-ENV/
-
-# IDEs
-.idea/
-.vscode/
-*.swp
-*.swo
-
-# Data and large files (SeizeIT2)
-data/
-*.edf
-*.npz
-*.pickle
-*.h5
-
-# Keep results
-!results/*.json
-!results/*.csv
-!results/figures/*.png
-
-# OS
+.env
 .DS_Store
-Thumbs.db
-
-# Internal probes and test artefacts
-_gitdir_probe/
-git-metadata/
-
-# Streamlit Cloud build/runtime logs (downloaded for debugging)
-logs-*.txt
+/data/raw/
+/data/processed/
+/data/interim/
+/data/external/
+/datasets/
+/checkpoints/
+/models/
+/wandb/
+/mlruns/
+/runs/
+/outputs/
+*.ckpt
+*.pt
+*.pth
+*.onnx
+*.joblib
+/reports/*.parquet
+/reports/*.csv
+/reports/**/*.parquet
+/reports/**/*.csv
+/reports/leakage_audit.txt
+/reports/*_leakage_audit.txt
+/reports/48h_milestone.md

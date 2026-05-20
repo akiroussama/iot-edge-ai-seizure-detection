@@ -1,0 +1,4 @@
+sph_minutes: 5
+sop_minutes: 30
+postictal_exclusion_minutes: 60
+ictal_exclusion: true

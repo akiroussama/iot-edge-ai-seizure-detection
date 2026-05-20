@@ -1,0 +1,23 @@
+experiment: seizeit2_sph5_sop30
+stage: paper1_benchmark
+dataset: seizeit2
+windows: data/processed/seizeit2/windows.parquet
+events: data/processed/seizeit2/events.parquet
+labels: data/processed/seizeit2/labels_sph5_sop30.parquet
+labeling:
+  sph_minutes: 5
+  sop_minutes: 30
+  postictal_exclusion_minutes: 60
+split:
+  primary: patient_wise
+  secondary: temporal_patient_specific
+metrics:
+  - event_level_sensitivity
+  - false_alarm_rate_per_day
+  - time_in_warning
+  - median_lead_time
+  - brier_score
+  - expected_calibration_error
+clinical_budgets:
+  far_per_day: [0.1, 0.5, 1.0]
+  time_in_warning: [0.05, 0.10, 0.20]

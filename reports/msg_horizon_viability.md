@@ -1,0 +1,22 @@
+# MSG Horizon Viability
+
+This is a feasibility audit for candidate SPH/SOP horizons, not a model result.
+
+Interpretation rules:
+
+- Low valid-window fraction means the horizon is poorly supported by recording duration.
+- Low event-coverable fraction means many annotated seizures cannot enter event metrics.
+- Right-censored unknown windows must not be silently treated as negatives.
+- Confirmed positives that are right-censored are counted separately for manual review.
+
+| sph_minutes | sop_minutes | windows_total | valid_windows | valid_window_fraction | excluded_windows | positive_windows_total | valid_positive_windows | right_censored_windows | right_censored_unknown_windows | right_censored_confirmed_positive_windows | events_total | events_coverable_by_valid_windows | event_coverable_fraction | events_recording_matched | events_recording_unmatched |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 5 | 30 | 49577 | 46598 | 0.940 | 2979 | 213 | 166 | 1155 | 1152 | 3 | 768 | 177 | 0.230 | 510 | 258 |
+| 5 | 360 | 49577 | 36215 | 0.730 | 13362 | 2054 | 1722 | 12335 | 11950 | 385 | 768 | 444 | 0.578 | 510 | 258 |
+| 5 | 1440 | 49577 | 8689 | 0.175 | 40888 | 4058 | 3563 | 44106 | 40365 | 3741 | 768 | 456 | 0.594 | 510 | 258 |
+| 60 | 30 | 49577 | 44781 | 0.903 | 4796 | 207 | 167 | 3060 | 3058 | 2 | 768 | 179 | 0.233 | 510 | 258 |
+| 60 | 360 | 49577 | 34468 | 0.695 | 15109 | 1960 | 1646 | 14157 | 13774 | 383 | 768 | 426 | 0.555 | 510 | 258 |
+| 60 | 1440 | 49577 | 7920 | 0.160 | 41657 | 3781 | 3326 | 44689 | 41178 | 3511 | 768 | 436 | 0.568 | 510 | 258 |
+
+A horizon with poor coverage can still be useful as a documented negative or exploratory
+analysis, but it should not anchor the main paper table without advisor approval.

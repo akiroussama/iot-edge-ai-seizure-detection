@@ -1,0 +1,8 @@
+metrics:
+  - event_level_sensitivity
+  - false_alarm_rate_per_day
+  - false_alarm_rate_per_hour
+  - time_in_warning
+  - median_lead_time
+  - brier_score
+  - expected_calibration_error
