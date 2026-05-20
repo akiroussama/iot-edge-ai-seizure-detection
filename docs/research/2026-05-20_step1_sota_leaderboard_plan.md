@@ -81,24 +81,27 @@ The important distinction is:
 This is publishable only as a negative/replication/edge critique unless expanded
 to full public benchmarks.
 
-### Baseline B - Active Forecasting Artifact
+### Baseline B - Active Forecasting Artifact (pre-Gate-C exploratory)
 
-The active forecasting branch `feature/epibench-forecast-v0.1` records a real
-MSG patient-wise forecasting result, introduced by the result report and carried
-forward to the current target head:
+The active forecasting branch `feature/epibench-forecast-v0.1` records
+exploratory pre-freeze MSG patient-wise forecasting numbers, introduced by the
+result report and carried forward to the current target head. **Per
+`PLAYBOOK.md` section 10 rule 1, these numbers cannot be cited as a benchmark
+result until Gate C (frozen splits + Zenodo DOI) passes.**
 
 - Dataset/task: MSG HR Empatica features, SPH 60 minutes / SOP 1440 minutes.
 - Split: patient-wise test.
 - Model: HR tabular MLP.
-- Result: `27/31` coverable events, sensitivity `0.871`, FAR `2.006/day`, TIW
-  `0.1253`.
+- Pre-freeze exploratory result: `27/31` coverable events, sensitivity
+  `0.871`, FAR `2.006/day`, TIW `0.1253`.
 - Boundary: sampled human label attestation; not a final clinical efficacy
   claim; SeizeIT2 forecasting excluded until duplicate recording-range issues
-  are resolved.
+  are resolved. **Not citable until Gate C closes** (see
+  `reports/msg_patientwise_clinical_baseline_2026-05-20.md`).
 
 This is a stronger research direction, but it must be reproduced under a
-standard leaderboard schema and compared against SOTA baselines before being
-claimed as a major contribution.
+standard leaderboard schema, frozen at Gate C, and compared against SOTA
+baselines before being claimed as a major contribution.
 
 ## Gaps To Close
 
@@ -136,7 +139,9 @@ The next commits should execute the backlog in `2026-05-20_step1_experiment_back
 Priority order:
 
 1. Preserve the MSG forecasting baseline as the feature-branch anchor and build
-   the first leaderboard row around its evidence files and commands.
+   the first leaderboard row around its evidence files and commands. (The
+   current baseline numbers remain pre-Gate-C exploratory until Gate C — frozen
+   splits + Zenodo DOI — closes; the leaderboard row becomes citable then.)
 2. Add a leaderboard schema and CLI that accepts any prediction table and emits
    event-level metrics, calibration, Brier Skill Score, FAR/day, TIW, and edge
    cost metadata.
