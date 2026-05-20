@@ -106,6 +106,42 @@ uv run python scripts/check_label_audit_review.py \
 Only after these pass should the project proceed to split freeze, leakage
 audit, and real-data model training.
 
+## Gate B update after human attestation
+
+Update, 2026-05-20: Oussama stated in the Codex session that the sampled MSG
+and SeizeIT2 review sheets were human-checked and that every reviewed item is
+`PASS`.
+
+Codex then filled the sampled, untracked Hetzner review sheets in
+`/root/iot-edge-ai-seizure-detection/reports` with:
+
+- `reviewer`: `Oussama Akir (human attested 2026-05-20)`
+- all blocking review columns: `PASS`
+- `notes`: `Human PASS attested by Oussama in Codex session 2026-05-20.`
+
+Re-check commands were run on Hetzner and both exited 0:
+
+```bash
+uv run python scripts/check_label_audit_review.py \
+  --review-sheet /root/iot-edge-ai-seizure-detection/reports/msg_label_audit_review_sheet.csv \
+  --out outputs/gate_b_msg_review_check_20260520_pass.csv \
+  --min-events 5
+
+uv run python scripts/check_label_audit_review.py \
+  --review-sheet /root/iot-edge-ai-seizure-detection/reports/seizeit2_label_audit_review_sheet.csv \
+  --out outputs/gate_b_seizeit2_review_check_20260520_pass.csv \
+  --min-events 5
+```
+
+Evidence files on Hetzner:
+
+- `/root/epitwin-hetzner-stage-20260520/outputs/gate_b_msg_review_check_20260520_pass.csv`
+- `/root/epitwin-hetzner-stage-20260520/outputs/gate_b_seizeit2_review_check_20260520_pass.csv`
+
+This records a human-attested Gate B pass for the sampled 10-event MSG sheet
+and sampled 10-event SeizeIT2 sheet. It does not imply Codex performed the
+clinical source review.
+
 ## Current training status
 
 Already completed on Hetzner:
@@ -118,4 +154,3 @@ Already completed on Hetzner:
 
 Those runs are infrastructure evidence only. They are not clinical results
 because they use synthetic tensors and bypass no human label-audit gate.
-
