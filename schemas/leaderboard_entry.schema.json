@@ -1,0 +1,344 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/akiroussama/iot-edge-ai-seizure-detection/schemas/leaderboard_entry.schema.json",
+  "title": "EpiTwin unified leaderboard entry",
+  "description": "One comparable row for seizure detection, seizure forecasting, external SOTA context, or edge ablation results. The schema is pre-Gate-C safe: rows must explicitly encode whether numbers are citable.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "result_id",
+    "result_status",
+    "citation_status",
+    "task_type",
+    "dataset",
+    "cohort",
+    "modality",
+    "model_name",
+    "model_family",
+    "split_name",
+    "split_policy",
+    "split_ref",
+    "horizon_name",
+    "sph_minutes",
+    "sop_minutes",
+    "window_seconds",
+    "stride_seconds",
+    "event_unit",
+    "events_source_total",
+    "events_after_filter",
+    "events_used_for_metrics",
+    "metric_units_used_for_metrics",
+    "prediction_rows",
+    "valid_prediction_rows",
+    "positive_windows",
+    "monitored_hours",
+    "n_forecasted_or_detected",
+    "sensitivity",
+    "false_alarm_rate_per_day",
+    "false_alarm_rate_per_hour",
+    "time_in_warning",
+    "precision",
+    "f1_score",
+    "median_lead_time_seconds",
+    "brier_score",
+    "brier_skill_score",
+    "bss_reference",
+    "expected_calibration_error",
+    "auroc",
+    "auprc",
+    "label_audit_status",
+    "gate_b_status",
+    "gate_c_status",
+    "leakage_status",
+    "split_frozen_status",
+    "doi_or_prereg_uri",
+    "edge_target",
+    "quantization",
+    "model_size_kb",
+    "ram_kb",
+    "flash_kb",
+    "latency_ms",
+    "energy_mj_per_inference",
+    "repo_commit",
+    "evidence_uri",
+    "notes"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "leaderboard.v1"
+    },
+    "result_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable row identifier, e.g. msg_hr_mlp_patientwise_sph60_sop1440_20260520."
+    },
+    "result_status": {
+      "type": "string",
+      "enum": [
+        "pre_gate_c_exploratory_not_citable",
+        "gate_c_frozen_citable",
+        "external_sota_context",
+        "synthetic_smoke_test_not_citable",
+        "invalid_or_retracted"
+      ]
+    },
+    "citation_status": {
+      "type": "string",
+      "enum": [
+        "not_citable_pre_gate_c",
+        "citable_after_gate_c",
+        "external_reported_not_recomputed",
+        "synthetic_not_citable",
+        "invalid_do_not_use"
+      ]
+    },
+    "task_type": {
+      "type": "string",
+      "enum": ["detection", "forecasting", "edge_cost", "external_context"]
+    },
+    "dataset": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cohort": {
+      "type": ["string", "null"],
+      "description": "Subset or cohort descriptor, e.g. MSG patient-wise test, SeizeIT2 FBTC LOSO."
+    },
+    "modality": {
+      "type": ["string", "null"],
+      "description": "Signals used by the model, e.g. HR, ECG, ACC+BVP+EDA+TEMP."
+    },
+    "model_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_family": {
+      "type": ["string", "null"],
+      "description": "High-level family, e.g. random, cycle_prior, tabular_mlp, tcn, lstm, matrix_profile."
+    },
+    "split_name": {
+      "type": ["string", "null"],
+      "description": "Evaluated split name, e.g. test, LOSO, external_paper."
+    },
+    "split_policy": {
+      "type": "string",
+      "enum": [
+        "patient_wise",
+        "temporal_recording",
+        "recording_wise",
+        "loso",
+        "external_paper",
+        "synthetic",
+        "not_applicable"
+      ]
+    },
+    "split_ref": {
+      "type": ["string", "null"],
+      "description": "Path, git tag, DOI, or publication reference identifying the split."
+    },
+    "horizon_name": {
+      "type": ["string", "null"],
+      "description": "Human-readable horizon, e.g. SPH60_SOP1440 or detection_window."
+    },
+    "sph_minutes": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "sop_minutes": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "window_seconds": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "stride_seconds": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "event_unit": {
+      "type": "string",
+      "enum": ["seizure", "cluster", "window", "episode", "not_applicable"]
+    },
+    "events_source_total": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "events_after_filter": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "events_used_for_metrics": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "metric_units_used_for_metrics": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "prediction_rows": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "valid_prediction_rows": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "positive_windows": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "monitored_hours": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "n_forecasted_or_detected": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "sensitivity": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "false_alarm_rate_per_day": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "false_alarm_rate_per_hour": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "time_in_warning": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "precision": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "f1_score": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "median_lead_time_seconds": {
+      "type": ["number", "null"]
+    },
+    "brier_score": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "brier_skill_score": {
+      "type": ["number", "null"],
+      "description": "1 - Brier(model) / Brier(reference). May be negative."
+    },
+    "bss_reference": {
+      "type": ["string", "null"],
+      "description": "Reference forecast used for Brier Skill Score, e.g. rate_matched_random, patient_prior."
+    },
+    "expected_calibration_error": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "auroc": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "auprc": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "label_audit_status": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "sampled_human_attested",
+        "full_human_audited",
+        "external_reported",
+        "not_applicable",
+        "failed"
+      ]
+    },
+    "gate_b_status": {
+      "type": "string",
+      "enum": ["not_started", "partial", "passed", "not_applicable_external", "failed"]
+    },
+    "gate_c_status": {
+      "type": "string",
+      "enum": ["not_started", "partial", "passed", "not_applicable_external", "failed"]
+    },
+    "leakage_status": {
+      "type": "string",
+      "enum": [
+        "not_run",
+        "clean",
+        "known_issue",
+        "external_unknown",
+        "not_applicable",
+        "failed"
+      ]
+    },
+    "split_frozen_status": {
+      "type": "string",
+      "enum": [
+        "not_frozen",
+        "frozen_git_tag",
+        "frozen_doi",
+        "external_reported",
+        "not_applicable"
+      ]
+    },
+    "doi_or_prereg_uri": {
+      "type": ["string", "null"],
+      "description": "Zenodo DOI, OSF/preregistration URI, external paper URI, or null."
+    },
+    "edge_target": {
+      "type": ["string", "null"],
+      "description": "Hardware target, e.g. ESP32, CPU-Hetzner, A100, external_unknown."
+    },
+    "quantization": {
+      "type": ["string", "null"],
+      "description": "Quantization/deployment mode, e.g. fp32, int8, external_unknown."
+    },
+    "model_size_kb": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "ram_kb": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "flash_kb": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "latency_ms": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "energy_mj_per_inference": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "repo_commit": {
+      "type": ["string", "null"],
+      "description": "Commit SHA that produced or records the row."
+    },
+    "evidence_uri": {
+      "type": ["string", "null"],
+      "description": "Path, PR, DOI, or external URL with evidence."
+    },
+    "notes": {
+      "type": ["string", "null"]
+    }
+  }
+}

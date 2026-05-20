@@ -1,0 +1,58 @@
+column,required,type,allowed_values,description
+schema_version,yes,string,leaderboard.v1,Schema version for compatibility checks.
+result_id,yes,string,,Stable row identifier.
+result_status,yes,enum,pre_gate_c_exploratory_not_citable|gate_c_frozen_citable|external_sota_context|synthetic_smoke_test_not_citable|invalid_or_retracted,Whether the row is exploratory citable external synthetic or invalid.
+citation_status,yes,enum,not_citable_pre_gate_c|citable_after_gate_c|external_reported_not_recomputed|synthetic_not_citable|invalid_do_not_use,Explicit citation permission status.
+task_type,yes,enum,detection|forecasting|edge_cost|external_context,Clinical or engineering task represented by the row.
+dataset,yes,string,,Dataset name.
+cohort,yes,string|null,,Subset or cohort descriptor.
+modality,yes,string|null,,Signals used by the model.
+model_name,yes,string,,Model or baseline name.
+model_family,yes,string|null,,High-level model family.
+split_name,yes,string|null,,Evaluated split name.
+split_policy,yes,enum,patient_wise|temporal_recording|recording_wise|loso|external_paper|synthetic|not_applicable,Split policy used for evaluation.
+split_ref,yes,string|null,,Path git tag DOI or paper reference identifying the split.
+horizon_name,yes,string|null,,Human-readable horizon name.
+sph_minutes,yes,number|null,,Seizure prediction horizon in minutes for forecasting rows.
+sop_minutes,yes,number|null,,Seizure occurrence period in minutes for forecasting rows.
+window_seconds,yes,number|null,,Prediction or detection window duration in seconds.
+stride_seconds,yes,number|null,,Stride between prediction windows in seconds.
+event_unit,yes,enum,seizure|cluster|window|episode|not_applicable,Metric denominator unit.
+events_source_total,yes,integer|null,,All source events before filtering.
+events_after_filter,yes,integer|null,,Events after explicit filters.
+events_used_for_metrics,yes,integer|null,,Events used for final event-level metrics.
+metric_units_used_for_metrics,yes,integer|null,,Metric units used after clustering or window conversion.
+prediction_rows,yes,integer|null,,Prediction rows before validity filtering.
+valid_prediction_rows,yes,integer|null,,Prediction rows used for metric computation.
+positive_windows,yes,integer|null,,Positive windows in the evaluated prediction table.
+monitored_hours,yes,number|null,,Valid monitored hours used for FAR/TIW.
+n_forecasted_or_detected,yes,integer|null,,Forecasted or detected events/windows depending on event_unit.
+sensitivity,yes,number|null,,Event or window sensitivity in [0,1].
+false_alarm_rate_per_day,yes,number|null,,False alarm episodes per monitored day.
+false_alarm_rate_per_hour,yes,number|null,,False alarm episodes per monitored hour.
+time_in_warning,yes,number|null,,Fraction of valid monitored time in warning.
+precision,yes,number|null,,Precision when defined for the task.
+f1_score,yes,number|null,,F1 score when defined for the task.
+median_lead_time_seconds,yes,number|null,,Median lead time in seconds for forecasted events.
+brier_score,yes,number|null,,Brier score for probabilistic forecast rows.
+brier_skill_score,yes,number|null,,Brier Skill Score against bss_reference.
+bss_reference,yes,string|null,,Reference forecast used for Brier Skill Score.
+expected_calibration_error,yes,number|null,,Expected calibration error.
+auroc,yes,number|null,,Area under ROC curve when available.
+auprc,yes,number|null,,Area under precision-recall curve when available.
+label_audit_status,yes,enum,not_started|sampled_human_attested|full_human_audited|external_reported|not_applicable|failed,Label audit status.
+gate_b_status,yes,enum,not_started|partial|passed|not_applicable_external|failed,Manual label-audit gate status.
+gate_c_status,yes,enum,not_started|partial|passed|not_applicable_external|failed,Frozen benchmark gate status.
+leakage_status,yes,enum,not_run|clean|known_issue|external_unknown|not_applicable|failed,Leakage audit status.
+split_frozen_status,yes,enum,not_frozen|frozen_git_tag|frozen_doi|external_reported|not_applicable,Split freeze or external reporting status.
+doi_or_prereg_uri,yes,string|null,,Zenodo DOI preregistration URI external paper URI or null.
+edge_target,yes,string|null,,Hardware target or runtime target.
+quantization,yes,string|null,,Quantization/deployment mode.
+model_size_kb,yes,number|null,,Serialized model size in KiB when available.
+ram_kb,yes,number|null,,Peak or estimated RAM use in KiB.
+flash_kb,yes,number|null,,Flash use in KiB.
+latency_ms,yes,number|null,,Inference latency in milliseconds.
+energy_mj_per_inference,yes,number|null,,Energy per inference in millijoules.
+repo_commit,yes,string|null,,Commit SHA that produced or records the row.
+evidence_uri,yes,string|null,,Path PR DOI or external URL with evidence.
+notes,yes,string|null,,Free-text caveats and review notes.
