@@ -6,7 +6,12 @@ from src.metrics.alarm_metrics import (
     monitored_time_seconds,
     time_in_warning,
 )
-from src.metrics.calibration import brier_score, expected_calibration_error, reliability_table
+from src.metrics.calibration import (
+    brier_score,
+    brier_skill_score,
+    expected_calibration_error,
+    reliability_table,
+)
 from src.metrics.event_metrics import (
     assign_event_clusters,
     collapse_event_clusters,
@@ -33,6 +38,7 @@ __all__ = [
     "median_lead_time",
     "monitored_time_seconds",
     "brier_score",
+    "brier_skill_score",
     "expected_calibration_error",
     "reliability_table",
     "sensitivity_at_fixed_far",

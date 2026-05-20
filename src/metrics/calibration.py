@@ -23,6 +23,20 @@ def brier_score(predictions_df: pd.DataFrame) -> float:
     return float(np.mean((p - y) ** 2))
 
 
+def brier_skill_score(predictions_df: pd.DataFrame, reference_predictions_df: pd.DataFrame) -> float:
+    """Brier Skill Score against a reference forecast.
+
+    The reference must be aligned by the caller. A zero reference Brier score
+    means the reference is perfect, so the skill ratio is undefined and should
+    not be silently reported.
+    """
+    model_brier = brier_score(predictions_df)
+    reference_brier = brier_score(reference_predictions_df)
+    if reference_brier == 0:
+        raise ValueError("reference Brier score is zero; Brier Skill Score is undefined")
+    return float(1.0 - model_brier / reference_brier)
+
+
 def expected_calibration_error(predictions_df: pd.DataFrame, n_bins: int = 10) -> float:
     """Expected calibration error for binary forecasting risk scores."""
     df = _valid(predictions_df)
