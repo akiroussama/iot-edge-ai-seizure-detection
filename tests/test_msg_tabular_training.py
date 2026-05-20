@@ -16,6 +16,8 @@ def test_msg_tabular_feature_selection_excludes_leakage_columns() -> None:
         {
             "patient_id": ["p1"],
             "forecast_label": [True],
+            "is_right_censored": [False],
+            "right_censoring_applied": [True],
             "time_to_next_seizure_seconds": [300.0],
             "time_since_last_seizure_seconds": [100.0],
             "feature_recordings_processed": [1],
