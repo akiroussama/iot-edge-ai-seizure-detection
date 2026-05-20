@@ -33,6 +33,7 @@ from src.metrics import (
     monitored_time_seconds,
     time_in_warning,
 )
+from src.artifacts.registry import load_registry, verify_gate_c_registry
 from src.utils.io import read_table, write_table
 
 SCHEMA_PATH = REPO_ROOT / "schemas" / "leaderboard_entry.schema.json"
@@ -176,6 +177,42 @@ def _validate_row_keys(row: dict[str, Any]) -> None:
         raise ValueError(f"leaderboard row shape mismatch; missing={missing}, extra={extra}")
 
 
+def _requires_gate_c_registry(row: dict[str, Any]) -> bool:
+    return (
+        row["result_status"] == "gate_c_frozen_citable"
+        or row["citation_status"] == "citable_after_gate_c"
+        or row["gate_c_status"] == "passed"
+        or row["split_frozen_status"] in {"frozen_git_tag", "frozen_doi"}
+    )
+
+
+def _validate_gate_c_registry_for_row(row: dict[str, Any], registry_path: str | None) -> None:
+    registry_required = _requires_gate_c_registry(row)
+    if registry_path is None:
+        if registry_required:
+            raise ValueError("citable/frozen leaderboard rows require --artifact-registry")
+        return
+
+    registry = load_registry(registry_path)
+    result = verify_gate_c_registry(
+        registry,
+        root=REPO_ROOT,
+        require_frozen=registry_required,
+    )
+    if not result["ok"]:
+        raise ValueError(f"artifact registry verification failed: {result['errors']}")
+    if row["dataset"] != registry.get("dataset"):
+        raise ValueError(
+            f"artifact registry dataset {registry.get('dataset')!r} does not match row dataset {row['dataset']!r}"
+        )
+    manifest = registry.get("split_manifest", {})
+    registry_split_ref = manifest.get("split_ref")
+    if row["split_ref"] and registry_split_ref and row["split_ref"] != registry_split_ref:
+        raise ValueError(
+            f"artifact registry split_ref {registry_split_ref!r} does not match row split_ref {row['split_ref']!r}"
+        )
+
+
 def build_leaderboard_row(
     *,
     predictions: pd.DataFrame,
@@ -298,6 +335,7 @@ def build_leaderboard_row(
     }
     row = {key: _clean(value) for key, value in row.items()}
     _validate_row_keys(row)
+    _validate_gate_c_registry_for_row(row, getattr(args, "artifact_registry", None))
     return row
 
 
@@ -370,6 +408,11 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--out-md", default=None)
     parser.add_argument("--reference-predictions", default=None)
     parser.add_argument("--bss-reference", default=None)
+    parser.add_argument(
+        "--artifact-registry",
+        default=None,
+        help="Gate C artifact registry JSON. Required for citable/frozen leaderboard rows.",
+    )
     parser.add_argument("--result-id", required=True)
     parser.add_argument("--dataset", required=True)
     parser.add_argument("--model-name", required=True)
