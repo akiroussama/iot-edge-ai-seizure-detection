@@ -31,6 +31,11 @@
     "metric_units_used_for_metrics",
     "prediction_rows",
     "valid_prediction_rows",
+    "observable_prediction_rows",
+    "deficient_prediction_rows",
+    "abstained_prediction_rows",
+    "deficiency_time_minutes",
+    "mean_observable_score",
     "positive_windows",
     "monitored_hours",
     "n_forecasted_or_detected",
@@ -185,6 +190,32 @@
     "valid_prediction_rows": {
       "type": ["integer", "null"],
       "minimum": 0
+    },
+    "observable_prediction_rows": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "description": "Rows judged observable enough for wearable-risk evaluation."
+    },
+    "deficient_prediction_rows": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "description": "Rows judged deficient or not observable by the signal-quality policy."
+    },
+    "abstained_prediction_rows": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "description": "Rows abstained because signal observability was insufficient."
+    },
+    "deficiency_time_minutes": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Total monitored minutes marked deficient or not observable."
+    },
+    "mean_observable_score": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Mean wearable signal observability score."
     },
     "positive_windows": {
       "type": ["integer", "null"],

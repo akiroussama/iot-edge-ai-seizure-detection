@@ -24,6 +24,11 @@ events_used_for_metrics,yes,integer|null,,Events used for final event-level metr
 metric_units_used_for_metrics,yes,integer|null,,Metric units used after clustering or window conversion.
 prediction_rows,yes,integer|null,,Prediction rows before validity filtering.
 valid_prediction_rows,yes,integer|null,,Prediction rows used for metric computation.
+observable_prediction_rows,yes,integer|null,,Prediction rows marked observable by the signal observability policy.
+deficient_prediction_rows,yes,integer|null,,Prediction rows marked deficient or not observable by the signal observability policy.
+abstained_prediction_rows,yes,integer|null,,Prediction rows abstained because wearable signal observability was insufficient.
+deficiency_time_minutes,yes,number|null,,Total monitored minutes marked deficient or not observable.
+mean_observable_score,yes,number|null,,Mean wearable observability score in [0,1] when available.
 positive_windows,yes,integer|null,,Positive windows in the evaluated prediction table.
 monitored_hours,yes,number|null,,Valid monitored hours used for FAR/TIW.
 n_forecasted_or_detected,yes,integer|null,,Forecasted or detected events/windows depending on event_unit.
