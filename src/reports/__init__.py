@@ -38,6 +38,13 @@ from src.reports.clinical_audit_workbench import (
     clinical_audit_workbench_html,
     clinical_audit_workbench_markdown,
 )
+from src.reports.edge_ablation import (
+    EdgeAblationConfig,
+    EdgeAblationReport,
+    build_edge_ablation_report,
+    edge_ablation_markdown,
+    validate_edge_profiles,
+)
 from src.reports.statistical_robustness import (
     StatisticalRobustnessReport,
     adjust_p_values,
@@ -54,6 +61,8 @@ __all__ = [
     "ClinicalUtilityAssumptions",
     "ClinicalUtilityConstraints",
     "DEFAULT_SEIZEIT2_TASKS",
+    "EdgeAblationConfig",
+    "EdgeAblationReport",
     "ForecastabilityThresholds",
     "SeizeIT2TaskSpec",
     "StatisticalRobustnessReport",
@@ -69,6 +78,7 @@ __all__ = [
     "build_bootstrap_table",
     "build_calibration_skill_report",
     "build_clinical_audit_workbench",
+    "build_edge_ablation_report",
     "build_forecastability_atlas",
     "build_seizeit2_full_track_matrix",
     "build_reliability_tables",
@@ -80,10 +90,12 @@ __all__ = [
     "clinical_audit_workbench_markdown",
     "clinical_utility_markdown",
     "clinical_utility_table",
+    "edge_ablation_markdown",
     "forecastability_atlas_markdown",
     "paired_brier_permutation_test",
     "reliability_slope_table",
     "seizeit2_count_summary",
     "seizeit2_full_track_markdown",
     "statistical_robustness_markdown",
+    "validate_edge_profiles",
 ]

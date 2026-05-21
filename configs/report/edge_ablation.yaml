@@ -1,0 +1,40 @@
+name: edge_aware_forecasting_ablation
+status: pre_gate_c_engineering_only
+input_contract:
+  clinical_rows: leaderboard_or_metric_rows
+  edge_profiles: traceable_edge_cost_profiles
+  join_key: model_name
+edge_profile_required_columns:
+  - model_name
+  - edge_target
+  - quantization
+  - parameter_count
+  - model_size_kb
+  - ram_kb
+  - flash_kb
+  - latency_ms
+  - energy_mj_per_inference
+  - profiling_method
+  - evidence_uri
+defaults:
+  skill_metric: auto
+  latency_budget_ms: 100.0
+  ram_budget_kb: 512.0
+  flash_budget_kb: 1024.0
+  energy_budget_mj: 1.0
+  model_size_budget_kb: 1024.0
+  parameter_budget: 100000.0
+outputs:
+  - edge_ablation_table.csv
+  - edge_pareto_frontier.csv
+  - edge_ablation_warnings.csv
+  - edge_ablation_manifest.csv
+  - edge_ablation_report.json
+  - edge_ablation_report.md
+guardrails:
+  - Edge profiles require profiling_method and evidence_uri unless explicitly disabled.
+  - Negative or non-numeric cost values fail validation.
+  - Clinical score and edge cost are reported as separate columns.
+  - Pre-Gate-C clinical scores are warned as not citable.
+  - Estimated edge costs are warned separately from measured hardware profiles.
+  - Pareto status maximizes clinical score while minimizing parameter count, size, RAM, flash, latency, and energy.
