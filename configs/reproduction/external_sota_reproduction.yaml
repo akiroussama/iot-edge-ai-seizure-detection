@@ -1,0 +1,68 @@
+name: external_sota_reproduction
+status: pre_gate_c_reproducibility_bridge
+objective: score one external SOTA-family prediction table with the EpiTwin leaderboard runner
+required_source_fields:
+  - source_name
+  - source_citation
+  - source_url_or_doi
+  - reproduction_family
+  - reproduction_status
+  - mismatch_notes
+reproduction_statuses:
+  - recomputed_under_epitwin_runner
+  - adapter_smoke_test_not_sota_claim
+  - blocked_modality_or_split_mismatch
+  - external_reported_not_recomputed
+input_contract:
+  predictions:
+    required_after_mapping:
+      - patient_id
+      - recording_id
+      - window_start
+      - window_end
+      - risk_score
+      - alarm
+      - forecast_label
+      - is_excluded
+  events:
+    required_columns:
+      - patient_id
+      - recording_id
+      - seizure_start
+      - seizure_end
+outputs:
+  - external_sota_predictions.csv
+  - external_sota_leaderboard_row.csv
+  - external_sota_leaderboard_row.json
+  - external_sota_leaderboard_row.md
+  - external_sota_manifest.csv
+  - external_sota_manifest.json
+  - external_sota_report.md
+guardrails:
+  - External reported metrics are context unless recomputed from row-level predictions.
+  - Detection, early-warning, and forecasting tasks must not be mixed.
+  - Any modality, split, label, horizon, or threshold mismatch must remain explicit.
+  - Gate C frozen artifacts are required before citable SOTA comparison.
+pinned_candidate_sources:
+  - name: SeizeIT2 official detection baselines
+    doi: 10.1038/s41597-025-05580-x
+    task_type: detection
+    expected_mismatch_risks:
+      - bte-EEG modality availability
+      - official train-validation split
+      - post-processing and artifact rejection
+  - name: Wearable seizure likelihood forecasting
+    doi: 10.3389/fneur.2021.704060
+    task_type: forecasting
+    expected_mismatch_risks:
+      - hourly versus daily forecast format
+      - patient-specific retraining cadence
+      - self-reported versus EEG-confirmed events
+  - name: MSG hybrid short-long horizon wearable forecasting
+    doi: 10.1111/epi.18466
+    dataset_doi: 10.5281/zenodo.17380899
+    task_type: forecasting
+    expected_mismatch_risks:
+      - ultra-long-term horizon definitions
+      - heart-rate and step-count feature parity
+      - pseudo-prospective evaluation protocol

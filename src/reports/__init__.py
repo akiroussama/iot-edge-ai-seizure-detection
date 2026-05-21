@@ -52,6 +52,14 @@ from src.reports.failure_taxonomy import (
     build_failure_taxonomy_rows,
     failure_taxonomy_markdown,
 )
+from src.reports.external_sota_reproduction import (
+    ExternalPredictionColumns,
+    ExternalSOTAReference,
+    build_external_sota_manifest,
+    external_sota_reproduction_markdown,
+    standardize_external_predictions,
+    validate_external_sota_reference,
+)
 from src.reports.longitudinal_deep_dive import (
     LongitudinalDeepDiveConfig,
     LongitudinalDeepDiveReport,
@@ -83,6 +91,8 @@ __all__ = [
     "DEFAULT_SEIZEIT2_TASKS",
     "EdgeAblationConfig",
     "EdgeAblationReport",
+    "ExternalPredictionColumns",
+    "ExternalSOTAReference",
     "FailureTaxonomyConfig",
     "FailureTaxonomyReport",
     "LongitudinalDeepDiveConfig",
@@ -105,6 +115,7 @@ __all__ = [
     "build_calibration_skill_report",
     "build_clinical_audit_workbench",
     "build_edge_ablation_report",
+    "build_external_sota_manifest",
     "build_failure_taxonomy_report",
     "build_failure_taxonomy_rows",
     "build_longitudinal_deep_dive_report",
@@ -121,6 +132,7 @@ __all__ = [
     "clinical_utility_markdown",
     "clinical_utility_table",
     "edge_ablation_markdown",
+    "external_sota_reproduction_markdown",
     "failure_taxonomy_markdown",
     "forecastability_atlas_markdown",
     "longitudinal_deep_dive_markdown",
@@ -130,6 +142,8 @@ __all__ = [
     "seizeit2_count_summary",
     "seizeit2_full_track_markdown",
     "statistical_robustness_markdown",
+    "standardize_external_predictions",
     "validate_edge_profiles",
+    "validate_external_sota_reference",
     "workflow_forensics_markdown",
 ]
