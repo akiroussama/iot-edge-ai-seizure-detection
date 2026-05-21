@@ -79,6 +79,43 @@ def _positive_windows(predictions: pd.DataFrame) -> int | None:
     return int(valid["forecast_label"].fillna(False).astype(bool).sum())
 
 
+def _observability_counts(predictions: pd.DataFrame) -> dict[str, float | int | None]:
+    if "is_observable" not in predictions.columns:
+        return {
+            "observable_prediction_rows": None,
+            "deficient_prediction_rows": None,
+            "abstained_prediction_rows": None,
+            "deficiency_time_minutes": None,
+            "mean_observable_score": None,
+        }
+    valid = predictions.loc[_valid_prediction_mask(predictions)]
+    observable = valid["is_observable"].fillna(False).astype(bool)
+    abstain = (
+        valid["abstain_for_observability"].fillna(False).astype(bool)
+        if "abstain_for_observability" in valid.columns
+        else pd.Series(False, index=valid.index)
+    )
+    deficiency_time = (
+        pd.to_numeric(valid["deficiency_time_minutes"], errors="coerce").fillna(0.0).sum()
+        if "deficiency_time_minutes" in valid.columns
+        else None
+    )
+    mean_score = (
+        pd.to_numeric(valid["observable_score"], errors="coerce").mean()
+        if "observable_score" in valid.columns
+        else None
+    )
+    return {
+        "observable_prediction_rows": int(observable.sum()),
+        "deficient_prediction_rows": int((~observable).sum()),
+        "abstained_prediction_rows": int(abstain.sum()),
+        "deficiency_time_minutes": float(deficiency_time)
+        if deficiency_time is not None
+        else None,
+        "mean_observable_score": float(mean_score) if not pd.isna(mean_score) else None,
+    }
+
+
 def _window_precision_f1(predictions: pd.DataFrame) -> tuple[float | None, float | None]:
     if not {"forecast_label", "alarm"}.issubset(predictions.columns):
         return None, None
@@ -248,6 +285,7 @@ def build_leaderboard_row(
     else:
         metric_events = metric_units
 
+    observability = _observability_counts(selected_predictions)
     sensitivity = event_level_sensitivity(
         selected_predictions,
         metric_events,
@@ -282,6 +320,7 @@ def build_leaderboard_row(
         "metric_units_used_for_metrics": len(metric_events),
         "prediction_rows": len(selected_predictions),
         "valid_prediction_rows": int(_valid_prediction_mask(selected_predictions).sum()),
+        **observability,
         "positive_windows": _positive_windows(selected_predictions),
         "monitored_hours": monitored_seconds / 3600.0 if monitored_seconds is not None else None,
         "n_forecasted_or_detected": sensitivity["n_forecasted"],
@@ -360,6 +399,10 @@ def _write_markdown(row: dict[str, Any], path: Path) -> None:
 - Events after filter: `{row["events_after_filter"]}`
 - Events used for metrics: `{row["events_used_for_metrics"]}`
 - Valid prediction rows: `{row["valid_prediction_rows"]}`
+- Observable prediction rows: `{row["observable_prediction_rows"]}`
+- Deficient prediction rows: `{row["deficient_prediction_rows"]}`
+- Abstained prediction rows: `{row["abstained_prediction_rows"]}`
+- Deficiency time minutes: `{row["deficiency_time_minutes"]}`
 
 ## Metrics
 
