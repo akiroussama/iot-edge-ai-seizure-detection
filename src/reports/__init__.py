@@ -54,6 +54,12 @@ from src.reports.statistical_robustness import (
     paired_brier_permutation_test,
     statistical_robustness_markdown,
 )
+from src.reports.workflow_forensics import (
+    WorkflowForensicsConfig,
+    WorkflowForensicsReport,
+    build_workflow_forensics_report,
+    workflow_forensics_markdown,
+)
 
 __all__ = [
     "CalibrationSkillReport",
@@ -66,6 +72,8 @@ __all__ = [
     "ForecastabilityThresholds",
     "SeizeIT2TaskSpec",
     "StatisticalRobustnessReport",
+    "WorkflowForensicsConfig",
+    "WorkflowForensicsReport",
     "align_reference_predictions",
     "align_reference_set",
     "adjust_p_values",
@@ -86,6 +94,7 @@ __all__ = [
     "build_statistical_robustness_report",
     "build_summary_table",
     "build_timeline_geometry",
+    "build_workflow_forensics_report",
     "clinical_audit_workbench_html",
     "clinical_audit_workbench_markdown",
     "clinical_utility_markdown",
@@ -98,4 +107,5 @@ __all__ = [
     "seizeit2_full_track_markdown",
     "statistical_robustness_markdown",
     "validate_edge_profiles",
+    "workflow_forensics_markdown",
 ]
