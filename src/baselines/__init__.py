@@ -26,10 +26,16 @@ from src.baselines.forecast_nulls import (
     split_prevalence_prior,
     variant_counts,
 )
+from src.baselines.patient_adaptive import (
+    PatientAdaptiveConfig,
+    patient_adaptive_predictions,
+    patient_adaptive_summary,
+)
 
 __all__ = [
     "CyclePriorModel",
     "MultiCyclePriorModel",
+    "PatientAdaptiveConfig",
     "acc_energy_score",
     "apply_validation_quantile_alarm",
     "appended_columns",
@@ -43,6 +49,8 @@ __all__ = [
     "generic_zscore_anomaly",
     "normalize_score",
     "patient_prior",
+    "patient_adaptive_predictions",
+    "patient_adaptive_summary",
     "permute_cycle_labels_within_patient",
     "predict_cycle_prior",
     "predict_multiday_cycle_prior",
