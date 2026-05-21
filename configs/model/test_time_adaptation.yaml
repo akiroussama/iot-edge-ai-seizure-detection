@@ -1,0 +1,39 @@
+name: rolling_origin_test_time_adaptation
+status: pre_gate_c_engineering_only
+method: rolling_rank_blend
+input_contract:
+  table: standardized_prediction_windows
+  required_columns:
+    - risk_score
+    - patient_id
+    - window_start
+  required_alignment_keys:
+    - patient_id
+    - recording_id
+    - window_start
+    - window_end
+  training_uses_labels: false
+  adaptation_uses_future_windows: false
+defaults:
+  score_col: risk_score
+  patient_col: patient_id
+  time_col: window_start
+  split_col: split
+  threshold_split: val
+  target_tiw: 0.1
+  history_window: 48
+  min_history: 6
+  blend_alpha: 0.5
+outputs:
+  - tta_predictions.csv
+  - tta_summary.csv
+  - tta_manifest.csv
+  - tta_report.json
+  - tta_report.md
+guardrails:
+  - Adaptation uses only past unlabeled risk scores for the same patient.
+  - forecast_label is never read by the adaptation rule.
+  - Future score perturbations must not change earlier adapted risks.
+  - The adapted risk replaces risk_score for downstream runner compatibility.
+  - pre_tta_risk_score and pre_tta_alarm preserve the original model outputs.
+  - Reports are not citable benchmark results before Gate C.
