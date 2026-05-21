@@ -30,6 +30,14 @@ from src.reports.clinical_utility import (
     clinical_utility_markdown,
     clinical_utility_table,
 )
+from src.reports.clinical_audit_workbench import (
+    ClinicalAuditWorkbenchReport,
+    build_audit_workbench_summary,
+    build_clinical_audit_workbench,
+    build_timeline_geometry,
+    clinical_audit_workbench_html,
+    clinical_audit_workbench_markdown,
+)
 from src.reports.statistical_robustness import (
     StatisticalRobustnessReport,
     adjust_p_values,
@@ -42,6 +50,7 @@ from src.reports.statistical_robustness import (
 
 __all__ = [
     "CalibrationSkillReport",
+    "ClinicalAuditWorkbenchReport",
     "ClinicalUtilityAssumptions",
     "ClinicalUtilityConstraints",
     "DEFAULT_SEIZEIT2_TASKS",
@@ -53,17 +62,22 @@ __all__ = [
     "adjust_p_values",
     "apply_official_seizeit2_splits",
     "apply_refractory_alarm_policy",
+    "build_audit_workbench_summary",
     "bootstrap_brier_skill_score_interval",
     "bootstrap_brier_skill_score_intervals",
     "bootstrap_skill_intervals",
     "build_bootstrap_table",
     "build_calibration_skill_report",
+    "build_clinical_audit_workbench",
     "build_forecastability_atlas",
     "build_seizeit2_full_track_matrix",
     "build_reliability_tables",
     "build_skill_table",
     "build_statistical_robustness_report",
     "build_summary_table",
+    "build_timeline_geometry",
+    "clinical_audit_workbench_html",
+    "clinical_audit_workbench_markdown",
     "clinical_utility_markdown",
     "clinical_utility_table",
     "forecastability_atlas_markdown",
