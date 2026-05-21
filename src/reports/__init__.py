@@ -45,6 +45,13 @@ from src.reports.edge_ablation import (
     edge_ablation_markdown,
     validate_edge_profiles,
 )
+from src.reports.failure_taxonomy import (
+    FailureTaxonomyConfig,
+    FailureTaxonomyReport,
+    build_failure_taxonomy_report,
+    build_failure_taxonomy_rows,
+    failure_taxonomy_markdown,
+)
 from src.reports.statistical_robustness import (
     StatisticalRobustnessReport,
     adjust_p_values,
@@ -69,6 +76,8 @@ __all__ = [
     "DEFAULT_SEIZEIT2_TASKS",
     "EdgeAblationConfig",
     "EdgeAblationReport",
+    "FailureTaxonomyConfig",
+    "FailureTaxonomyReport",
     "ForecastabilityThresholds",
     "SeizeIT2TaskSpec",
     "StatisticalRobustnessReport",
@@ -87,6 +96,8 @@ __all__ = [
     "build_calibration_skill_report",
     "build_clinical_audit_workbench",
     "build_edge_ablation_report",
+    "build_failure_taxonomy_report",
+    "build_failure_taxonomy_rows",
     "build_forecastability_atlas",
     "build_seizeit2_full_track_matrix",
     "build_reliability_tables",
@@ -100,6 +111,7 @@ __all__ = [
     "clinical_utility_markdown",
     "clinical_utility_table",
     "edge_ablation_markdown",
+    "failure_taxonomy_markdown",
     "forecastability_atlas_markdown",
     "paired_brier_permutation_test",
     "reliability_slope_table",
