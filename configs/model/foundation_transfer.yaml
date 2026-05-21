@@ -1,0 +1,51 @@
+name: foundation_transfer_baseline
+status: pre_gate_c_transfer_protocol
+objective: attach frozen external foundation-model embeddings as supervised ladder features
+input_contract:
+  features:
+    required_join_keys:
+      - patient_id
+      - recording_id
+      - window_start
+      - window_end
+  embeddings:
+    required_join_keys:
+      - patient_id
+      - recording_id
+      - window_start
+      - window_end
+    forbidden_columns:
+      - forecast_label
+      - is_ictal
+      - is_postictal
+      - is_excluded
+      - alarm
+      - risk_score
+      - split
+      - time_to_next_seizure_seconds
+      - time_since_last_seizure_seconds
+outputs:
+  - foundation_transfer_features.csv
+  - foundation_transfer_manifest.csv
+  - foundation_transfer_manifest.json
+  - foundation_transfer_report.md
+guardrails:
+  - License and modality compatibility must be documented before use.
+  - Embedding generation must not read labels.
+  - Frozen embeddings are transfer baselines, not foundation-model training by this project.
+  - Citable comparisons require Gate C frozen artifacts.
+pinned_context_sources:
+  - name: Large-scale Training of Foundation Models for Wearable Biosignals
+    venue: ICLR 2024
+    url: https://proceedings.iclr.cc/paper_files/paper/2024/hash/0d99a8c048befb6dd6e17d7684adacac-Abstract-Conference.html
+    modalities:
+      - PPG
+      - ECG
+  - name: PaPaGei open PPG foundation model
+    venue: ICLR 2025
+    url: https://github.com/nokia-bell-Labs/papagei-foundation-model
+    modalities:
+      - PPG
+default_runner:
+  script: scripts/prepare_foundation_transfer_features.py
+  downstream: scripts/run_supervised_model_ladder.py
