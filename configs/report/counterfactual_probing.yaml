@@ -1,0 +1,36 @@
+name: counterfactual_probing
+status: pre_gate_c_surrogate_explanation
+input_contract:
+  table: standardized_prediction_rows_with_features
+  required_columns:
+    - risk_score
+    - alarm
+    - is_excluded
+  required_alignment_keys:
+    - patient_id
+    - recording_id
+    - window_start
+    - window_end
+defaults:
+  fit_split: train
+  split_col: split
+  risk_col: risk_score
+  alarm_col: alarm
+  excluded_col: is_excluded
+  threshold_col: alarm_threshold
+  direction: prevent_alarm
+  margin: 0.01
+  ridge_alpha: 0.001
+  top_k_features: 3
+outputs:
+  - counterfactual_rows.csv
+  - counterfactual_feature_changes.csv
+  - counterfactual_summary.csv
+  - counterfactual_manifest.csv
+  - counterfactual_report.json
+  - counterfactual_report.md
+guardrails:
+  - Feature selection excludes labels, IDs, risk/alarm outputs, split metadata, and explicit seizure-timing leakage columns.
+  - The fitted surrogate targets model risk scores, not forecast labels.
+  - Counterfactuals are local surrogate explanations, not causal physiology.
+  - Reports are not citable benchmark results before Gate C.
