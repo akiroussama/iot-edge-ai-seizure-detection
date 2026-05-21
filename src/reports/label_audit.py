@@ -43,7 +43,7 @@ REVIEW_DECISION_COLUMNS = [
     "decision",
 ]
 
-ALLOWED_REVIEW_DECISIONS = {"PASS", "FAIL", "NEEDS_SOURCE_REVIEW"}
+ALLOWED_REVIEW_DECISIONS = {"PASS", "FAIL", "UNCERTAIN", "NEEDS_SOURCE_REVIEW"}
 
 
 def _bool_series(df: pd.DataFrame, column: str, default: bool = False) -> pd.Series:
@@ -278,7 +278,7 @@ def validate_label_audit_review_sheet(
         normalized = review_df[column].astype("string").str.strip().str.upper()
         missing_rows = normalized.isna() | normalized.eq("")
         invalid_rows = ~normalized.isin(ALLOWED_REVIEW_DECISIONS) & ~missing_rows
-        failing_rows = normalized.isin({"FAIL", "NEEDS_SOURCE_REVIEW"})
+        failing_rows = normalized.isin({"FAIL", "UNCERTAIN", "NEEDS_SOURCE_REVIEW"})
         add_check(
             f"{column}_filled",
             not bool(missing_rows.any()),
