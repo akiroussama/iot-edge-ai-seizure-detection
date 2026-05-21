@@ -1,0 +1,73 @@
+name: supervised_model_ladder
+status: pre_gate_c_engineering_only
+prediction_contract:
+  requires_reference_comparator: true
+  reference_argument_format: NAME=PATH
+  required_alignment_keys:
+    - patient_id
+    - recording_id
+    - window_start
+    - window_end
+  required_pass_through_columns:
+    - forecast_label
+    - is_excluded
+  standard_outputs:
+    - risk_score
+    - alarm
+    - alarm_threshold
+    - supervised_model_name
+    - supervised_model_family
+    - supervised_ladder_rung
+    - score_fit_split
+    - threshold_source_split
+    - target_tiw
+    - feature_columns
+    - feature_set_hash
+    - training_artifact_hash
+    - comparator_reference_name
+    - comparator_reference_hash
+    - seed
+    - supervised_valid_evidence
+    - supervised_prediction_status
+defaults:
+  split_col: split
+  train_split: train
+  val_split: val
+  target_col: forecast_label
+  target_tiw: 0.1
+  seed: 42
+  epochs: 100
+  learning_rate: 0.05
+  weight_decay: 0.0001
+  hidden_dim: 32
+  batch_size: 256
+  n_estimators: 25
+  sequence_length: 8
+rungs:
+  logistic_regression:
+    family: linear
+    rung: tabular_linear
+    input_kind: tabular_features
+    requires_torch: false
+  gradient_stumps:
+    family: tree_ensemble
+    rung: tabular_stump_boosting
+    input_kind: tabular_features
+    requires_torch: false
+  mlp:
+    family: neural_tabular
+    rung: tabular_mlp
+    input_kind: tabular_features
+    requires_torch: true
+  tcn:
+    family: temporal_neural
+    rung: window_sequence_tcn
+    input_kind: patient_ordered_window_sequence
+    requires_torch: true
+    note: Uses the same window-feature table interface until Gate C sequence tensors exist.
+  gru:
+    family: temporal_neural
+    rung: window_sequence_gru
+    input_kind: patient_ordered_window_sequence
+    requires_torch: true
+    note: Uses the same window-feature table interface until Gate C sequence tensors exist.
