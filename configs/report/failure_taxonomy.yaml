@@ -1,0 +1,33 @@
+name: failure_taxonomy
+status: pre_gate_c_descriptive_analysis
+input_contract:
+  predictions: standardized_prediction_rows
+  required_columns:
+    - risk_score
+    - alarm
+    - forecast_label
+    - is_excluded
+  optional_observability_columns:
+    - is_observable
+    - abstain_for_observability
+defaults:
+  risk_col: risk_score
+  alarm_col: alarm
+  label_col: forecast_label
+  excluded_col: is_excluded
+  patient_col: patient_id
+  high_risk_threshold: 0.7
+  low_risk_threshold: 0.3
+outputs:
+  - failure_taxonomy_rows.csv
+  - failure_taxonomy_summary.csv
+  - failure_taxonomy_patient_summary.csv
+  - failure_taxonomy_warnings.csv
+  - failure_taxonomy_manifest.csv
+  - failure_taxonomy_report.json
+  - failure_taxonomy_report.md
+guardrails:
+  - Taxonomy is post-hoc descriptive, not causal.
+  - Excluded rows are separated before clinical success/failure categories.
+  - Observability abstentions and deficiencies take precedence over ordinary false alarms or misses.
+  - Reports are not citable benchmark results before Gate C.
