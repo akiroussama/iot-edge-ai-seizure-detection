@@ -1,0 +1,36 @@
+name: n1_longitudinal_deep_dive
+status: pre_gate_c_descriptive_case_study
+input_contract:
+  predictions: standardized_prediction_rows
+  required_columns:
+    - patient_id
+    - window_start
+    - risk_score
+    - alarm
+    - forecast_label
+    - is_excluded
+  optional_columns:
+    - failure_category
+    - is_observable
+defaults:
+  patient_id: null
+  patient_col: patient_id
+  time_col: window_start
+  risk_col: risk_score
+  alarm_col: alarm
+  label_col: forecast_label
+  excluded_col: is_excluded
+  segments: 6
+  event_neighborhood_rows: 3
+outputs:
+  - n1_patient_selection.csv
+  - n1_timeline.csv
+  - n1_segment_summary.csv
+  - n1_event_neighborhoods.csv
+  - n1_manifest.csv
+  - n1_report.json
+  - n1_report.md
+guardrails:
+  - If patient_id is omitted, the selected patient maximizes duration plus event/alarm coverage.
+  - The analysis is descriptive and single-patient, not a generalizable benchmark claim.
+  - Reports are not citable benchmark results before Gate C.

@@ -52,6 +52,13 @@ from src.reports.failure_taxonomy import (
     build_failure_taxonomy_rows,
     failure_taxonomy_markdown,
 )
+from src.reports.longitudinal_deep_dive import (
+    LongitudinalDeepDiveConfig,
+    LongitudinalDeepDiveReport,
+    build_longitudinal_deep_dive_report,
+    longitudinal_deep_dive_markdown,
+    patient_selection_table,
+)
 from src.reports.statistical_robustness import (
     StatisticalRobustnessReport,
     adjust_p_values,
@@ -78,6 +85,8 @@ __all__ = [
     "EdgeAblationReport",
     "FailureTaxonomyConfig",
     "FailureTaxonomyReport",
+    "LongitudinalDeepDiveConfig",
+    "LongitudinalDeepDiveReport",
     "ForecastabilityThresholds",
     "SeizeIT2TaskSpec",
     "StatisticalRobustnessReport",
@@ -98,6 +107,7 @@ __all__ = [
     "build_edge_ablation_report",
     "build_failure_taxonomy_report",
     "build_failure_taxonomy_rows",
+    "build_longitudinal_deep_dive_report",
     "build_forecastability_atlas",
     "build_seizeit2_full_track_matrix",
     "build_reliability_tables",
@@ -113,7 +123,9 @@ __all__ = [
     "edge_ablation_markdown",
     "failure_taxonomy_markdown",
     "forecastability_atlas_markdown",
+    "longitudinal_deep_dive_markdown",
     "paired_brier_permutation_test",
+    "patient_selection_table",
     "reliability_slope_table",
     "seizeit2_count_summary",
     "seizeit2_full_track_markdown",
