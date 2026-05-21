@@ -1,0 +1,23 @@
+name: ai_assisted_workflow_forensics
+status: descriptive_methodology_evidence
+input_contract:
+  git_history: local_repository
+  documents:
+    - docs/research/*.md
+    - docs/*.md
+defaults:
+  max_commits: 200
+  include_merge_commits: true
+outputs:
+  - workflow_commits.csv
+  - workflow_task_docs.csv
+  - workflow_artifact_summary.csv
+  - workflow_validation_summary.csv
+  - workflow_forensics_manifest.csv
+  - workflow_forensics_report.json
+  - workflow_forensics_report.md
+guardrails:
+  - The report uses only repository git history and checked-in documents.
+  - It does not claim access to chat transcripts unless separately supplied in a future task.
+  - It summarizes validation and guardrail markers as descriptive evidence, not proof of clinical correctness.
+  - Clinical benchmark claims still require Gate C frozen artifacts and independent review.
