@@ -1,0 +1,35 @@
+name: sparse_autoencoder_interpretability
+status: pre_gate_c_engineering_only
+input_contract:
+  table: hidden_activation_windows
+  required_alignment_keys:
+    - patient_id
+    - recording_id
+    - window_start
+    - window_end
+  optional_prediction_table: true
+  training_uses_labels: false
+  post_hoc_associations_use_labels: true
+defaults:
+  n_features: 8
+  fit_split: train
+  split_col: split
+  seed: 42
+  epochs: 250
+  learning_rate: 0.01
+  sparsity_l1: 0.01
+  batch_size: 128
+  activation_epsilon: 0.000001
+outputs:
+  - sae_feature_scores.csv
+  - sae_dictionary.csv
+  - sae_associations.csv
+  - sae_manifest.csv
+  - sae_report.json
+  - sae_report.md
+guardrails:
+  - Activation column selection excludes labels, IDs, prediction outputs, and explicit seizure-timing leakage columns.
+  - Fit split controls which rows train the autoencoder.
+  - Prediction labels are used only for post-hoc association tables.
+  - Associations are marked post_hoc_not_causal.
+  - Reports are not citable benchmark results before Gate C.
