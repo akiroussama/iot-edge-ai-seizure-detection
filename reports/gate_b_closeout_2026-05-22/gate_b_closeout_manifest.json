@@ -1,0 +1,27 @@
+{
+  "run_id": "gate_b_closeout_2026-05-22",
+  "source_uri": "reports/local_gate_guardrails_2026-05-22/gate_bc_action_checklist.csv",
+  "claim_status": "gate_b_closeout_ledger_pending_human_review_not_citable",
+  "gate_b_status": "blocked_pending_human_closeout",
+  "ledger_rows": 8,
+  "open_rows": 8,
+  "ledger_hash": "42585384479b4b93fe6ab7c9af15061ec5091ae09f2931b81b86bc3eb4014d03",
+  "summary_hash": "a60c161b6f1f7741b5c85c71879e5d67dc4df7f7e4d862fa0bd1ef113320f7dc",
+  "allowed_human_decisions": [
+    "APPROVED_EXCLUSION",
+    "BLOCKED",
+    "DEFERRED",
+    "NEEDS_SOURCE_REVIEW",
+    "RESOLVED"
+  ],
+  "review_columns": [
+    "human_decision",
+    "reviewer_name",
+    "review_date",
+    "evidence_uri",
+    "evidence_hash",
+    "resolution_notes",
+    "rerun_required",
+    "rerun_artifact_uri"
+  ]
+}
