@@ -1,12 +1,15 @@
 # EpiTwin-Open Playbook
 
-Single operating document. Last updated: 2026-05-15 (revision 2).
+Single operating document. Last updated: 2026-05-22 (revision 3).
 
 ## What this is and how to use it
 
-This playbook is the forward operating plan for EpiTwin-Open. Revision 2 changes
-the **objective**, records a **scope decision**, and inserts a **certification
-phase**. The gated critical-path discipline of revision 1 is carried forward.
+This playbook is the forward operating plan for EpiTwin-Open. Revision 3 keeps
+the revision-2 objective and scope decision, but refreshes the current state
+after the May 20-22 engineering blocks: leaderboard schema, Gate C registry
+scaffold, null models, calibration/BSS, conformal intervals, audit tooling,
+clinical utility, forecastability atlas, SOTA bridge, and anti-hallucination
+guardrails. The gated critical-path discipline remains unchanged.
 
 It does not repeat work that already exists. Read these first, in order:
 
@@ -29,10 +32,10 @@ It does not repeat work that already exists. Read these first, in order:
 
 Read the next sentence before acting on the one above.
 
-**This is a target, not the current state.** As of 2026-05-15 the Phase R audit
-lists one **P0 blocker**, **M2 is not closed**, the benchmark is not frozen, and
-no manual label audit has been done. "Verifiably SOTA" is *reached* by passing
-the phase gates in section 5 — it is never asserted, never assumed.
+**This is a target, not the current state.** As of 2026-05-22 the benchmark is
+still not frozen, Gate B is not fully closed by a committed per-event human
+audit, and Gate C has not passed. "Verifiably SOTA" is *reached* by passing the
+phase gates in section 5 — it is never asserted, never assumed.
 
 What revision 2 changes: revision 1 ended at "write and submit". Revision 2
 inserts **Phase G — certification** between the science and the writing. Nothing
@@ -74,8 +77,12 @@ this playbook is built around:
    audited). Full scope changes *what* the paper contains, not the *order* in
    which it is built.
 2. **The SOTA bar is now higher.** A protocol contribution is defended on
-   novelty. A model contribution is *also* defended on performance, head-to-head
-   with Nasseri 2025 and SeizureFormer 2026. Phase G must clear both.
+   novelty. A model contribution is *also* defended on performance where the
+   task, modality, and split are comparable. Nasseri 2025 is a direct wearable
+   forecasting boundary; SeizureFormer 2026 is long-horizon seizure-forecasting
+   context from implant-derived RNS biomarkers, not a direct HR/steps wearable
+   comparator unless a task-compatible reproduction is explicitly defined.
+   Phase G must clear both direct and contextual comparisons honestly.
 3. **A negative model result is pre-accepted, now, in writing.** If the certified
    EpiTwin-SSL does not beat the transparent baselines or prior SOTA, the honest
    result — "EpiTwin-SSL does not yet outperform X on this benchmark" — is still
@@ -84,13 +91,16 @@ this playbook is built around:
 
 ## 4. Where we are now
 
-The scaffold is built and tested (`PROJECT_STATUS.md`). The 2026-05-15 methods
-review found 4 Critical + 5 High findings; Phase R remediation closed some and
-left a punch list — `docs/CLAUDE_PHASE_R_AUDIT_2026-05-15.md` has the detail,
-including a **P0** over-exclusion bug that currently corrupts every MSG report on
-disk. Real MSG is parsed (510/768 onsets matched); SeizeIT2 is a single subject.
-Do not relitigate findings here — they live in the review and the audit with
-file:line anchors.
+The scaffold is built and tested (`PROJECT_STATUS.md`). The May 20-22 branches
+added the publishability layer: unified leaderboard rows, constrained nulls,
+calibration/BSS, Gate C registry machinery, active audit selection, conformal
+intervals, clinical utility, observability/failure reports, SOTA reproduction
+bridge, paper artifact packaging, and an anti-hallucination audit. Those are
+engineering scaffolds unless and until Gate B and Gate C pass. Real MSG remains
+partially matched and audit-limited; SeizeIT2 cohort claims still require full
+track validation. Do not relitigate historical Phase R findings here — they
+live in the review/audit documents with file:line anchors, and current
+corrective traces live in `docs/commits/` and `docs/research/`.
 
 ## 5. Critical path
 
@@ -165,11 +175,15 @@ supported by the analysis or honestly bounded as a negative/limited result.
 
 ### Phase G — SOTA validation and certification
 The phase that makes Phase H a formality. Four deliverables:
-1. **Positioning matrix** — EpiTwin-Open vs Nasseri 2025, SeizureFormer 2026,
-   SeizeIT2-ECG 2025, on protocol *and* model performance. Every cited SOTA
-   source verified. The earlier `arXiv:2604.18297` phantom-citation concern was
-   superseded by `docs/SOTA_CITATION_AUDIT_2026-05-18.md`; do not reclassify it
-   as phantom without a fresh primary-source check.
+1. **Positioning matrix** — EpiTwin-Open vs direct wearable forecasting
+   comparators such as Nasseri 2025, detection comparators such as SeizeIT2-ECG
+   2025, and contextual long-horizon forecasting work such as SeizureFormer
+   2026. The matrix must separate protocol, dataset, modality, horizon, split,
+   and model-performance comparability; no direct head-to-head claim is allowed
+   across incompatible tasks. Every cited SOTA source verified. The earlier
+   `arXiv:2604.18297` phantom-citation concern was superseded by
+   `docs/SOTA_CITATION_AUDIT_2026-05-18.md`; do not reclassify it as phantom
+   without a fresh primary-source check.
 2. **Reproducibility certification** — clean clone → one documented command →
    result tables reproduced to a documented numerical tolerance; a committed
    golden-numbers / golden-SHA non-regression test.
@@ -298,3 +312,4 @@ violated under time pressure:
 | 2026-05-15 | Initial playbook (revision 1). Gated path to a benchmark-first Paper 1, deep models deferred to a Paper 2. |
 | 2026-05-15 | Revision 2. Objective reframed to a published, verifiably-SOTA contribution with the manuscript as a downstream formality. Scope decision recorded (section 3): Oussama chose the full package — benchmark + deep baselines + EpiTwin-SSL + A100 in one paper. Added Phase G (certification) and Phase H (manuscript); added the Claude/Codex kaizen (section 8) and the three Codex mistakes (section 9) from the Phase R audit. |
 | 2026-05-19 | Gate A policy half closed — the four Phase R policy decisions recorded in docs/GATE_A_DECISIONS_2026-05-19.md. MSG horizon: coverage-limited 24 h plus an added SOP 240 min comparison. Cluster metric: cluster-level primary, cluster_gap_minutes 240. Event denominator: both reported, coverable-matched primary. Postictal anchor: onset + 120 min (StatPearls NBK526004, Pottkämper et al. 2020). Remaining Gate A blocker: the Phase B manual label audit. |
+| 2026-05-22 | Revision 3. Current-state refresh after Tasks 5-20 and complementary research blocks. Clarified that SeizureFormer is contextual implant-derived SOTA, not a direct wearable HR/steps comparator; retained Gate B/C as the blockers for citable benchmark claims. |

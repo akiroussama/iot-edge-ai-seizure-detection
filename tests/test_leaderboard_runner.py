@@ -6,6 +6,7 @@ import subprocess
 import sys
 
 import pandas as pd
+import pytest
 
 from scripts.make_leaderboard_row import build_leaderboard_row, write_outputs
 from src.utils.io import read_table, write_table
@@ -113,6 +114,33 @@ def test_build_leaderboard_row_from_predictions_and_events() -> None:
     assert row["time_in_warning"] == 1 / 3
     assert row["brier_score"] is not None
     assert row["auroc"] == 1.0
+
+
+def test_leaderboard_row_requires_probabilistic_prediction_contract() -> None:
+    base = pd.Timestamp("2026-01-01 00:00:00")
+    predictions = _sample_predictions(base).drop(columns=["risk_score"])
+
+    with pytest.raises(ValueError, match="missing required leaderboard prediction columns"):
+        build_leaderboard_row(
+            predictions=predictions,
+            events=_sample_events(base),
+            reference_predictions=None,
+            args=_args(),
+        )
+
+
+def test_leaderboard_row_rejects_reference_row_mismatch() -> None:
+    base = pd.Timestamp("2026-01-01 00:00:00")
+    predictions = _sample_predictions(base)
+    reference = predictions.iloc[:-1].copy()
+
+    with pytest.raises(ValueError, match="reference predictions row mismatch"):
+        build_leaderboard_row(
+            predictions=predictions,
+            events=_sample_events(base),
+            reference_predictions=reference,
+            args=_args(bss_reference="truncated_reference"),
+        )
 
 
 def test_leaderboard_row_brier_skill_score_uses_reference_predictions() -> None:

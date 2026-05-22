@@ -221,6 +221,11 @@ def build_claim_traceability(claims: pd.DataFrame, inventory: pd.DataFrame) -> p
     out = claims.copy()
     out["artifact_found"] = out["artifact_path"].astype(str).isin(inventory_paths)
     out["has_source_uri"] = out.get("source_uri", pd.Series("", index=out.index)).fillna("").astype(str).str.len() > 0
+    source_status = out.get("source_verification_status", pd.Series("", index=out.index))
+    out["source_verification_status"] = source_status.fillna("").astype(str).str.strip().str.lower()
+    out["source_verified"] = out["source_verification_status"].isin(
+        {"verified", "primary_source_verified"}
+    )
     out["citation_safe"] = ~(
         out["citation_status"].eq("citable_after_gate_c") & ~out["gate_c_status"].eq("passed")
     )
@@ -229,6 +234,12 @@ def build_claim_traceability(claims: pd.DataFrame, inventory: pd.DataFrame) -> p
         row_issues = []
         if not bool(row["artifact_found"]) and not bool(row["has_source_uri"]):
             row_issues.append("missing committed artifact or source URI")
+        if (
+            not bool(row["artifact_found"])
+            and bool(row["has_source_uri"])
+            and not bool(row["source_verified"])
+        ):
+            row_issues.append("source URI present but not primary-source verified")
         if not bool(row["citation_safe"]):
             row_issues.append("citable claim before Gate C passed")
         issues.append("; ".join(row_issues) if row_issues else "ok")

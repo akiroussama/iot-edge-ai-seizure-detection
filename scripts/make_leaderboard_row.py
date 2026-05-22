@@ -38,6 +38,16 @@ from src.utils.io import read_table, write_table
 
 SCHEMA_PATH = REPO_ROOT / "schemas" / "leaderboard_entry.schema.json"
 TEMPLATE_PATH = REPO_ROOT / "schemas" / "leaderboard_template.csv"
+PREDICTION_CONTRACT_COLUMNS = {
+    "patient_id",
+    "window_start",
+    "window_end",
+    "risk_score",
+    "alarm",
+    "forecast_label",
+    "is_excluded",
+}
+REFERENCE_ALIGNMENT_COLUMNS = ("patient_id", "recording_id", "window_start", "window_end")
 
 
 def _canonical_columns() -> list[str]:
@@ -66,6 +76,51 @@ def _metric_or_none(fn, *args) -> float | None:
         return _clean(fn(*args))
     except (KeyError, ValueError, TypeError):
         return None
+
+
+def _metric_required(metric_name: str, fn, *args) -> float | None:
+    try:
+        return _clean(fn(*args))
+    except (KeyError, ValueError, TypeError) as exc:
+        raise ValueError(f"failed to compute required leaderboard metric {metric_name}: {exc}") from exc
+
+
+def _validate_prediction_contract(
+    predictions: pd.DataFrame,
+    *,
+    name: str,
+    events: pd.DataFrame,
+) -> None:
+    missing = sorted(PREDICTION_CONTRACT_COLUMNS - set(predictions.columns))
+    if "recording_id" in events.columns and "recording_id" not in predictions.columns:
+        missing.append("recording_id")
+    if missing:
+        raise ValueError(f"{name} missing required leaderboard prediction columns: {missing}")
+    if predictions.empty:
+        raise ValueError(f"{name} contains no rows after filtering")
+
+
+def _validate_reference_alignment(predictions: pd.DataFrame, reference: pd.DataFrame) -> None:
+    keys = [column for column in REFERENCE_ALIGNMENT_COLUMNS if column in predictions.columns]
+    missing = [column for column in keys if column not in reference.columns]
+    if missing:
+        raise ValueError(f"reference predictions missing alignment columns: {missing}")
+    model = predictions.set_index(keys, drop=False)
+    ref = reference.set_index(keys, drop=False)
+    model_keys = set(model.index)
+    ref_keys = set(ref.index)
+    if model_keys != ref_keys:
+        raise ValueError(
+            "reference predictions row mismatch: "
+            f"missing_reference_rows={len(model_keys - ref_keys)}, "
+            f"extra_reference_rows={len(ref_keys - model_keys)}"
+        )
+    ref = ref.loc[model.index]
+    for column in ("forecast_label", "is_excluded"):
+        model_values = model[column].fillna(False).astype(bool)
+        ref_values = ref[column].fillna(False).astype(bool)
+        if not model_values.equals(ref_values):
+            raise ValueError(f"reference predictions column {column!r} does not match predictions")
 
 
 def _valid_prediction_mask(predictions: pd.DataFrame) -> pd.Series:
@@ -272,6 +327,14 @@ def build_leaderboard_row(
         if reference_predictions is not None
         else None
     )
+    _validate_prediction_contract(selected_predictions, name="predictions", events=filtered_events)
+    if selected_reference is not None:
+        _validate_prediction_contract(
+            selected_reference,
+            name="reference predictions",
+            events=filtered_events,
+        )
+        _validate_reference_alignment(selected_predictions, selected_reference)
 
     sph_minutes = args.sph_minutes or 0.0
     sop_minutes = args.sop_minutes or 0.0
@@ -293,7 +356,11 @@ def build_leaderboard_row(
         sop_minutes,
     )
     precision, f1 = _window_precision_f1(selected_predictions)
-    monitored_seconds = _metric_or_none(monitored_time_seconds, selected_predictions)
+    monitored_seconds = _metric_required(
+        "monitored_time_seconds",
+        monitored_time_seconds,
+        selected_predictions,
+    )
     row: dict[str, Any] = {
         "schema_version": "leaderboard.v1",
         "result_id": args.result_id,
@@ -325,21 +392,27 @@ def build_leaderboard_row(
         "monitored_hours": monitored_seconds / 3600.0 if monitored_seconds is not None else None,
         "n_forecasted_or_detected": sensitivity["n_forecasted"],
         "sensitivity": sensitivity["sensitivity"],
-        "false_alarm_rate_per_day": _metric_or_none(
+        "false_alarm_rate_per_day": _metric_required(
+            "false_alarm_rate_per_day",
             false_alarm_rate_per_day,
             selected_predictions,
             metric_events,
             sph_minutes,
             sop_minutes,
         ),
-        "false_alarm_rate_per_hour": _metric_or_none(
+        "false_alarm_rate_per_hour": _metric_required(
+            "false_alarm_rate_per_hour",
             false_alarm_rate_per_hour,
             selected_predictions,
             metric_events,
             sph_minutes,
             sop_minutes,
         ),
-        "time_in_warning": _metric_or_none(time_in_warning, selected_predictions),
+        "time_in_warning": _metric_required(
+            "time_in_warning",
+            time_in_warning,
+            selected_predictions,
+        ),
         "precision": precision,
         "f1_score": f1,
         "median_lead_time_seconds": _metric_or_none(
@@ -349,10 +422,14 @@ def build_leaderboard_row(
             sph_minutes,
             sop_minutes,
         ),
-        "brier_score": _metric_or_none(brier_score, selected_predictions),
+        "brier_score": _metric_required("brier_score", brier_score, selected_predictions),
         "brier_skill_score": _brier_skill_score(selected_predictions, selected_reference),
         "bss_reference": args.bss_reference if selected_reference is not None else None,
-        "expected_calibration_error": _metric_or_none(expected_calibration_error, selected_predictions),
+        "expected_calibration_error": _metric_required(
+            "expected_calibration_error",
+            expected_calibration_error,
+            selected_predictions,
+        ),
         "auroc": _auroc(selected_predictions),
         "auprc": _auprc(selected_predictions),
         "label_audit_status": args.label_audit_status,
