@@ -6,11 +6,13 @@ import sys
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 from src.reports.gate_b_closeout import (
     CLAIM_STATUS,
     HUMAN_REVIEW_COLUMNS,
     apply_gate_b_closeout_decisions,
+    build_gate_b_real_closeout_package,
     build_gate_b_closeout_ledger,
     summarize_gate_b_closeout_ledger,
 )
@@ -181,6 +183,84 @@ def test_simulated_closeout_never_advances_real_gate_b_status() -> None:
     assert updated.manifest["decision_evidence_status"] == "simulation_positive_not_real_gate_b_evidence"
 
 
+def test_simulated_decisions_cannot_be_applied_as_real_closeout() -> None:
+    package = build_gate_b_closeout_ledger(_actions(), source_uri="actions.csv")
+    decisions = pd.DataFrame(
+        {
+            "ledger_id": ["GB-001"],
+            "human_decision": ["RESOLVED"],
+            "reviewer_name": ["O. Akir"],
+            "review_date": ["2026-05-22"],
+            "evidence_uri": ["s3://audit/GB-001.pdf"],
+            "evidence_hash": ["sha256:abc"],
+            "resolution_notes": ["simulated positive decision"],
+            "rerun_required": ["no"],
+            "rerun_artifact_uri": ["N/A"],
+        }
+    )
+
+    with pytest.raises(ValueError, match="simulation markers"):
+        apply_gate_b_closeout_decisions(
+            package.ledger,
+            decisions,
+            source_uri="decisions.csv",
+            run_id="real",
+            decision_evidence_status="human_attested_not_independently_verified",
+        )
+
+
+def test_gate_b_real_closeout_package_keeps_simulation_out_of_template() -> None:
+    package = build_gate_b_closeout_ledger(_actions(), source_uri="actions.csv")
+    decisions = pd.DataFrame(
+        {
+            "ledger_id": ["GB-001"],
+            "human_decision": ["RESOLVED"],
+            "reviewer_name": ["O. Akir"],
+            "review_date": ["2026-05-22"],
+            "evidence_uri": ["s3://audit/GB-001.pdf"],
+            "evidence_hash": ["sha256:abc"],
+            "resolution_notes": ["real attestation"],
+            "rerun_required": ["no"],
+            "rerun_artifact_uri": ["N/A"],
+        }
+    )
+    partial = apply_gate_b_closeout_decisions(
+        package.ledger,
+        decisions,
+        source_uri="decisions.csv",
+        run_id="partial",
+    )
+    simulation_decisions = pd.DataFrame(
+        {
+            "ledger_id": ["GB-002"],
+            "human_decision": ["APPROVED_EXCLUSION"],
+            "reviewer_name": ["O. Akir"],
+            "review_date": ["2026-05-22"],
+            "evidence_uri": ["s3://audit/GB-002.pdf"],
+            "evidence_hash": ["sha256:def"],
+            "resolution_notes": ["simulated positive decision"],
+            "rerun_required": ["no"],
+            "rerun_artifact_uri": ["N/A"],
+        }
+    )
+
+    real_package = build_gate_b_real_closeout_package(
+        partial.ledger,
+        source_uri="partial-ledger.csv",
+        run_id="real-closeout",
+        simulation_decisions=simulation_decisions,
+    )
+
+    assert real_package.manifest["gate_b_real_closeout_status"] == "blocked_pending_real_evidence"
+    assert real_package.manifest["real_closed_rows"] == 1
+    assert real_package.manifest["real_open_rows"] == 1
+    assert real_package.manifest["simulation_available_open_rows"] == 1
+    assert real_package.template["ledger_id"].tolist() == ["GB-002"]
+    assert real_package.template.loc[0, "human_decision"] == ""
+    assert real_package.readiness.loc[1, "simulated_human_decision"] == "APPROVED_EXCLUSION"
+    assert "not copied into real human decision columns" in real_package.manifest["note"]
+
+
 def test_apply_gate_b_closeout_decisions_cli_writes_updated_outputs(tmp_path: Path) -> None:
     package = build_gate_b_closeout_ledger(_actions(), source_uri="actions.csv")
     ledger_path = tmp_path / "ledger.csv"
@@ -228,3 +308,59 @@ def test_apply_gate_b_closeout_decisions_cli_writes_updated_outputs(tmp_path: Pa
     assert payload["closed_rows"] == 1
     assert payload["open_rows"] == 1
     assert updated.loc[0, "closeout_status"] == "closed_by_human_review"
+
+
+def test_build_gate_b_real_closeout_package_cli_writes_outputs(tmp_path: Path) -> None:
+    package = build_gate_b_closeout_ledger(_actions(), source_uri="actions.csv")
+    ledger_path = tmp_path / "ledger.csv"
+    simulation_path = tmp_path / "simulation.csv"
+    out_dir = tmp_path / "real-closeout"
+    write_table(package.ledger, ledger_path)
+    write_table(
+        pd.DataFrame(
+            {
+                "ledger_id": ["GB-001"],
+                "human_decision": ["RESOLVED"],
+                "reviewer_name": ["O. Akir"],
+                "review_date": ["2026-05-22"],
+                "evidence_uri": ["s3://audit/GB-001.pdf"],
+                "evidence_hash": ["sha256:abc"],
+                "resolution_notes": ["simulated positive decision"],
+                "rerun_required": ["no"],
+                "rerun_artifact_uri": ["N/A"],
+            }
+        ),
+        simulation_path,
+    )
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "scripts/build_gate_b_real_closeout_package.py",
+            "--ledger",
+            str(ledger_path),
+            "--simulation-decisions",
+            str(simulation_path),
+            "--out-dir",
+            str(out_dir),
+            "--run-id",
+            "real-closeout",
+        ],
+        check=True,
+        cwd=Path(__file__).resolve().parents[1],
+        text=True,
+        capture_output=True,
+    )
+
+    payload = json.loads(result.stdout)
+    readiness = read_table(out_dir / "gate_b_real_closeout_readiness.csv")
+    template = read_table(out_dir / "gate_b_real_closeout_required_decisions_template.csv")
+    manifest = json.loads((out_dir / "gate_b_real_closeout_manifest.json").read_text())
+    markdown = (out_dir / "gate_b_real_closeout.md").read_text(encoding="utf-8")
+    assert payload["gate_b_real_closeout_status"] == "blocked_pending_real_evidence"
+    assert payload["simulation_available_open_rows"] == 1
+    assert len(readiness) == 2
+    assert len(template) == 2
+    assert manifest["run_id"] == "real-closeout"
+    assert "Simulation rows are only used as hints" in manifest["note"]
+    assert "Real Decision Template" in markdown
