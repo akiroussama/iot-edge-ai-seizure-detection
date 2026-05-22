@@ -92,9 +92,8 @@ uv sync --extra dev --extra torch
 uv run python -m pytest -q
 ```
 
-The test count changes as remediation tests are added. The current Phase R3 checkpoint passes
-99 tests; treat CI and the local command output as the source of truth rather than a hard-coded
-claim.
+The test count changes as remediation tests are added. Treat CI and the local
+command output as the source of truth rather than a hard-coded claim.
 
 ```text
 all tests pass

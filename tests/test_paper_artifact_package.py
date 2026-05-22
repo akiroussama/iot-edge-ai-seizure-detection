@@ -139,7 +139,7 @@ def test_build_paper_artifact_package_rejects_citable_before_gate_c(tmp_path) ->
     assert "gate-c-status passed" in result.stderr
 
 
-def test_build_paper_artifact_package_with_custom_claim_source_uri(tmp_path) -> None:
+def test_build_paper_artifact_package_marks_unverified_source_uri_not_ready(tmp_path) -> None:
     _write_minimal_package_root(tmp_path)
     claims = pd.DataFrame(
         {
@@ -158,6 +158,31 @@ def test_build_paper_artifact_package_with_custom_claim_source_uri(tmp_path) -> 
         root=tmp_path,
         config=PaperArtifactPackageConfig(tracked_only=False),
         claims=read_table(claims_path),
+    )
+
+    assert bool(package.claims.loc[0, "claim_ready"]) is False
+    assert "not primary-source verified" in package.claims.loc[0, "traceability_issue"]
+    assert package.manifest["ready_claim_count"] == 0
+
+
+def test_build_paper_artifact_package_accepts_verified_source_only_claim(tmp_path) -> None:
+    _write_minimal_package_root(tmp_path)
+    claims = pd.DataFrame(
+        {
+            "claim_id": ["source_only"],
+            "claim_text": ["external source only claim"],
+            "artifact_path": [""],
+            "source_uri": ["https://example.org/source"],
+            "source_verification_status": ["primary_source_verified"],
+            "citation_status": ["method_claim_only"],
+            "gate_c_status": ["not_started"],
+        }
+    )
+
+    package = build_paper_artifact_package(
+        root=tmp_path,
+        config=PaperArtifactPackageConfig(tracked_only=False),
+        claims=claims,
     )
 
     assert bool(package.claims.loc[0, "claim_ready"]) is True

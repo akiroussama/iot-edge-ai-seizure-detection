@@ -165,27 +165,37 @@ Defense: Synthetic/mock outputs are labeled as software checks only.
 
 ## Current Readiness
 
-As of 2026-05-15:
+As of 2026-05-22:
 
 - Software scaffold: strong.
 - Mock SeizeIT2/MSG pathways: working.
-- Real SeizeIT2 local integration: single-subject pipeline check produced labels/reports; not a cohort result.
+- Real SeizeIT2 local integration: parser and benchmark-track scaffolds exist,
+  but full cohort validation and task-compatible external comparison are still
+  required before any cohort claim.
 - Real MSG local integration: full Zenodo file list downloaded and parsed; 510 / 768 onsets are matched
   to downloaded wearable segments; labels, random baseline, HR-rule baseline, and split audits exist.
-- A split-safe hour-of-day cycle baseline now exists and uses validation-only thresholding, but the
-  current unaudited temporal-test check has low event sensitivity.
-- A recording-boundary temporal split now exists for MSG and the local audit reports no recording
-  overlap or temporal overlap across train/validation/test.
-- A split-aware HR tachycardia pipeline check now fits score statistics on train, selects threshold
-  on validation, and reports on test only. Its local numbers are audit signals only, not paper
-  results, because event matching, seizure timelines, cluster handling, and normalization policy
-  are not manually cleared.
+- Unified leaderboard, constrained nulls, calibration/BSS, conformal intervals,
+  Gate C registry scaffolding, active audit selection, clinical utility,
+  forecastability atlas, SOTA reproduction bridge, and paper artifact packaging
+  are implemented as engineering infrastructure.
+- A split-safe hour-of-day cycle baseline exists and uses validation-only
+  thresholding, but current real-data checks remain unaudited and non-citable.
+- A recording-boundary temporal split exists for MSG and local audit reports no
+  recording overlap or temporal overlap across train/validation/test.
+- A split-aware HR tachycardia pipeline check fits score statistics on train,
+  selects threshold on validation, and reports on test only. Its local numbers
+  are audit signals only, not paper results, because event matching, seizure
+  timelines, cluster handling, and normalization policy are not manually
+  cleared.
 - Phase R2/R3 right-censoring changed MSG SPH60/SOP1440 feasibility substantially: after preserving
   confirmed positives and using onset-anchored postictal exclusion, 7,920 / 49,577 one-hour windows
   remain valid. The current matched/coverable temporal-test denominator is 54 seizure events or 40
   first-event clusters under the 240-minute cluster-gap audit policy. This may force a shorter
   horizon, a different continuity model, or a stricter wearable-coverage subset before final
   experiments.
+- Clinical utility, forecastability-atlas, and paper-package outputs now fail
+  closed on the main publication guardrails, but they still consume pre-Gate-C
+  artifacts unless Gate C is explicitly passed.
 - Clinical result claims: not allowed yet.
 - A100 training: not cleared.
 - Next blocker: manual audit of 5-10 seizure timelines per dataset and correction of any parser/label issues.

@@ -18,7 +18,7 @@ Deliverables:
 - First EpiTwin-SSL ablation.
 
 Forbidden claims:
-- No tibia performance claim.
+- No TinyML/edge performance claim without RAM, latency, and energy evidence.
 - No >90% / <0.1 FAR/day hero claim.
 - No “all focal seizures are predictable”.
 

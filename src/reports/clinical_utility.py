@@ -66,9 +66,13 @@ def _constraint_status(
     if pd.isna(sensitivity):
         reasons.append("missing sensitivity")
     far = row.get("far_per_day")
+    if pd.isna(far):
+        reasons.append("missing FAR/day")
     if constraints.max_far_per_day is not None and pd.notna(far) and far > constraints.max_far_per_day:
         reasons.append(f"FAR/day {far:g} > {constraints.max_far_per_day:g}")
     tiw = row.get("time_in_warning")
+    if pd.isna(tiw):
+        reasons.append("missing TIW")
     if (
         constraints.max_time_in_warning is not None
         and pd.notna(tiw)
@@ -103,8 +107,8 @@ def clinical_utility_table(
     out = sweep_df.copy()
     out["sensitivity"] = _numeric(out["sensitivity"], default=np.nan)
     out["miss_rate"] = 1.0 - out["sensitivity"]
-    out["far_per_day"] = _numeric(out["far_per_day"], default=0.0)
-    out["time_in_warning"] = _numeric(out["time_in_warning"], default=0.0)
+    out["far_per_day"] = _numeric(out["far_per_day"], default=np.nan)
+    out["time_in_warning"] = _numeric(out["time_in_warning"], default=np.nan)
     if "median_lead_time_seconds" not in out.columns:
         out["median_lead_time_seconds"] = np.nan
     if "brier_skill_score" not in out.columns:
@@ -132,7 +136,7 @@ def clinical_utility_table(
         "lead_time_bonus_component",
         "brier_skill_component",
     ]
-    out["utility_score"] = out[component_cols].sum(axis=1)
+    out["utility_score"] = out[component_cols].sum(axis=1, skipna=False)
 
     statuses = out.apply(lambda row: _constraint_status(row, constraints), axis=1)
     out["policy_status"] = [status for status, _ in statuses]

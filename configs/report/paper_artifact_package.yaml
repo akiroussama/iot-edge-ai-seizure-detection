@@ -16,10 +16,12 @@ claim_table_required_columns:
 recommended_optional_columns:
   - paper_section
   - source_uri
+  - source_verification_status
   - claim_status
 guardrails:
   - Citable artifact packages require gate_c_status=passed.
   - Every paper claim must link to a committed artifact or explicit source URI.
+  - Source-only claims are not ready unless source_verification_status records primary-source verification.
   - Source URI presence is not source verification; final manuscript claims still require primary-source audit.
   - Pre-Gate-C benchmark numbers must remain non-citable.
   - External SOTA claims require row-level recomputation under the EpiTwin runner.

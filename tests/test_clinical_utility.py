@@ -45,6 +45,30 @@ def test_clinical_utility_selects_best_policy_under_costs() -> None:
     assert utility.loc[utility["threshold"].eq(0.2), "policy_status"].iloc[0] == "ineligible"
 
 
+def test_clinical_utility_does_not_select_missing_burden_metrics() -> None:
+    sweep = pd.DataFrame(
+        {
+            "threshold": [0.1, 0.9],
+            "sensitivity": [0.95, 0.30],
+            "far_per_day": [float("nan"), 0.0],
+            "time_in_warning": [float("nan"), 0.01],
+        }
+    )
+
+    utility = clinical_utility_table(
+        sweep,
+        constraints=ClinicalUtilityConstraints(max_far_per_day=0.1, max_time_in_warning=0.1),
+    )
+
+    missing = utility.loc[utility["threshold"].eq(0.1)].iloc[0]
+    assert missing["policy_status"] == "ineligible"
+    assert "missing FAR/day" in missing["constraint_reason"]
+    assert "missing TIW" in missing["constraint_reason"]
+    assert not bool(missing["selected_under_assumptions"])
+    selected = utility.loc[utility["selected_under_assumptions"]].iloc[0]
+    assert selected["threshold"] == 0.9
+
+
 def test_clinical_utility_markdown_is_decision_support_not_recommendation() -> None:
     assumptions = ClinicalUtilityAssumptions()
     constraints = ClinicalUtilityConstraints(max_far_per_day=1.0)
