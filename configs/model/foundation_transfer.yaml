@@ -32,6 +32,7 @@ outputs:
 guardrails:
   - License and modality compatibility must be documented before use.
   - Embedding generation must not read labels.
+  - The adapter cannot prove upstream embedding generation was label-free; citable use requires source/provenance audit.
   - Frozen embeddings are transfer baselines, not foundation-model training by this project.
   - Citable comparisons require Gate C frozen artifacts.
 pinned_context_sources:

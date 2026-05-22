@@ -35,6 +35,9 @@ benchmark without claiming that this project trained a foundation model.
 ## Scientific Guardrails
 
 - Embedding generation must not read labels.
+- The adapter rejects label/future-event columns in the embedding table, but it
+  cannot prove that an upstream encoder was generated label-free; citable use
+  needs source/provenance audit.
 - License and modality compatibility are mandatory.
 - Transfer rows are baselines, not a new foundation model.
 - Gate C frozen artifacts are required before citable comparisons.

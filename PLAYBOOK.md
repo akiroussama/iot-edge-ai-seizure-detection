@@ -167,7 +167,9 @@ supported by the analysis or honestly bounded as a negative/limited result.
 The phase that makes Phase H a formality. Four deliverables:
 1. **Positioning matrix** — EpiTwin-Open vs Nasseri 2025, SeizureFormer 2026,
    SeizeIT2-ECG 2025, on protocol *and* model performance. Every cited SOTA
-   source verified; fix the phantom `arXiv:2604.18297` in `SOTA_REVIEW_2026.md`.
+   source verified. The earlier `arXiv:2604.18297` phantom-citation concern was
+   superseded by `docs/SOTA_CITATION_AUDIT_2026-05-18.md`; do not reclassify it
+   as phantom without a fresh primary-source check.
 2. **Reproducibility certification** — clean clone → one documented command →
    result tables reproduced to a documented numerical tolerance; a committed
    golden-numbers / golden-SHA non-regression test.
