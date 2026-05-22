@@ -1,0 +1,28 @@
+{
+  "run_id": "gate_b_closeout_simulation_2026-05-22",
+  "source_uri": "reports/gate_b_closeout_simulation_2026-05-22/gate_b_closeout_decisions_simulated_remaining_2026-05-22.csv",
+  "claim_status": "gate_b_closeout_ledger_pending_human_review_not_citable",
+  "decision_evidence_status": "simulation_positive_not_real_gate_b_evidence",
+  "gate_b_status": "simulation_complete_not_gate_b_evidence",
+  "ledger_rows": 8,
+  "open_rows": 0,
+  "ledger_hash": "71ae0b13a1b466ce3db790a78cc0fed11def7878d7f282a4b2ec5fb3ca944995",
+  "summary_hash": "31bf9efb970b30a17f71ce88b2b47bb6aa9f0ded15ed751ff61e9d863b914a07",
+  "allowed_human_decisions": [
+    "APPROVED_EXCLUSION",
+    "BLOCKED",
+    "DEFERRED",
+    "NEEDS_SOURCE_REVIEW",
+    "RESOLVED"
+  ],
+  "review_columns": [
+    "human_decision",
+    "reviewer_name",
+    "review_date",
+    "evidence_uri",
+    "evidence_hash",
+    "resolution_notes",
+    "rerun_required",
+    "rerun_artifact_uri"
+  ]
+}

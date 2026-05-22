@@ -2,11 +2,12 @@
   "run_id": "gate_b_closeout_2026-05-22",
   "source_uri": "reports/gate_b_closeout_2026-05-22/gate_b_closeout_decisions_partial_2026-05-22.csv",
   "claim_status": "gate_b_closeout_ledger_pending_human_review_not_citable",
+  "decision_evidence_status": "human_attested_not_independently_verified",
   "gate_b_status": "blocked_pending_human_closeout",
   "ledger_rows": 8,
   "open_rows": 5,
   "ledger_hash": "d7aaa3ae1924634c12d504232ae78a3e44bc9eb49f74d57fd6ad648e952fea9b",
-  "summary_hash": "1ed5bc668484de63ff46b9fa1a758aac2f051b079e772c33724a4d6897990f96",
+  "summary_hash": "63c8f2bf5d47e8fc0c19cd42af6a581e2ea7265ffe1092b4f063def32497b6ca",
   "allowed_human_decisions": [
     "APPROVED_EXCLUSION",
     "BLOCKED",

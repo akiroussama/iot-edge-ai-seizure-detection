@@ -147,6 +147,40 @@ def test_apply_gate_b_closeout_decisions_closes_supplied_rows_only(tmp_path: Pat
     assert updated.ledger.loc[1, "closeout_status"] == "pending_human_decision"
 
 
+def test_simulated_closeout_never_advances_real_gate_b_status() -> None:
+    package = build_gate_b_closeout_ledger(_actions(), source_uri="actions.csv")
+    decisions = pd.DataFrame(
+        {
+            "ledger_id": ["GB-001", "GB-002"],
+            "human_decision": ["RESOLVED", "APPROVED_EXCLUSION"],
+            "reviewer_name": ["O. Akir", "O. Akir"],
+            "review_date": ["2026-05-22", "2026-05-22"],
+            "evidence_uri": ["s3://audit/GB-001.pdf", "s3://audit/GB-002.pdf"],
+            "evidence_hash": ["sha256:abc", "sha256:def"],
+            "resolution_notes": ["simulated positive decision", "simulated positive decision"],
+            "rerun_required": ["no", "no"],
+            "rerun_artifact_uri": ["N/A", "N/A"],
+        }
+    )
+
+    updated = apply_gate_b_closeout_decisions(
+        package.ledger,
+        decisions,
+        source_uri="simulation.csv",
+        run_id="simulation",
+        decision_evidence_status="simulation_positive_not_real_gate_b_evidence",
+    )
+
+    assert updated.summary.loc[0, "closed_rows"] == 2
+    assert updated.summary.loc[0, "open_rows"] == 0
+    assert updated.summary.loc[0, "gate_b_status"] == "simulation_complete_not_gate_b_evidence"
+    assert (
+        updated.summary.loc[0, "decision_evidence_status"]
+        == "simulation_positive_not_real_gate_b_evidence"
+    )
+    assert updated.manifest["decision_evidence_status"] == "simulation_positive_not_real_gate_b_evidence"
+
+
 def test_apply_gate_b_closeout_decisions_cli_writes_updated_outputs(tmp_path: Path) -> None:
     package = build_gate_b_closeout_ledger(_actions(), source_uri="actions.csv")
     ledger_path = tmp_path / "ledger.csv"
