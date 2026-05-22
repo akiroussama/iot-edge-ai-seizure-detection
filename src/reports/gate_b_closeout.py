@@ -204,21 +204,76 @@ def build_gate_b_closeout_ledger(
         }
         rows.append(row)
     ledger = pd.DataFrame(rows, columns=LEDGER_COLUMNS)
-    summary = summarize_gate_b_closeout_ledger(ledger, run_id=run_id, source_uri=source_uri)
+    return package_gate_b_closeout_ledger(ledger, source_uri=source_uri, run_id=run_id)
+
+
+def package_gate_b_closeout_ledger(
+    ledger: pd.DataFrame,
+    *,
+    source_uri: str,
+    run_id: str = "gate_b_closeout_2026-05-22",
+) -> GateBCloseoutLedger:
+    """Build summary, manifest, and Markdown for an existing closeout ledger."""
+    _require_columns(ledger, set(LEDGER_COLUMNS), "ledger")
+    packaged = ledger.copy()
+    summary = summarize_gate_b_closeout_ledger(packaged, run_id=run_id, source_uri=source_uri)
     manifest = {
         "run_id": run_id,
         "source_uri": source_uri,
         "claim_status": CLAIM_STATUS,
         "gate_b_status": str(summary.loc[0, "gate_b_status"]),
-        "ledger_rows": int(len(ledger)),
+        "ledger_rows": int(len(packaged)),
         "open_rows": int(summary.loc[0, "open_rows"]),
-        "ledger_hash": _dataframe_hash(ledger),
+        "ledger_hash": _dataframe_hash(packaged),
         "summary_hash": _dataframe_hash(summary),
         "allowed_human_decisions": sorted(ALLOWED_HUMAN_DECISIONS),
         "review_columns": HUMAN_REVIEW_COLUMNS,
     }
-    markdown = gate_b_closeout_markdown(ledger, summary, manifest)
-    return GateBCloseoutLedger(ledger=ledger, summary=summary, manifest=manifest, markdown=markdown)
+    markdown = gate_b_closeout_markdown(packaged, summary, manifest)
+    return GateBCloseoutLedger(ledger=packaged, summary=summary, manifest=manifest, markdown=markdown)
+
+
+def apply_gate_b_closeout_decisions(
+    ledger: pd.DataFrame,
+    decisions: pd.DataFrame,
+    *,
+    source_uri: str,
+    run_id: str = "gate_b_closeout_2026-05-22",
+) -> GateBCloseoutLedger:
+    """Apply human-supplied decisions to a Gate B closeout ledger.
+
+    The function records decisions as supplied evidence. It validates shape and
+    decision vocabulary, but it does not verify external evidence URIs or hashes.
+    """
+    _require_columns(ledger, set(LEDGER_COLUMNS), "ledger")
+    _require_columns(decisions, {"ledger_id", *HUMAN_REVIEW_COLUMNS}, "decisions")
+    duplicate_decisions = decisions["ledger_id"].duplicated(keep=False)
+    if duplicate_decisions.any():
+        examples = decisions.loc[duplicate_decisions, "ledger_id"].astype(str).unique().tolist()
+        raise ValueError(f"decisions contains duplicate ledger_id values: {examples}")
+    out = ledger.copy()
+    valid_ids = set(out["ledger_id"].astype(str))
+    unknown = sorted(set(decisions["ledger_id"].astype(str)) - valid_ids)
+    if unknown:
+        raise ValueError(f"decisions contains unknown ledger_id values: {unknown}")
+    for column in HUMAN_REVIEW_COLUMNS:
+        out[column] = out[column].fillna("").astype("object")
+    indexed_decisions = decisions.set_index(decisions["ledger_id"].astype(str))
+    for ledger_id, decision in indexed_decisions.iterrows():
+        row_mask = out["ledger_id"].astype(str).eq(str(ledger_id))
+        normalized_decision = _normalize_decision(decision["human_decision"])
+        if normalized_decision and normalized_decision not in ALLOWED_HUMAN_DECISIONS:
+            raise ValueError(
+                f"invalid human_decision for {ledger_id}: {decision['human_decision']!r}"
+            )
+        for column in HUMAN_REVIEW_COLUMNS:
+            value = decision[column]
+            if column == "human_decision":
+                value = normalized_decision
+            elif pd.isna(value):
+                value = ""
+            out.loc[row_mask, column] = value
+    return package_gate_b_closeout_ledger(out, source_uri=source_uri, run_id=run_id)
 
 
 def summarize_gate_b_closeout_ledger(

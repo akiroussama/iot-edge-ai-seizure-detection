@@ -1,2 +1,2 @@
 run_id,source_uri,ledger_rows,closed_rows,open_rows,blocked_rows,invalid_rows,p0_open_rows,gate_b_status,claim_status
-gate_b_closeout_2026-05-22,reports/local_gate_guardrails_2026-05-22/gate_bc_action_checklist.csv,8,0,8,0,0,3,blocked_pending_human_closeout,gate_b_closeout_ledger_pending_human_review_not_citable
+gate_b_closeout_2026-05-22,reports/gate_b_closeout_2026-05-22/gate_b_closeout_decisions_partial_2026-05-22.csv,8,3,5,0,0,0,blocked_pending_human_closeout,gate_b_closeout_ledger_pending_human_review_not_citable
