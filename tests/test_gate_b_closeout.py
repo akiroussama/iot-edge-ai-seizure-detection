@@ -10,6 +10,7 @@ import pandas as pd
 from src.reports.gate_b_closeout import (
     CLAIM_STATUS,
     HUMAN_REVIEW_COLUMNS,
+    apply_gate_b_closeout_decisions,
     build_gate_b_closeout_ledger,
     summarize_gate_b_closeout_ledger,
 )
@@ -112,3 +113,84 @@ def test_build_gate_b_closeout_ledger_cli_writes_outputs(tmp_path: Path) -> None
     assert len(ledger) == 2
     assert manifest["run_id"] == "test-ledger"
     assert "Human Review Instructions" in markdown
+
+
+def test_apply_gate_b_closeout_decisions_closes_supplied_rows_only(tmp_path: Path) -> None:
+    package = build_gate_b_closeout_ledger(_actions(), source_uri="actions.csv")
+    decisions = pd.DataFrame(
+        {
+            "ledger_id": ["GB-001"],
+            "human_decision": ["resolved"],
+            "reviewer_name": ["O. Akir"],
+            "review_date": ["2026-05-22"],
+            "evidence_uri": ["s3://audit/GB-001.pdf"],
+            "evidence_hash": ["sha256:abc"],
+            "resolution_notes": ["user-supplied decision"],
+            "rerun_required": ["no"],
+            "rerun_artifact_uri": ["N/A"],
+        }
+    )
+
+    updated = apply_gate_b_closeout_decisions(
+        package.ledger,
+        decisions,
+        source_uri="decisions.csv",
+        run_id="partial",
+    )
+
+    assert updated.summary.loc[0, "closed_rows"] == 1
+    assert updated.summary.loc[0, "open_rows"] == 1
+    assert updated.summary.loc[0, "p0_open_rows"] == 1
+    assert updated.summary.loc[0, "gate_b_status"] == "blocked_pending_human_closeout"
+    assert updated.ledger.loc[0, "human_decision"] == "RESOLVED"
+    assert updated.ledger.loc[0, "closeout_status"] == "closed_by_human_review"
+    assert updated.ledger.loc[1, "closeout_status"] == "pending_human_decision"
+
+
+def test_apply_gate_b_closeout_decisions_cli_writes_updated_outputs(tmp_path: Path) -> None:
+    package = build_gate_b_closeout_ledger(_actions(), source_uri="actions.csv")
+    ledger_path = tmp_path / "ledger.csv"
+    decisions_path = tmp_path / "decisions.csv"
+    out_dir = tmp_path / "updated"
+    write_table(package.ledger, ledger_path)
+    write_table(
+        pd.DataFrame(
+            {
+                "ledger_id": ["GB-001"],
+                "human_decision": ["RESOLVED"],
+                "reviewer_name": ["O. Akir"],
+                "review_date": ["2026-05-22"],
+                "evidence_uri": ["s3://audit/GB-001.pdf"],
+                "evidence_hash": ["sha256:abc"],
+                "resolution_notes": ["user-supplied decision"],
+                "rerun_required": ["no"],
+                "rerun_artifact_uri": ["N/A"],
+            }
+        ),
+        decisions_path,
+    )
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "scripts/apply_gate_b_closeout_decisions.py",
+            "--ledger",
+            str(ledger_path),
+            "--decisions",
+            str(decisions_path),
+            "--out-dir",
+            str(out_dir),
+            "--run-id",
+            "partial",
+        ],
+        check=True,
+        cwd=Path(__file__).resolve().parents[1],
+        text=True,
+        capture_output=True,
+    )
+
+    payload = json.loads(result.stdout)
+    updated = read_table(out_dir / "gate_b_closeout_ledger.csv")
+    assert payload["closed_rows"] == 1
+    assert payload["open_rows"] == 1
+    assert updated.loc[0, "closeout_status"] == "closed_by_human_review"
