@@ -1,0 +1,6 @@
+ledger_id,required_evidence,human_decision,reviewer_name,review_date,evidence_uri,evidence_hash,resolution_notes,rerun_required,rerun_artifact_uri
+GB-004,"Denominator policy signed off for source, matched, and prediction-coverable events; regenerated leaderboard rows expose all denominator fields.",,,,,,,,
+GB-005,Advisor-approved main horizon choice or documented demotion to feasibility-negative analysis; regenerated horizon triage for chosen horizons.,,,,,,,,
+GB-006,"Ready track matrix covering required splits, tasks, and modality tracks; count summary matching documented expected counts.",,,,,,,,
+GB-007,Source-review decision for each source-review-required horizon and evidence that chosen main horizons no longer depend on unresolved event gaps.,,,,,,,,
+GB-008,Paper-table or appendix plan preserving non-ready tracks as explicit negative readiness findings.,,,,,,,,

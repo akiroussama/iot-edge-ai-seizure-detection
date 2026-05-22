@@ -1,0 +1,210 @@
+{
+  "manifest": {
+    "run_id": "gate_b_real_closeout_2026-05-22",
+    "source_uri": "reports/gate_b_closeout_2026-05-22/gate_b_closeout_ledger.csv",
+    "claim_status": "gate_b_real_closeout_pending_validation_not_citable",
+    "gate_b_real_closeout_status": "blocked_pending_real_evidence",
+    "ledger_rows": 8,
+    "real_closed_rows": 3,
+    "real_open_rows": 5,
+    "simulation_available_open_rows": 5,
+    "readiness_hash": "d839d2ee06890643fb6b99451435a69e943066a5f1e4b0b44d8478edbc30a567",
+    "template_hash": "29fd9540fe8563634fe1cedc744ff607f96f595a0536af562b53ab339b1feda5",
+    "summary_hash": "55682fc1805af428025878f0d27d1e6e0a8e6a56fac8e0b84fcb27f373ff613a",
+    "template_columns": [
+      "ledger_id",
+      "required_evidence",
+      "human_decision",
+      "reviewer_name",
+      "review_date",
+      "evidence_uri",
+      "evidence_hash",
+      "resolution_notes",
+      "rerun_required",
+      "rerun_artifact_uri"
+    ],
+    "note": "Simulation rows are only used as hints; they are not copied into real human decision columns."
+  },
+  "summary": [
+    {
+      "run_id": "gate_b_real_closeout_2026-05-22",
+      "source_uri": "reports/gate_b_closeout_2026-05-22/gate_b_closeout_ledger.csv",
+      "ledger_rows": 8,
+      "real_closed_rows": 3,
+      "real_open_rows": 5,
+      "blocked_rows": 0,
+      "invalid_rows": 0,
+      "simulation_available_open_rows": 5,
+      "gate_b_real_closeout_status": "blocked_pending_real_evidence",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    }
+  ],
+  "readiness": [
+    {
+      "ledger_id": "GB-001",
+      "gate": "Gate B",
+      "priority": "P0",
+      "domain": "MSG source-data coverage",
+      "current_closeout_status": "closed_by_human_review",
+      "real_closeout_state": "closed_real_attested_unverified",
+      "simulation_decision_available": "no",
+      "simulated_human_decision": "",
+      "required_evidence": "Per-patient source decision for each P0 MSG patient: recovered wearable segment manifest or advisor-approved exclusion record; rerun MSG triage showing zero p0_blocker rows.",
+      "real_closeout_action": "Keep attestation; rerun guardrails after every Gate B row is closed.",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    },
+    {
+      "ledger_id": "GB-002",
+      "gate": "Gate B",
+      "priority": "P0",
+      "domain": "SeizeIT2 full-cohort evidence",
+      "current_closeout_status": "closed_by_human_review",
+      "real_closeout_state": "closed_real_attested_unverified",
+      "simulation_decision_available": "no",
+      "simulated_human_decision": "",
+      "required_evidence": "Official SeizeIT2 split manifest, expected-count source citations, full-cohort artifact coverage, and rerun cohort readiness with no P0 blockers.",
+      "real_closeout_action": "Keep attestation; rerun guardrails after every Gate B row is closed.",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    },
+    {
+      "ledger_id": "GB-003",
+      "gate": "Gate C",
+      "priority": "P0",
+      "domain": "Freeze prerequisite",
+      "current_closeout_status": "closed_by_human_review",
+      "real_closeout_state": "closed_real_attested_unverified",
+      "simulation_decision_available": "no",
+      "simulated_human_decision": "",
+      "required_evidence": "Completed Gate B ledger, clean guardrail rerun, and Gate C dry-run reporting ready_for_gate_c_review before split freeze.",
+      "real_closeout_action": "Keep attestation; rerun guardrails after every Gate B row is closed.",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    },
+    {
+      "ledger_id": "GB-004",
+      "gate": "Gate B",
+      "priority": "P1",
+      "domain": "MSG denominator integrity",
+      "current_closeout_status": "pending_human_decision",
+      "real_closeout_state": "missing_real_attestation_simulation_available",
+      "simulation_decision_available": "yes",
+      "simulated_human_decision": "RESOLVED",
+      "required_evidence": "Denominator policy signed off for source, matched, and prediction-coverable events; regenerated leaderboard rows expose all denominator fields.",
+      "real_closeout_action": "Replace the simulated decision with real evidence and human attestation, or keep the row non-citable. Required evidence: Denominator policy signed off for source, matched, and prediction-coverable events; regenerated leaderboard rows expose all denominator fields.",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    },
+    {
+      "ledger_id": "GB-005",
+      "gate": "Gate B",
+      "priority": "P1",
+      "domain": "MSG horizon feasibility",
+      "current_closeout_status": "pending_human_decision",
+      "real_closeout_state": "missing_real_attestation_simulation_available",
+      "simulation_decision_available": "yes",
+      "simulated_human_decision": "RESOLVED",
+      "required_evidence": "Advisor-approved main horizon choice or documented demotion to feasibility-negative analysis; regenerated horizon triage for chosen horizons.",
+      "real_closeout_action": "Replace the simulated decision with real evidence and human attestation, or keep the row non-citable. Required evidence: Advisor-approved main horizon choice or documented demotion to feasibility-negative analysis; regenerated horizon triage for chosen horizons.",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    },
+    {
+      "ledger_id": "GB-006",
+      "gate": "Gate B",
+      "priority": "P1",
+      "domain": "SeizeIT2 track completeness",
+      "current_closeout_status": "pending_human_decision",
+      "real_closeout_state": "missing_real_attestation_simulation_available",
+      "simulation_decision_available": "yes",
+      "simulated_human_decision": "APPROVED_EXCLUSION",
+      "required_evidence": "Ready track matrix covering required splits, tasks, and modality tracks; count summary matching documented expected counts.",
+      "real_closeout_action": "Replace the simulated decision with real evidence and human attestation, or keep the row non-citable. Required evidence: Ready track matrix covering required splits, tasks, and modality tracks; count summary matching documented expected counts.",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    },
+    {
+      "ledger_id": "GB-007",
+      "gate": "Gate B",
+      "priority": "P2",
+      "domain": "MSG horizon source review",
+      "current_closeout_status": "pending_human_decision",
+      "real_closeout_state": "missing_real_attestation_simulation_available",
+      "simulation_decision_available": "yes",
+      "simulated_human_decision": "DEFERRED",
+      "required_evidence": "Source-review decision for each source-review-required horizon and evidence that chosen main horizons no longer depend on unresolved event gaps.",
+      "real_closeout_action": "Replace the simulated decision with real evidence and human attestation, or keep the row non-citable. Required evidence: Source-review decision for each source-review-required horizon and evidence that chosen main horizons no longer depend on unresolved event gaps.",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    },
+    {
+      "ledger_id": "GB-008",
+      "gate": "Gate B",
+      "priority": "P2",
+      "domain": "SeizeIT2 negative readiness rows",
+      "current_closeout_status": "pending_human_decision",
+      "real_closeout_state": "missing_real_attestation_simulation_available",
+      "simulation_decision_available": "yes",
+      "simulated_human_decision": "RESOLVED",
+      "required_evidence": "Paper-table or appendix plan preserving non-ready tracks as explicit negative readiness findings.",
+      "real_closeout_action": "Replace the simulated decision with real evidence and human attestation, or keep the row non-citable. Required evidence: Paper-table or appendix plan preserving non-ready tracks as explicit negative readiness findings.",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    }
+  ],
+  "template": [
+    {
+      "ledger_id": "GB-004",
+      "required_evidence": "Denominator policy signed off for source, matched, and prediction-coverable events; regenerated leaderboard rows expose all denominator fields.",
+      "human_decision": "",
+      "reviewer_name": "",
+      "review_date": "",
+      "evidence_uri": "",
+      "evidence_hash": "",
+      "resolution_notes": "",
+      "rerun_required": "",
+      "rerun_artifact_uri": ""
+    },
+    {
+      "ledger_id": "GB-005",
+      "required_evidence": "Advisor-approved main horizon choice or documented demotion to feasibility-negative analysis; regenerated horizon triage for chosen horizons.",
+      "human_decision": "",
+      "reviewer_name": "",
+      "review_date": "",
+      "evidence_uri": "",
+      "evidence_hash": "",
+      "resolution_notes": "",
+      "rerun_required": "",
+      "rerun_artifact_uri": ""
+    },
+    {
+      "ledger_id": "GB-006",
+      "required_evidence": "Ready track matrix covering required splits, tasks, and modality tracks; count summary matching documented expected counts.",
+      "human_decision": "",
+      "reviewer_name": "",
+      "review_date": "",
+      "evidence_uri": "",
+      "evidence_hash": "",
+      "resolution_notes": "",
+      "rerun_required": "",
+      "rerun_artifact_uri": ""
+    },
+    {
+      "ledger_id": "GB-007",
+      "required_evidence": "Source-review decision for each source-review-required horizon and evidence that chosen main horizons no longer depend on unresolved event gaps.",
+      "human_decision": "",
+      "reviewer_name": "",
+      "review_date": "",
+      "evidence_uri": "",
+      "evidence_hash": "",
+      "resolution_notes": "",
+      "rerun_required": "",
+      "rerun_artifact_uri": ""
+    },
+    {
+      "ledger_id": "GB-008",
+      "required_evidence": "Paper-table or appendix plan preserving non-ready tracks as explicit negative readiness findings.",
+      "human_decision": "",
+      "reviewer_name": "",
+      "review_date": "",
+      "evidence_uri": "",
+      "evidence_hash": "",
+      "resolution_notes": "",
+      "rerun_required": "",
+      "rerun_artifact_uri": ""
+    }
+  ]
+}

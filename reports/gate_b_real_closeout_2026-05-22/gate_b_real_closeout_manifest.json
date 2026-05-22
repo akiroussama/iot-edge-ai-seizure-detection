@@ -1,0 +1,26 @@
+{
+  "run_id": "gate_b_real_closeout_2026-05-22",
+  "source_uri": "reports/gate_b_closeout_2026-05-22/gate_b_closeout_ledger.csv",
+  "claim_status": "gate_b_real_closeout_pending_validation_not_citable",
+  "gate_b_real_closeout_status": "blocked_pending_real_evidence",
+  "ledger_rows": 8,
+  "real_closed_rows": 3,
+  "real_open_rows": 5,
+  "simulation_available_open_rows": 5,
+  "readiness_hash": "d839d2ee06890643fb6b99451435a69e943066a5f1e4b0b44d8478edbc30a567",
+  "template_hash": "29fd9540fe8563634fe1cedc744ff607f96f595a0536af562b53ab339b1feda5",
+  "summary_hash": "55682fc1805af428025878f0d27d1e6e0a8e6a56fac8e0b84fcb27f373ff613a",
+  "template_columns": [
+    "ledger_id",
+    "required_evidence",
+    "human_decision",
+    "reviewer_name",
+    "review_date",
+    "evidence_uri",
+    "evidence_hash",
+    "resolution_notes",
+    "rerun_required",
+    "rerun_artifact_uri"
+  ],
+  "note": "Simulation rows are only used as hints; they are not copied into real human decision columns."
+}
