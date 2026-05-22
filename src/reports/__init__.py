@@ -60,6 +60,13 @@ from src.reports.external_sota_reproduction import (
     standardize_external_predictions,
     validate_external_sota_reference,
 )
+from src.reports.federated_benchmark import (
+    FederatedBenchmarkConfig,
+    FederatedBenchmarkReport,
+    federated_benchmark_markdown,
+    federated_benchmark_summary,
+    validate_federated_site_results,
+)
 from src.reports.longitudinal_deep_dive import (
     LongitudinalDeepDiveConfig,
     LongitudinalDeepDiveReport,
@@ -101,6 +108,8 @@ __all__ = [
     "EdgeAblationReport",
     "ExternalPredictionColumns",
     "ExternalSOTAReference",
+    "FederatedBenchmarkConfig",
+    "FederatedBenchmarkReport",
     "FailureTaxonomyConfig",
     "FailureTaxonomyReport",
     "LongitudinalDeepDiveConfig",
@@ -147,6 +156,8 @@ __all__ = [
     "edge_ablation_markdown",
     "external_sota_reproduction_markdown",
     "failure_taxonomy_markdown",
+    "federated_benchmark_markdown",
+    "federated_benchmark_summary",
     "forecastability_atlas_markdown",
     "longitudinal_deep_dive_markdown",
     "paired_brier_permutation_test",
@@ -159,5 +170,6 @@ __all__ = [
     "standardize_external_predictions",
     "validate_edge_profiles",
     "validate_external_sota_reference",
+    "validate_federated_site_results",
     "workflow_forensics_markdown",
 ]

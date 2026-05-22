@@ -1,0 +1,45 @@
+name: federated_benchmark_protocol
+status: pre_gate_c_site_level_protocol
+objective: aggregate site-level leaderboard rows without sharing raw patient windows
+input_contract:
+  site_results:
+    required_columns:
+      - site_id
+      - dataset
+      - task_type
+      - model_name
+      - events_used_for_metrics
+      - prediction_rows
+      - valid_prediction_rows
+      - sensitivity
+      - false_alarm_rate_per_day
+      - time_in_warning
+      - brier_score
+      - brier_skill_score
+      - citation_status
+      - gate_c_status
+      - leakage_status
+      - split_frozen_status
+      - evidence_uri
+    forbidden_raw_columns:
+      - patient_id
+      - recording_id
+      - window_start
+      - window_end
+      - seizure_start
+      - seizure_end
+      - risk_score
+      - forecast_label
+      - alarm
+outputs:
+  - federated_site_results_validated.csv
+  - federated_benchmark_summary.csv
+  - federated_benchmark_manifest.csv
+  - federated_benchmark_manifest.json
+  - federated_benchmark_report.md
+guardrails:
+  - Inputs are site-level metric rows only.
+  - Raw patient/window rows are rejected.
+  - Citable summaries require every site to be Gate C passed, leakage-clean, and frozen.
+  - Site heterogeneity is reported rather than hidden in pooled means.
+  - No raw-data sharing is required by this report.
