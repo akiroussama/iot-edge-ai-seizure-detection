@@ -192,8 +192,9 @@ The phase that makes Phase H a formality. Four deliverables:
    or an honest limitation, in a dated audit document.
 4. **Claims-surface clean-up** — confirm every manuscript claim is covered by
    the Phase C pre-registration and the certified artifacts, with no claim
-   exceeding the pre-registered scope. Fix the `tibia` typo in
-   `docs/HUMAN_INTERVENTION_CHECKPOINTS.md` and `README.md` (review L3).
+   exceeding the pre-registered scope. Keep old hardware-claim typos out of
+   current operational docs and preserve them only in archival review records
+   when needed.
 **Gate G** — all four delivered; **advisor sign-off** that the contribution is
 certified SOTA-defensible and reproducible.
 

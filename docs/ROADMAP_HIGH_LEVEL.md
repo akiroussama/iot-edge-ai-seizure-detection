@@ -49,7 +49,7 @@ Core experiments:
 Goal: cross-placement adaptation and real wearable validation.
 
 Requires:
-- Wrist/tibia IMU.
+- Documented wrist or limb IMU placement.
 - ECG patch or PPG/EDA.
 - Clinical reference/annotation.
 - IRB/ethics.

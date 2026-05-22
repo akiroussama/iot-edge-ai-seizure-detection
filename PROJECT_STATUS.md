@@ -1,6 +1,6 @@
 # EpiTwin-Open project status
 
-Generated package status:
+Current package status, refreshed 2026-05-22:
 
 - Benchmark scaffold: implemented.
 - SPH/SOP labeling: implemented and tested.
@@ -45,10 +45,16 @@ Generated package status:
   within-recording split boundaries would create preprocessing or artifact leakage risk.
 - Temporal split boundaries now default to elapsed patient time rather than row/recording counts.
   The old count-based behavior requires explicit `--temporal-basis count`.
-- Phase R audit remediation has started from `docs/CLAUDE_REVIEW_2026-05-15.md`. C1-C4 are now
-  guarded in code, but the advisor has not yet declared M2 closed.
+- Phase R code guardrails and the Gate A policy decisions are represented in code/docs, but M2 is
+  not declared closed because the manual label audit remains a human blocker.
 - Leakage audit now flags missing fit-scope metadata as `UNVERIFIED_OR_FAILED` and detects duplicate
   recording time ranges that can invalidate temporal assumptions.
+- Publishability scaffolds added after the initial Phase R work include the unified leaderboard
+  row runner/schema, constrained null models, calibration/Brier skill reports, Gate C registry
+  checks, active audit selection, conformal intervals, clinical utility analysis, forecastability
+  atlas, observability/failure reports, SOTA reproduction bridge, paper artifact packaging, and
+  anti-hallucination/claims-surface guardrails. These are engineering support until Gate B and Gate
+  C pass; they do not make any current real-data number citable.
 
 Verified test status:
 
