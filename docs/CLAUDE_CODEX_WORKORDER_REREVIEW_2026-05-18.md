@@ -116,11 +116,11 @@ method is sound, not fabricated.
 
 **Verdict:** Task 2 is **CLOSED**.
 
-**Playbook maintenance recommended:** `PLAYBOOK.md` §G Phase-G deliverable 1
-still instructs "fix the phantom `arXiv:2604.18297`". That instruction is
-obsolete; it should be removed or rewritten ("citation verified real,
-2026-05-18") so a future reader does not re-chase a resolved item. This is a
-`PLAYBOOK.md` edit and is left to Oussama (§12 — playbook maintenance).
+**Playbook maintenance resolved:** the obsolete `PLAYBOOK.md` §G Phase-G
+instruction that treated `arXiv:2604.18297` as phantom was superseded by the
+2026-05-18 citation audit and then rewritten in the 2026-05-22
+anti-hallucination audit. Future work should not reclassify this citation as
+phantom without a fresh primary-source check.
 
 ## R1/R2 closure re-review — 2026-05-19
 

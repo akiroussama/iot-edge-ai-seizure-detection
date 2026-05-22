@@ -20,6 +20,7 @@ recommended_optional_columns:
 guardrails:
   - Citable artifact packages require gate_c_status=passed.
   - Every paper claim must link to a committed artifact or explicit source URI.
+  - Source URI presence is not source verification; final manuscript claims still require primary-source audit.
   - Pre-Gate-C benchmark numbers must remain non-citable.
   - External SOTA claims require row-level recomputation under the EpiTwin runner.
   - Negative and null-overlapping results are valid reportable outcomes.

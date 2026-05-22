@@ -40,6 +40,7 @@ outputs:
 guardrails:
   - Inputs are site-level metric rows only.
   - Raw patient/window rows are rejected.
+  - This validator is not a full PHI/de-identification certificate; sites remain responsible for de-identifying all submitted fields.
   - Citable summaries require every site to be Gate C passed, leakage-clean, and frozen.
   - Site heterogeneity is reported rather than hidden in pooled means.
   - No raw-data sharing is required by this report.

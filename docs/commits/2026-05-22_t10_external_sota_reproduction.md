@@ -63,8 +63,6 @@ Result:
 - New tests: 4 passed.
 - Neighbor tests: 15 passed.
 
-Full validation pending below.
-
 Full validation:
 
 ```bash

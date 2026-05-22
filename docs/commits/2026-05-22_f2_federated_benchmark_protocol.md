@@ -23,6 +23,9 @@ site-level leaderboard rows only; it does not federate model parameters yet.
 ## Scientific Guardrails
 
 - No raw patient windows in federated inputs.
+- The validator rejects known raw/window columns, but it is not a full
+  PHI/de-identification certificate; sites remain responsible for all submitted
+  fields.
 - No pooled mean without heterogeneity reporting.
 - No citable federated summary unless all site rows are Gate C passed,
   leakage-clean, and frozen.
