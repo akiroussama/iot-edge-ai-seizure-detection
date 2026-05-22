@@ -41,6 +41,15 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Evidence URI/path for the updated ledger. Defaults to --ledger.",
     )
+    parser.add_argument(
+        "--decision-evidence-status",
+        default="human_attested_not_independently_verified",
+        help=(
+            "Evidence status recorded in summary/manifest, e.g. "
+            "human_attested_not_independently_verified or "
+            "simulation_positive_not_real_gate_b_evidence."
+        ),
+    )
     return parser
 
 
@@ -53,6 +62,7 @@ def main() -> None:
         _read_text_table(args.decisions),
         source_uri=source_uri,
         run_id=args.run_id,
+        decision_evidence_status=args.decision_evidence_status,
     )
     out_dir = Path(args.out_dir)
     write_table(package.ledger, out_dir / "gate_b_closeout_ledger.csv")

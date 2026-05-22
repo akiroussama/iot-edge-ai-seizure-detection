@@ -162,6 +162,7 @@ def build_gate_b_closeout_ledger(
     *,
     source_uri: str,
     run_id: str = "gate_b_closeout_2026-05-22",
+    decision_evidence_status: str = "pending_human_review",
 ) -> GateBCloseoutLedger:
     """Create a human-fillable Gate B closeout ledger from guardrail actions."""
     _require_columns(
@@ -204,7 +205,12 @@ def build_gate_b_closeout_ledger(
         }
         rows.append(row)
     ledger = pd.DataFrame(rows, columns=LEDGER_COLUMNS)
-    return package_gate_b_closeout_ledger(ledger, source_uri=source_uri, run_id=run_id)
+    return package_gate_b_closeout_ledger(
+        ledger,
+        source_uri=source_uri,
+        run_id=run_id,
+        decision_evidence_status=decision_evidence_status,
+    )
 
 
 def package_gate_b_closeout_ledger(
@@ -212,15 +218,22 @@ def package_gate_b_closeout_ledger(
     *,
     source_uri: str,
     run_id: str = "gate_b_closeout_2026-05-22",
+    decision_evidence_status: str = "human_attested_not_independently_verified",
 ) -> GateBCloseoutLedger:
     """Build summary, manifest, and Markdown for an existing closeout ledger."""
     _require_columns(ledger, set(LEDGER_COLUMNS), "ledger")
     packaged = ledger.copy()
-    summary = summarize_gate_b_closeout_ledger(packaged, run_id=run_id, source_uri=source_uri)
+    summary = summarize_gate_b_closeout_ledger(
+        packaged,
+        run_id=run_id,
+        source_uri=source_uri,
+        decision_evidence_status=decision_evidence_status,
+    )
     manifest = {
         "run_id": run_id,
         "source_uri": source_uri,
         "claim_status": CLAIM_STATUS,
+        "decision_evidence_status": decision_evidence_status,
         "gate_b_status": str(summary.loc[0, "gate_b_status"]),
         "ledger_rows": int(len(packaged)),
         "open_rows": int(summary.loc[0, "open_rows"]),
@@ -239,6 +252,7 @@ def apply_gate_b_closeout_decisions(
     *,
     source_uri: str,
     run_id: str = "gate_b_closeout_2026-05-22",
+    decision_evidence_status: str = "human_attested_not_independently_verified",
 ) -> GateBCloseoutLedger:
     """Apply human-supplied decisions to a Gate B closeout ledger.
 
@@ -273,7 +287,12 @@ def apply_gate_b_closeout_decisions(
             elif pd.isna(value):
                 value = ""
             out.loc[row_mask, column] = value
-    return package_gate_b_closeout_ledger(out, source_uri=source_uri, run_id=run_id)
+    return package_gate_b_closeout_ledger(
+        out,
+        source_uri=source_uri,
+        run_id=run_id,
+        decision_evidence_status=decision_evidence_status,
+    )
 
 
 def summarize_gate_b_closeout_ledger(
@@ -281,6 +300,7 @@ def summarize_gate_b_closeout_ledger(
     *,
     run_id: str,
     source_uri: str,
+    decision_evidence_status: str = "human_attested_not_independently_verified",
 ) -> pd.DataFrame:
     """Summarize closeout state without silently passing Gate B."""
     if ledger.empty:
@@ -295,7 +315,10 @@ def summarize_gate_b_closeout_ledger(
         blocked_rows = int(statuses.eq("blocked_after_human_review").sum())
         invalid_rows = int(statuses.isin({"invalid_human_decision", "incomplete_closeout_metadata"}).sum())
         open_rows = int(len(ledger) - closed_rows)
-    if open_rows == 0 and invalid_rows == 0 and blocked_rows == 0 and len(ledger) > 0:
+    is_simulation = "simulation" in decision_evidence_status.lower()
+    if is_simulation and len(ledger) > 0:
+        gate_b_status = "simulation_complete_not_gate_b_evidence"
+    elif open_rows == 0 and invalid_rows == 0 and blocked_rows == 0 and len(ledger) > 0:
         gate_b_status = "ready_for_gate_b_validation_rerun"
     else:
         gate_b_status = "blocked_pending_human_closeout"
@@ -318,6 +341,7 @@ def summarize_gate_b_closeout_ledger(
                 if not ledger.empty
                 else 0,
                 "gate_b_status": gate_b_status,
+                "decision_evidence_status": decision_evidence_status,
                 "claim_status": CLAIM_STATUS,
             }
         ]
@@ -362,6 +386,7 @@ def gate_b_closeout_markdown(
     visible = ledger[[column for column in visible_columns if column in ledger.columns]]
     decisions = ", ".join(manifest["allowed_human_decisions"])
     review_columns = ", ".join(manifest["review_columns"])
+    decision_evidence_status = manifest.get("decision_evidence_status", "not recorded")
     return f"""# Gate B Closeout Ledger
 
 **Status:** pending human closeout; this is not a Gate B pass.
@@ -398,10 +423,12 @@ date, and evidence URI before the ledger can advance to Gate B validation rerun.
 - Blank human decision columns mean Gate B remains blocked.
 - Gate C remains blocked until this ledger is closed and guardrails are rerun.
 - Claim status: `{manifest["claim_status"]}`
+- Decision evidence status: `{decision_evidence_status}`
 
 ## Manifest
 
 - Run ID: `{manifest["run_id"]}`
 - Source URI: `{manifest["source_uri"]}`
+- Decision evidence status: `{decision_evidence_status}`
 - Ledger hash: `{manifest["ledger_hash"]}`
 """

@@ -29,6 +29,11 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Evidence URI/path for the action checklist. Defaults to --action-checklist.",
     )
+    parser.add_argument(
+        "--decision-evidence-status",
+        default="pending_human_review",
+        help="Evidence status recorded in summary/manifest.",
+    )
     return parser
 
 
@@ -40,6 +45,7 @@ def main() -> None:
         read_table(args.action_checklist),
         source_uri=source_uri,
         run_id=args.run_id,
+        decision_evidence_status=args.decision_evidence_status,
     )
     out_dir = Path(args.out_dir)
     write_table(package.ledger, out_dir / "gate_b_closeout_ledger.csv")
