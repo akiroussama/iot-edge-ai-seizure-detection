@@ -278,17 +278,24 @@ def _requires_gate_c_registry(row: dict[str, Any]) -> bool:
     )
 
 
-def _validate_gate_c_registry_for_row(row: dict[str, Any], registry_path: str | None) -> None:
+def _validate_gate_c_registry_for_row(
+    row: dict[str, Any],
+    registry_path: str | None,
+    registry_root: str | Path | None = None,
+) -> None:
     registry_required = _requires_gate_c_registry(row)
     if registry_path is None:
         if registry_required:
             raise ValueError("citable/frozen leaderboard rows require --artifact-registry")
         return
 
-    registry = load_registry(registry_path)
+    registry_file = Path(registry_path)
+    if not registry_file.is_absolute() and registry_root is not None:
+        registry_file = Path(registry_root) / registry_file
+    registry = load_registry(registry_file)
     result = verify_gate_c_registry(
         registry,
-        root=REPO_ROOT,
+        root=registry_root or REPO_ROOT,
         require_frozen=registry_required,
     )
     if not result["ok"]:
@@ -451,7 +458,11 @@ def build_leaderboard_row(
     }
     row = {key: _clean(value) for key, value in row.items()}
     _validate_row_keys(row)
-    _validate_gate_c_registry_for_row(row, getattr(args, "artifact_registry", None))
+    _validate_gate_c_registry_for_row(
+        row,
+        getattr(args, "artifact_registry", None),
+        getattr(args, "artifact_registry_root", None),
+    )
     return row
 
 
@@ -532,6 +543,11 @@ def _build_parser() -> argparse.ArgumentParser:
         "--artifact-registry",
         default=None,
         help="Gate C artifact registry JSON. Required for citable/frozen leaderboard rows.",
+    )
+    parser.add_argument(
+        "--artifact-registry-root",
+        default=None,
+        help="Root used to verify relative paths in --artifact-registry.",
     )
     parser.add_argument("--result-id", required=True)
     parser.add_argument("--dataset", required=True)

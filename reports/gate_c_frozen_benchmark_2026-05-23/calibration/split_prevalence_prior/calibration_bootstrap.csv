@@ -1,0 +1,2 @@
+scope,group_col,reference_name,metric,n_groups,n_bootstrap,mean,ci_low,ci_high
+patient,patient_id,split_prevalence_prior,brier_skill_score,8,1000,0.0,0.0,0.0
