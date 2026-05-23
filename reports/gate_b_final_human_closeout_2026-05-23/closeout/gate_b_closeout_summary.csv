@@ -1,0 +1,2 @@
+run_id,source_uri,ledger_rows,closed_rows,open_rows,blocked_rows,invalid_rows,p0_open_rows,gate_b_status,decision_evidence_status,claim_status
+gate_b_final_human_closeout_2026-05-23,reports/gate_b_final_human_closeout_2026-05-23/gate_b_real_decisions_2026-05-23.csv,8,8,0,0,0,0,ready_for_gate_b_validation_rerun,human_attested_not_independently_verified,gate_b_closeout_ledger_pending_human_review_not_citable

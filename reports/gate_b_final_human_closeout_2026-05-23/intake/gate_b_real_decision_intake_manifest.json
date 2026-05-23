@@ -1,0 +1,12 @@
+{
+  "run_id": "gate_b_final_human_decision_intake_2026-05-23",
+  "source_uri": "reports/gate_b_final_human_closeout_2026-05-23/gate_b_real_decisions_2026-05-23.csv",
+  "claim_status": "gate_b_real_decision_intake_not_citable_pre_gate_c",
+  "intake_status": "ready_for_closeout_application",
+  "gate_b_next_status": "ready_to_apply_closeout_and_run_validation",
+  "rows_hash": "7eab290abd422c793514c421c1ad276c0760251406af3676051f41c695d0e07b",
+  "summary_hash": "680eca48dbd61cb559d3c9d3f483cc4ae74774f772f253119d17b24eaa2f61b2",
+  "closeout_ledger_hash": "d7aaa3ae1924634c12d504232ae78a3e44bc9eb49f74d57fd6ad648e952fea9b",
+  "required_decisions_hash": "29fd9540fe8563634fe1cedc744ff607f96f595a0536af562b53ab339b1feda5",
+  "decisions_hash": "dbed8ffc46f726594cb698ae7cfc7997c0e122fc3d53c21b8717982e804ce075"
+}

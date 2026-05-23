@@ -1,0 +1,2 @@
+issue_code,severity,detail,affected_rows,claim_status
+non_ready_track_rows_present,warning,Some task/modality/split rows are not ready; keep them as negative readiness rows.,1,seizeit2_cohort_readiness_pre_gate_c_not_citable

@@ -1,0 +1,193 @@
+{
+  "metadata": {
+    "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable",
+    "result_status": "cohort_readiness_guardrail_not_model_result",
+    "gate_b_status": "passed",
+    "gate_c_status": "not_started",
+    "config": {
+      "min_patients_for_full_cohort": 100,
+      "min_events_for_full_cohort": 100,
+      "required_splits": [
+        "train",
+        "val",
+        "test"
+      ],
+      "required_task_names": [
+        "ictal_detection",
+        "short_early_warning",
+        "long_horizon_forecasting"
+      ],
+      "required_modality_tracks": [
+        "ecg",
+        "acc",
+        "bte_eeg",
+        "multimodal"
+      ],
+      "require_expected_counts": true
+    },
+    "track_hash": "ccc2d9c7da7518fd03bd854bc224a59ada5212a0bf83578e47ec97288abddae8",
+    "count_summary_hash": "39a5d4c40c975e8f229a6bb93de61f142bab688bb13f86ac958621f08993e8e1",
+    "summary_hash": "916c91b237607dc2cf55a945b95b92d77018a7c1a6411b4f8a013e0b82078441",
+    "blockers_hash": "9ff51598f95094554673ec6bf7e89c161320e256dd69796c892631cf1e77d2bc",
+    "warnings_hash": "9c8471c924c38a82514191f8433bbc066dd0652b09b494b008d9cd29e8dfc7e9"
+  },
+  "summary": [
+    {
+      "readiness_status": "blocked",
+      "full_cohort_claim_status": "blocked_not_full_cohort_ready",
+      "gate_b_status": "passed",
+      "gate_c_status": "not_started",
+      "patients_observed": 1,
+      "events_observed": 2,
+      "track_rows": 1,
+      "ready_track_rows": 0,
+      "blockers": 19,
+      "warnings": 1,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    }
+  ],
+  "blockers": [
+    {
+      "issue_code": "gate_c_not_passed",
+      "severity": "blocker",
+      "detail": "Gate C status is 'not_started'; artifacts are not frozen/citable.",
+      "affected_rows": null,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "patients_below_full_cohort_threshold",
+      "severity": "blocker",
+      "detail": "Observed patients=1; required minimum is 100 for a full-cohort claim.",
+      "affected_rows": 1.0,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "events_below_full_cohort_threshold",
+      "severity": "blocker",
+      "detail": "Observed events=2; required minimum is 100 for a full-cohort claim.",
+      "affected_rows": 2.0,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "patients_expected_count_not_provided",
+      "severity": "blocker",
+      "detail": "Expected published count for patients was not supplied.",
+      "affected_rows": null,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "recordings_expected_count_not_provided",
+      "severity": "blocker",
+      "detail": "Expected published count for recordings was not supplied.",
+      "affected_rows": null,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "events_expected_count_not_provided",
+      "severity": "blocker",
+      "detail": "Expected published count for events was not supplied.",
+      "affected_rows": null,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "official_split_manifest_not_clean",
+      "severity": "blocker",
+      "detail": "Official split statuses present: ['missing_official_manifest'].",
+      "affected_rows": 1.0,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "required_splits_missing",
+      "severity": "blocker",
+      "detail": "Missing required splits: ['train', 'val', 'test'].",
+      "affected_rows": 3.0,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "required_tasks_missing",
+      "severity": "blocker",
+      "detail": "Missing required tasks: ['ictal_detection', 'short_early_warning'].",
+      "affected_rows": 2.0,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "required_modality_tracks_missing",
+      "severity": "blocker",
+      "detail": "Missing required modality tracks: ['ecg', 'acc', 'bte_eeg', 'multimodal'].",
+      "affected_rows": 4.0,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "required_ready_track_missing",
+      "severity": "blocker",
+      "detail": "No ready track for split=train, task=ictal_detection.",
+      "affected_rows": null,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "required_ready_track_missing",
+      "severity": "blocker",
+      "detail": "No ready track for split=train, task=short_early_warning.",
+      "affected_rows": null,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "required_ready_track_missing",
+      "severity": "blocker",
+      "detail": "No ready track for split=train, task=long_horizon_forecasting.",
+      "affected_rows": null,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "required_ready_track_missing",
+      "severity": "blocker",
+      "detail": "No ready track for split=val, task=ictal_detection.",
+      "affected_rows": null,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "required_ready_track_missing",
+      "severity": "blocker",
+      "detail": "No ready track for split=val, task=short_early_warning.",
+      "affected_rows": null,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "required_ready_track_missing",
+      "severity": "blocker",
+      "detail": "No ready track for split=val, task=long_horizon_forecasting.",
+      "affected_rows": null,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "required_ready_track_missing",
+      "severity": "blocker",
+      "detail": "No ready track for split=test, task=ictal_detection.",
+      "affected_rows": null,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "required_ready_track_missing",
+      "severity": "blocker",
+      "detail": "No ready track for split=test, task=short_early_warning.",
+      "affected_rows": null,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    },
+    {
+      "issue_code": "required_ready_track_missing",
+      "severity": "blocker",
+      "detail": "No ready track for split=test, task=long_horizon_forecasting.",
+      "affected_rows": null,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    }
+  ],
+  "warnings": [
+    {
+      "issue_code": "non_ready_track_rows_present",
+      "severity": "warning",
+      "detail": "Some task/modality/split rows are not ready; keep them as negative readiness rows.",
+      "affected_rows": 1,
+      "claim_status": "seizeit2_cohort_readiness_pre_gate_c_not_citable"
+    }
+  ]
+}

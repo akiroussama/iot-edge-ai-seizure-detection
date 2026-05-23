@@ -1,0 +1,2 @@
+run_id,source_uri,ledger_rows,real_closed_rows,real_open_rows,blocked_rows,invalid_rows,simulation_available_open_rows,gate_b_real_closeout_status,claim_status
+gate_b_final_real_closeout_package_2026-05-23,reports/gate_b_final_human_closeout_2026-05-23/closeout/gate_b_closeout_ledger.csv,8,8,0,0,0,0,ready_for_gate_b_validation_rerun,gate_b_real_closeout_pending_validation_not_citable
