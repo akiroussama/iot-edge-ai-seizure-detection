@@ -1,0 +1,2 @@
+name,role,path,bytes,row_count,event_count,positive_windows,split_counts
+gate_b_validation_summary,metadata,reports/gate_b_final_human_closeout_2026-05-23/validation/gate_b_validation_summary.csv,651,1,,,

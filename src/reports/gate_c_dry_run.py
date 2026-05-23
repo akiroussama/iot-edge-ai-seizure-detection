@@ -86,6 +86,42 @@ def _artifact_table_markdown(artifact_summary: pd.DataFrame) -> str:
     return "\n".join([header, divider, *body])
 
 
+def _next_actions(diagnostics: dict[str, Any]) -> list[str]:
+    actions: list[str] = []
+    if diagnostics["gate_b_status"] != "passed":
+        actions.append("Complete Gate B human label audit and commit the passing validation report.")
+    else:
+        actions.append("Keep the committed Gate B validation report as the upstream prerequisite.")
+
+    if diagnostics["structural_errors"]:
+        actions.append("Fix the structural registry errors listed above.")
+
+    missing_roles = diagnostics.get("missing_roles", [])
+    if missing_roles:
+        actions.append(
+            "Materialize and register the required Gate C artifact roles: "
+            + ", ".join(str(role) for role in missing_roles)
+            + "."
+        )
+
+    if diagnostics.get("doi_or_prereg_uri") is None:
+        actions.append("Pre-register or DOI the frozen protocol before producing citable rows.")
+
+    if diagnostics["gate_c_status"] != "passed" or diagnostics["freeze_status"] != "frozen":
+        actions.append(
+            "Set gate_c_status='passed' and freeze_status='frozen' only after the required "
+            "artifacts and DOI/preregistration pass verification."
+        )
+
+    if not diagnostics["blockers"]:
+        actions.append("Proceed to Gate C review using only the frozen registry-backed artifacts.")
+    return actions
+
+
+def _numbered_markdown(items: list[str]) -> str:
+    return "\n".join(f"{index}. {item}" for index, item in enumerate(items, start=1))
+
+
 def gate_c_dry_run_markdown(
     *,
     diagnostics: dict[str, Any],
@@ -123,11 +159,7 @@ benchmark number citable.
 
 ## Next Actions
 
-1. Complete Gate B human label audit and commit the passing validation report.
-2. Fix any structural registry errors listed above.
-3. Register all required artifact roles and rerun the dry-run report.
-4. Freeze splits/artifacts only after audit corrections are applied.
-5. Pre-register or DOI the frozen protocol before producing citable rows.
+{_numbered_markdown(_next_actions(diagnostics))}
 """
 
 
