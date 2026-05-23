@@ -1,0 +1,13 @@
+{
+  "run_id": "gate_b_final_validation_rerun_2026-05-23",
+  "source_uri": "reports/gate_b_final_human_closeout_2026-05-23/validation_guardrails",
+  "claim_status": "gate_b_validation_rerun_not_citable_pre_gate_c",
+  "gate_b_validation_status": "passed_ready_for_gate_c_dry_run",
+  "gate_b_passed": true,
+  "matrix_hash": "4f944e6c44c32f9a734c26b6d581844e82cc98f5ea2447a34404ad90a470e619",
+  "summary_hash": "d971327c70f4aba68d12b3229247e8014fd986be43261a433816aa830511f67d",
+  "closeout_ledger_hash": "d7deccde8dbede55b9bfae24bdbb2e32fac9d2e2aff0e2a5fac1387d9d73553d",
+  "action_checklist_hash": "cfd3674564df44be3cefeda23faa61b93bfe77054b7469cdaa4adfa85d69e8ea",
+  "msg_summary_hash": "2e4a980f5f283f3d7ce8e685ca44e68158bd277be0ed53a841930afe280c93c4",
+  "seizeit2_summary_hash": "916c91b237607dc2cf55a945b95b92d77018a7c1a6411b4f8a013e0b82078441"
+}

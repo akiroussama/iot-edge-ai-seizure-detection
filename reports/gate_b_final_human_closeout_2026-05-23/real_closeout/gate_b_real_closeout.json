@@ -1,0 +1,149 @@
+{
+  "manifest": {
+    "run_id": "gate_b_final_real_closeout_package_2026-05-23",
+    "source_uri": "reports/gate_b_final_human_closeout_2026-05-23/closeout/gate_b_closeout_ledger.csv",
+    "claim_status": "gate_b_real_closeout_pending_validation_not_citable",
+    "gate_b_real_closeout_status": "ready_for_gate_b_validation_rerun",
+    "ledger_rows": 8,
+    "real_closed_rows": 8,
+    "real_open_rows": 0,
+    "simulation_available_open_rows": 0,
+    "readiness_hash": "e501b09ae64049e29b315287a9a5b58d879535e069eba14389cf3b6ca43eac51",
+    "template_hash": "0d49f5ebc95eca5b095bce93ac296448bd4879c16136916510b2b7e36cf317ad",
+    "summary_hash": "a0e740297f7e139c7a80e4506a938d07cf4fed2bdcb38612afc1f9a563fcff08",
+    "template_columns": [
+      "ledger_id",
+      "required_evidence",
+      "human_decision",
+      "reviewer_name",
+      "review_date",
+      "evidence_uri",
+      "evidence_hash",
+      "resolution_notes",
+      "rerun_required",
+      "rerun_artifact_uri"
+    ],
+    "note": "Simulation rows are only used as hints; they are not copied into real human decision columns."
+  },
+  "summary": [
+    {
+      "run_id": "gate_b_final_real_closeout_package_2026-05-23",
+      "source_uri": "reports/gate_b_final_human_closeout_2026-05-23/closeout/gate_b_closeout_ledger.csv",
+      "ledger_rows": 8,
+      "real_closed_rows": 8,
+      "real_open_rows": 0,
+      "blocked_rows": 0,
+      "invalid_rows": 0,
+      "simulation_available_open_rows": 0,
+      "gate_b_real_closeout_status": "ready_for_gate_b_validation_rerun",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    }
+  ],
+  "readiness": [
+    {
+      "ledger_id": "GB-001",
+      "gate": "Gate B",
+      "priority": "P0",
+      "domain": "MSG source-data coverage",
+      "current_closeout_status": "closed_by_human_review",
+      "real_closeout_state": "closed_real_attested_unverified",
+      "simulation_decision_available": "no",
+      "simulated_human_decision": "",
+      "required_evidence": "Per-patient source decision for each P0 MSG patient: recovered wearable segment manifest or advisor-approved exclusion record; rerun MSG triage showing zero p0_blocker rows.",
+      "real_closeout_action": "Keep attestation; rerun guardrails after every Gate B row is closed.",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    },
+    {
+      "ledger_id": "GB-002",
+      "gate": "Gate B",
+      "priority": "P0",
+      "domain": "SeizeIT2 full-cohort evidence",
+      "current_closeout_status": "closed_by_human_review",
+      "real_closeout_state": "closed_real_attested_unverified",
+      "simulation_decision_available": "no",
+      "simulated_human_decision": "",
+      "required_evidence": "Official SeizeIT2 split manifest, expected-count source citations, full-cohort artifact coverage, and rerun cohort readiness with no P0 blockers.",
+      "real_closeout_action": "Keep attestation; rerun guardrails after every Gate B row is closed.",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    },
+    {
+      "ledger_id": "GB-003",
+      "gate": "Gate C",
+      "priority": "P0",
+      "domain": "Freeze prerequisite",
+      "current_closeout_status": "closed_by_human_review",
+      "real_closeout_state": "closed_real_attested_unverified",
+      "simulation_decision_available": "no",
+      "simulated_human_decision": "",
+      "required_evidence": "Completed Gate B ledger, clean guardrail rerun, and Gate C dry-run reporting ready_for_gate_c_review before split freeze.",
+      "real_closeout_action": "Keep attestation; rerun guardrails after every Gate B row is closed.",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    },
+    {
+      "ledger_id": "GB-004",
+      "gate": "Gate B",
+      "priority": "P1",
+      "domain": "MSG denominator integrity",
+      "current_closeout_status": "closed_by_human_review",
+      "real_closeout_state": "closed_real_attested_unverified",
+      "simulation_decision_available": "no",
+      "simulated_human_decision": "",
+      "required_evidence": "Denominator policy signed off for source, matched, and prediction-coverable events; regenerated leaderboard rows expose all denominator fields.",
+      "real_closeout_action": "Keep attestation; rerun guardrails after every Gate B row is closed.",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    },
+    {
+      "ledger_id": "GB-005",
+      "gate": "Gate B",
+      "priority": "P1",
+      "domain": "MSG horizon feasibility",
+      "current_closeout_status": "closed_by_human_review",
+      "real_closeout_state": "closed_real_attested_unverified",
+      "simulation_decision_available": "no",
+      "simulated_human_decision": "",
+      "required_evidence": "Advisor-approved main horizon choice or documented demotion to feasibility-negative analysis; regenerated horizon triage for chosen horizons.",
+      "real_closeout_action": "Keep attestation; rerun guardrails after every Gate B row is closed.",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    },
+    {
+      "ledger_id": "GB-006",
+      "gate": "Gate B",
+      "priority": "P1",
+      "domain": "SeizeIT2 track completeness",
+      "current_closeout_status": "closed_by_human_review",
+      "real_closeout_state": "closed_real_attested_unverified",
+      "simulation_decision_available": "no",
+      "simulated_human_decision": "",
+      "required_evidence": "Ready track matrix covering required splits, tasks, and modality tracks; count summary matching documented expected counts.",
+      "real_closeout_action": "Keep attestation; rerun guardrails after every Gate B row is closed.",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    },
+    {
+      "ledger_id": "GB-007",
+      "gate": "Gate B",
+      "priority": "P2",
+      "domain": "MSG horizon source review",
+      "current_closeout_status": "closed_by_human_review",
+      "real_closeout_state": "closed_real_attested_unverified",
+      "simulation_decision_available": "no",
+      "simulated_human_decision": "",
+      "required_evidence": "Source-review decision for each source-review-required horizon and evidence that chosen main horizons no longer depend on unresolved event gaps.",
+      "real_closeout_action": "Keep attestation; rerun guardrails after every Gate B row is closed.",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    },
+    {
+      "ledger_id": "GB-008",
+      "gate": "Gate B",
+      "priority": "P2",
+      "domain": "SeizeIT2 negative readiness rows",
+      "current_closeout_status": "closed_by_human_review",
+      "real_closeout_state": "closed_real_attested_unverified",
+      "simulation_decision_available": "no",
+      "simulated_human_decision": "",
+      "required_evidence": "Paper-table or appendix plan preserving non-ready tracks as explicit negative readiness findings.",
+      "real_closeout_action": "Keep attestation; rerun guardrails after every Gate B row is closed.",
+      "claim_status": "gate_b_real_closeout_pending_validation_not_citable"
+    }
+  ],
+  "template": []
+}

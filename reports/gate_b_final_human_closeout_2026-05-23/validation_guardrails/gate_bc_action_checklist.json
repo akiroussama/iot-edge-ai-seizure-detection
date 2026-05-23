@@ -1,0 +1,110 @@
+{
+  "metadata": {
+    "claim_status": "gate_bc_action_checklist_pre_gate_c_not_citable",
+    "source_label": "local_committed_reports_2026-05-22",
+    "actions_hash": "cfd3674564df44be3cefeda23faa61b93bfe77054b7469cdaa4adfa85d69e8ea",
+    "summary_hash": "b0408191fcb961575caa5fc1d5cc8e206904ecc557121b77ac98ce8e736c81df"
+  },
+  "summary": [
+    {
+      "source_label": "local_committed_reports_2026-05-22",
+      "actions_total": 8,
+      "p0_actions": 3,
+      "p1_actions": 3,
+      "p2_actions": 2,
+      "gate_b_actions": 7,
+      "gate_c_actions": 1,
+      "claim_status": "gate_bc_action_checklist_pre_gate_c_not_citable"
+    }
+  ],
+  "actions": [
+    {
+      "gate": "Gate B",
+      "priority": "P0",
+      "domain": "MSG source-data coverage",
+      "blocker_source": "msg_gap_patient_triage",
+      "action": "Recover or explicitly document exclusion for zero-recording/zero-matched patients.",
+      "evidence": "Patients: 1942, 1219, 1675; events_unmatched=131.",
+      "owner": "human_clinical_audit",
+      "exit_criterion": "Each P0 patient has recovered wearable segments or an advisor-approved exclusion record, and rerun MSG triage has zero p0_blocker rows.",
+      "claim_status": "gate_bc_action_checklist_pre_gate_c_not_citable"
+    },
+    {
+      "gate": "Gate B",
+      "priority": "P0",
+      "domain": "SeizeIT2 full-cohort evidence",
+      "blocker_source": "seizeit2_cohort_readiness_blockers",
+      "action": "Stop full-cohort wording until official split/count/source coverage is complete.",
+      "evidence": "Blockers: gate_c_not_passed, patients_below_full_cohort_threshold, events_below_full_cohort_threshold, official_split_manifest_not_clean.",
+      "owner": "human_clinical_audit",
+      "exit_criterion": "SeizeIT2 readiness rerun reports Gate B/Gate C passed, expected counts verified, official splits clean, and no P0 cohort blockers.",
+      "claim_status": "gate_bc_action_checklist_pre_gate_c_not_citable"
+    },
+    {
+      "gate": "Gate C",
+      "priority": "P0",
+      "domain": "Freeze prerequisite",
+      "blocker_source": "combined_guardrails",
+      "action": "Do not freeze splits or citable rows until Gate B checklist items are closed.",
+      "evidence": "MSG blockers=3 P0 patients; SeizeIT2 blockers=19.",
+      "owner": "project_lead",
+      "exit_criterion": "Gate B audit log is complete, guardrails rerun cleanly, and Gate C dry-run reports ready_for_gate_c_review.",
+      "claim_status": "gate_bc_action_checklist_pre_gate_c_not_citable"
+    },
+    {
+      "gate": "Gate B",
+      "priority": "P1",
+      "domain": "MSG denominator integrity",
+      "blocker_source": "msg_gap_patient_triage",
+      "action": "Resolve unmatched events or lock a matched-event-only denominator policy.",
+      "evidence": "Patients: 1988, 1965, 2002, 1110, 1904, 1876, 1869; events_unmatched=127.",
+      "owner": "human_clinical_audit",
+      "exit_criterion": "All unmatched events have source-review decisions and every leaderboard row declares source, matched, and prediction-coverable denominators.",
+      "claim_status": "gate_bc_action_checklist_pre_gate_c_not_citable"
+    },
+    {
+      "gate": "Gate B",
+      "priority": "P1",
+      "domain": "MSG horizon feasibility",
+      "blocker_source": "msg_gap_horizon_triage",
+      "action": "Demote failing SPH/SOP horizons or document them as feasibility-negative analyses.",
+      "evidence": "Horizons: SPH5/SOP1440, SPH60/SOP1440, SPH60/SOP360, SPH5/SOP30, SPH60/SOP30; min_valid_window_fraction=0.160; min_event_coverable_fraction=0.230.",
+      "owner": "human_clinical_audit",
+      "exit_criterion": "Main-paper horizon choice is advisor-approved and any failing horizons are excluded from main claims or labeled as negative feasibility findings.",
+      "claim_status": "gate_bc_action_checklist_pre_gate_c_not_citable"
+    },
+    {
+      "gate": "Gate B",
+      "priority": "P1",
+      "domain": "SeizeIT2 track completeness",
+      "blocker_source": "seizeit2_cohort_readiness_blockers",
+      "action": "Complete required split/task/modality readiness rows before benchmark claims.",
+      "evidence": "Blockers: patients_expected_count_not_provided, recordings_expected_count_not_provided, events_expected_count_not_provided, required_splits_missing, required_tasks_missing, required_modality_tracks_missing, required_ready_track_missing, required_ready_track_missing, required_ready_track_missing, required_ready_track_missing, required_ready_track_missing, required_ready_track_missing, ... (15 total).",
+      "owner": "human_clinical_audit",
+      "exit_criterion": "All required split/task/modality combinations have ready track rows.",
+      "claim_status": "gate_bc_action_checklist_pre_gate_c_not_citable"
+    },
+    {
+      "gate": "Gate B",
+      "priority": "P2",
+      "domain": "MSG horizon source review",
+      "blocker_source": "msg_gap_horizon_triage",
+      "action": "Keep source-review-required horizons out of citable tables until event gaps close.",
+      "evidence": "Horizons needing source review: SPH5/SOP360.",
+      "owner": "human_clinical_audit",
+      "exit_criterion": "Rerun horizon triage has no source_review_required rows for chosen main horizons.",
+      "claim_status": "gate_bc_action_checklist_pre_gate_c_not_citable"
+    },
+    {
+      "gate": "Gate B",
+      "priority": "P2",
+      "domain": "SeizeIT2 negative readiness rows",
+      "blocker_source": "seizeit2_cohort_readiness_warnings",
+      "action": "Preserve non-ready track rows as explicit negative readiness findings.",
+      "evidence": "Warnings: non_ready_track_rows_present.",
+      "owner": "human_clinical_audit",
+      "exit_criterion": "Paper tables and text disclose non-ready tracks instead of hiding them.",
+      "claim_status": "gate_bc_action_checklist_pre_gate_c_not_citable"
+    }
+  ]
+}

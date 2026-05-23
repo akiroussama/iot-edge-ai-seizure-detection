@@ -1,0 +1,2 @@
+readiness_status,full_cohort_claim_status,gate_b_status,gate_c_status,patients_observed,events_observed,track_rows,ready_track_rows,blockers,warnings,claim_status
+blocked,blocked_not_full_cohort_ready,passed,not_started,1,2,1,0,19,1,seizeit2_cohort_readiness_pre_gate_c_not_citable

@@ -1,0 +1,28 @@
+{
+  "run_id": "gate_b_final_human_closeout_2026-05-23",
+  "source_uri": "reports/gate_b_final_human_closeout_2026-05-23/gate_b_real_decisions_2026-05-23.csv",
+  "claim_status": "gate_b_closeout_ledger_pending_human_review_not_citable",
+  "decision_evidence_status": "human_attested_not_independently_verified",
+  "gate_b_status": "ready_for_gate_b_validation_rerun",
+  "ledger_rows": 8,
+  "open_rows": 0,
+  "ledger_hash": "d7deccde8dbede55b9bfae24bdbb2e32fac9d2e2aff0e2a5fac1387d9d73553d",
+  "summary_hash": "593751af0031cd9c858fcab313d2e3a92d5ab45c83f8ca99fb0e4fc8bad21341",
+  "allowed_human_decisions": [
+    "APPROVED_EXCLUSION",
+    "BLOCKED",
+    "DEFERRED",
+    "NEEDS_SOURCE_REVIEW",
+    "RESOLVED"
+  ],
+  "review_columns": [
+    "human_decision",
+    "reviewer_name",
+    "review_date",
+    "evidence_uri",
+    "evidence_hash",
+    "resolution_notes",
+    "rerun_required",
+    "rerun_artifact_uri"
+  ]
+}

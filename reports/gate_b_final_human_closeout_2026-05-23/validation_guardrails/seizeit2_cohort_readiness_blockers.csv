@@ -1,0 +1,20 @@
+issue_code,severity,detail,affected_rows,claim_status
+gate_c_not_passed,blocker,Gate C status is 'not_started'; artifacts are not frozen/citable.,,seizeit2_cohort_readiness_pre_gate_c_not_citable
+patients_below_full_cohort_threshold,blocker,Observed patients=1; required minimum is 100 for a full-cohort claim.,1.0,seizeit2_cohort_readiness_pre_gate_c_not_citable
+events_below_full_cohort_threshold,blocker,Observed events=2; required minimum is 100 for a full-cohort claim.,2.0,seizeit2_cohort_readiness_pre_gate_c_not_citable
+patients_expected_count_not_provided,blocker,Expected published count for patients was not supplied.,,seizeit2_cohort_readiness_pre_gate_c_not_citable
+recordings_expected_count_not_provided,blocker,Expected published count for recordings was not supplied.,,seizeit2_cohort_readiness_pre_gate_c_not_citable
+events_expected_count_not_provided,blocker,Expected published count for events was not supplied.,,seizeit2_cohort_readiness_pre_gate_c_not_citable
+official_split_manifest_not_clean,blocker,Official split statuses present: ['missing_official_manifest'].,1.0,seizeit2_cohort_readiness_pre_gate_c_not_citable
+required_splits_missing,blocker,"Missing required splits: ['train', 'val', 'test'].",3.0,seizeit2_cohort_readiness_pre_gate_c_not_citable
+required_tasks_missing,blocker,"Missing required tasks: ['ictal_detection', 'short_early_warning'].",2.0,seizeit2_cohort_readiness_pre_gate_c_not_citable
+required_modality_tracks_missing,blocker,"Missing required modality tracks: ['ecg', 'acc', 'bte_eeg', 'multimodal'].",4.0,seizeit2_cohort_readiness_pre_gate_c_not_citable
+required_ready_track_missing,blocker,"No ready track for split=train, task=ictal_detection.",,seizeit2_cohort_readiness_pre_gate_c_not_citable
+required_ready_track_missing,blocker,"No ready track for split=train, task=short_early_warning.",,seizeit2_cohort_readiness_pre_gate_c_not_citable
+required_ready_track_missing,blocker,"No ready track for split=train, task=long_horizon_forecasting.",,seizeit2_cohort_readiness_pre_gate_c_not_citable
+required_ready_track_missing,blocker,"No ready track for split=val, task=ictal_detection.",,seizeit2_cohort_readiness_pre_gate_c_not_citable
+required_ready_track_missing,blocker,"No ready track for split=val, task=short_early_warning.",,seizeit2_cohort_readiness_pre_gate_c_not_citable
+required_ready_track_missing,blocker,"No ready track for split=val, task=long_horizon_forecasting.",,seizeit2_cohort_readiness_pre_gate_c_not_citable
+required_ready_track_missing,blocker,"No ready track for split=test, task=ictal_detection.",,seizeit2_cohort_readiness_pre_gate_c_not_citable
+required_ready_track_missing,blocker,"No ready track for split=test, task=short_early_warning.",,seizeit2_cohort_readiness_pre_gate_c_not_citable
+required_ready_track_missing,blocker,"No ready track for split=test, task=long_horizon_forecasting.",,seizeit2_cohort_readiness_pre_gate_c_not_citable

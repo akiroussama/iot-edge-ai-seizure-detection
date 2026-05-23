@@ -1,0 +1,2 @@
+split_name,task_name,modality_track,official_split_status,track_ready
+unassigned,long_horizon_forecasting,unknown_local,missing_official_manifest,False

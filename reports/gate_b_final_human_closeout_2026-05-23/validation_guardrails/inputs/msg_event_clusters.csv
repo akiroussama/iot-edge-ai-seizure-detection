@@ -1,0 +1,12 @@
+patient_id,events_total,clusters,clustered_events,max_cluster_size,mean_events_per_cluster,cluster_gap_minutes,manual_review_priority
+1110,31,12,27,7,2.583,240.0,high
+1219,31,29,3,3,1.069,240.0,routine
+1675,12,4,11,6,3.0,240.0,high
+1869,26,22,7,3,1.182,240.0,routine
+1876,44,33,20,3,1.333,240.0,routine
+1904,31,15,24,6,2.067,240.0,high
+1927,11,11,0,1,1.0,240.0,routine
+1942,88,12,83,20,7.333,240.0,high
+1965,241,221,37,3,1.09,240.0,routine
+1988,197,119,113,6,1.655,240.0,high
+2002,56,52,7,3,1.077,240.0,routine
