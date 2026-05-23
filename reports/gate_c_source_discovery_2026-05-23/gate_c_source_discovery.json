@@ -1,0 +1,21 @@
+{
+  "scan_status": "blocked_missing_gate_c_sources",
+  "roots": [
+    "data",
+    "reports"
+  ],
+  "files_scanned": 70,
+  "readable_tables": 70,
+  "role_ready_counts": {
+    "recordings": 0,
+    "events": 0
+  },
+  "candidate_files_by_role": {
+    "recordings": [],
+    "events": []
+  },
+  "missing_roles": [
+    "recordings",
+    "events"
+  ]
+}
