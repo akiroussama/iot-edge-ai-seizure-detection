@@ -1,0 +1,2 @@
+model_name,reference_name,model_brier_score,reference_brier_score,brier_skill_score,model_expected_calibration_error,reference_expected_calibration_error,valid_prediction_rows
+patient_prior,split_prevalence_prior,0.1276733800426928,0.23898832356317398,0.4657756574080335,0.13101441631256677,0.21245061466213622,1418

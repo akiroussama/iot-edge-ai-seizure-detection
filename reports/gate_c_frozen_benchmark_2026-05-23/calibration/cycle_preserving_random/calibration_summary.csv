@@ -1,0 +1,3 @@
+series_name,series_role,prediction_rows,valid_prediction_rows,positive_windows,empirical_rate,mean_risk_score,brier_score,expected_calibration_error
+cycle_preserving_random,model,10309,1418,373,0.2630465444287729,0.4539645194593037,0.22237042583524766,0.19091797503053085
+split_prevalence_prior,reference,10309,1418,373,0.2630465444287729,0.4754971590909091,0.23898832356317398,0.21245061466213622

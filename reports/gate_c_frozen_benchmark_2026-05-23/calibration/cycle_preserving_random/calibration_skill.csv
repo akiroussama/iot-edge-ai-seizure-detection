@@ -1,0 +1,2 @@
+model_name,reference_name,model_brier_score,reference_brier_score,brier_skill_score,model_expected_calibration_error,reference_expected_calibration_error,valid_prediction_rows
+cycle_preserving_random,split_prevalence_prior,0.22237042583524766,0.23898832356317398,0.06953434996389507,0.19091797503053085,0.21245061466213622,1418

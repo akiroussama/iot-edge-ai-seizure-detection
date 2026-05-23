@@ -1,0 +1,3 @@
+series_name,series_role,prediction_rows,valid_prediction_rows,positive_windows,empirical_rate,mean_risk_score,brier_score,expected_calibration_error
+patient_prior,model,10309,1418,373,0.2630465444287729,0.3689751680551893,0.1276733800426928,0.13101441631256677
+split_prevalence_prior,reference,10309,1418,373,0.2630465444287729,0.4754971590909091,0.23898832356317398,0.21245061466213622

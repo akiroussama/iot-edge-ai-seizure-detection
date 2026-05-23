@@ -1,0 +1,273 @@
+{
+  "metadata": {
+    "model_name": "split_prevalence_prior",
+    "reference_names": [
+      "split_prevalence_prior"
+    ],
+    "id_columns": [
+      "patient_id",
+      "recording_id",
+      "window_start",
+      "window_end"
+    ],
+    "n_bins": 10,
+    "n_bootstrap": 1000,
+    "seed": 42,
+    "patient_col": "patient_id",
+    "event_col": null,
+    "result_status": "gate_c_frozen_citable",
+    "citation_status": "citable_after_gate_c",
+    "gate_c_status": "passed"
+  },
+  "summary": [
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "model",
+      "prediction_rows": 10309,
+      "valid_prediction_rows": 1418,
+      "positive_windows": 373,
+      "empirical_rate": 0.2630465444287729,
+      "mean_risk_score": 0.4754971590909091,
+      "brier_score": 0.23898832356317398,
+      "expected_calibration_error": 0.21245061466213622
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "reference",
+      "prediction_rows": 10309,
+      "valid_prediction_rows": 1418,
+      "positive_windows": 373,
+      "empirical_rate": 0.2630465444287729,
+      "mean_risk_score": 0.4754971590909091,
+      "brier_score": 0.23898832356317398,
+      "expected_calibration_error": 0.21245061466213622
+    }
+  ],
+  "skill": [
+    {
+      "model_name": "split_prevalence_prior",
+      "reference_name": "split_prevalence_prior",
+      "model_brier_score": 0.23898832356317398,
+      "reference_brier_score": 0.23898832356317398,
+      "brier_skill_score": 0.0,
+      "model_expected_calibration_error": 0.21245061466213622,
+      "reference_expected_calibration_error": 0.21245061466213622,
+      "valid_prediction_rows": 1418
+    }
+  ],
+  "reliability": [
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "model",
+      "bin": 0,
+      "bin_start": 0.0,
+      "bin_end": 0.1,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "model",
+      "bin": 1,
+      "bin_start": 0.1,
+      "bin_end": 0.2,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "model",
+      "bin": 2,
+      "bin_start": 0.2,
+      "bin_end": 0.30000000000000004,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "model",
+      "bin": 3,
+      "bin_start": 0.30000000000000004,
+      "bin_end": 0.4,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "model",
+      "bin": 4,
+      "bin_start": 0.4,
+      "bin_end": 0.5,
+      "count": 1418,
+      "mean_score": 0.4754971590909091,
+      "empirical_rate": 0.2630465444287729
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "model",
+      "bin": 5,
+      "bin_start": 0.5,
+      "bin_end": 0.6000000000000001,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "model",
+      "bin": 6,
+      "bin_start": 0.6000000000000001,
+      "bin_end": 0.7000000000000001,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "model",
+      "bin": 7,
+      "bin_start": 0.7000000000000001,
+      "bin_end": 0.8,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "model",
+      "bin": 8,
+      "bin_start": 0.8,
+      "bin_end": 0.9,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "model",
+      "bin": 9,
+      "bin_start": 0.9,
+      "bin_end": 1.0,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "reference",
+      "bin": 0,
+      "bin_start": 0.0,
+      "bin_end": 0.1,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "reference",
+      "bin": 1,
+      "bin_start": 0.1,
+      "bin_end": 0.2,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "reference",
+      "bin": 2,
+      "bin_start": 0.2,
+      "bin_end": 0.30000000000000004,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "reference",
+      "bin": 3,
+      "bin_start": 0.30000000000000004,
+      "bin_end": 0.4,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "reference",
+      "bin": 4,
+      "bin_start": 0.4,
+      "bin_end": 0.5,
+      "count": 1418,
+      "mean_score": 0.4754971590909091,
+      "empirical_rate": 0.2630465444287729
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "reference",
+      "bin": 5,
+      "bin_start": 0.5,
+      "bin_end": 0.6000000000000001,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "reference",
+      "bin": 6,
+      "bin_start": 0.6000000000000001,
+      "bin_end": 0.7000000000000001,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "reference",
+      "bin": 7,
+      "bin_start": 0.7000000000000001,
+      "bin_end": 0.8,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "reference",
+      "bin": 8,
+      "bin_start": 0.8,
+      "bin_end": 0.9,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    },
+    {
+      "series_name": "split_prevalence_prior",
+      "series_role": "reference",
+      "bin": 9,
+      "bin_start": 0.9,
+      "bin_end": 1.0,
+      "count": 0,
+      "mean_score": null,
+      "empirical_rate": null
+    }
+  ],
+  "bootstrap": [
+    {
+      "scope": "patient",
+      "group_col": "patient_id",
+      "reference_name": "split_prevalence_prior",
+      "metric": "brier_skill_score",
+      "n_groups": 8,
+      "n_bootstrap": 1000,
+      "mean": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0
+    }
+  ]
+}
