@@ -1,0 +1,29 @@
+{
+  "readiness_status": "ready_for_gate_c_review",
+  "citable_ready": true,
+  "structural_ok": true,
+  "frozen_verification_ok": true,
+  "registry_id": "msg_gate_c_sph60_sop1440_2026-05-23",
+  "dataset": "msg",
+  "gate_b_status": "passed",
+  "gate_c_status": "passed",
+  "freeze_status": "frozen",
+  "doi_or_prereg_uri": "doi:10.5281/zenodo.17380899",
+  "artifact_count": 7,
+  "required_roles": [
+    "events",
+    "labels",
+    "splits"
+  ],
+  "present_roles": [
+    "events",
+    "labels",
+    "metadata",
+    "splits"
+  ],
+  "missing_roles": [],
+  "blockers": [],
+  "warnings": [],
+  "structural_errors": [],
+  "frozen_errors": []
+}

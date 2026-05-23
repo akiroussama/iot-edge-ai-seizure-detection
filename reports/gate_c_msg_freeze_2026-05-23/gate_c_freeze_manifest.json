@@ -1,0 +1,31 @@
+{
+  "freeze_package_status": "gate_c_frozen_citable",
+  "registry_id": "msg_gate_c_sph60_sop1440_2026-05-23",
+  "dataset": "msg",
+  "dataset_version": "zenodo_17380899_local_2026-05-23",
+  "gate_c_status": "passed",
+  "freeze_status": "frozen",
+  "doi_or_prereg_uri": "doi:10.5281/zenodo.17380899",
+  "citable_ready": true,
+  "readiness_status": "ready_for_gate_c_review",
+  "required_roles": [
+    "events",
+    "labels",
+    "splits"
+  ],
+  "present_roles": [
+    "events",
+    "labels",
+    "metadata",
+    "splits"
+  ],
+  "blockers": [],
+  "warnings": [],
+  "output_paths": {
+    "registry": "reports/gate_c_msg_freeze_2026-05-23/gate_c_registry.json",
+    "dry_run_json": "reports/gate_c_msg_freeze_2026-05-23/gate_c_dry_run.json",
+    "dry_run_md": "reports/gate_c_msg_freeze_2026-05-23/gate_c_dry_run.md",
+    "artifact_summary": "reports/gate_c_msg_freeze_2026-05-23/gate_c_artifact_summary.csv",
+    "manifest": "reports/gate_c_msg_freeze_2026-05-23/gate_c_freeze_manifest.json"
+  }
+}

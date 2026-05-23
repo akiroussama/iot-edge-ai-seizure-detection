@@ -1,0 +1,90 @@
+{
+  "schema_version": "gate_c.registry.v1",
+  "registry_id": "msg_gate_c_sph60_sop1440_2026-05-23",
+  "dataset": "msg",
+  "dataset_version": "zenodo_17380899_local_2026-05-23",
+  "source_uri": "reports/gate_c_msg_freeze_2026-05-23/artifacts/gate_c_input_materialization_manifest.json",
+  "gate_c_status": "passed",
+  "freeze_status": "frozen",
+  "doi_or_prereg_uri": "doi:10.5281/zenodo.17380899",
+  "generation_command": "uv run python scripts/materialize_gate_c_inputs.py --recordings data/processed/msg/recordings.parquet --events data/processed/msg/events.parquet --out-dir data/processed/msg/gate_c_inputs_sph60_sop1440 --window-duration 1h --stride 1h --sph-minutes 60 --sop-minutes 1440 --postictal-exclusion-minutes 240 --postictal-anchor seizure_start --strategy temporal --temporal-unit recording --temporal-basis elapsed_time",
+  "split_manifest": {
+    "split_policy": "temporal_recording_elapsed_time",
+    "split_ids": [
+      "train",
+      "val",
+      "test"
+    ],
+    "split_ref": "reports/gate_c_msg_freeze_2026-05-23/artifacts/gate_c_input_materialization_manifest.json",
+    "horizon_name": "SPH60_SOP1440",
+    "sph_minutes": 60.0,
+    "sop_minutes": 1440.0
+  },
+  "artifacts": [
+    {
+      "name": "events",
+      "role": "events",
+      "path": "reports/gate_c_msg_freeze_2026-05-23/artifacts/events.csv",
+      "sha256": "79fc800754c21fd51d3f1efc888ca90e84b58716efd081e7d96e1237ef2eb80a",
+      "bytes": 104334,
+      "row_count": 768,
+      "event_count": 768
+    },
+    {
+      "name": "labels",
+      "role": "labels",
+      "path": "reports/gate_c_msg_freeze_2026-05-23/artifacts/labels.csv",
+      "sha256": "aa8d669b071f6312ef360e274d218ef936f70f2090096f412bdbd8e7cb5d1ecf",
+      "bytes": 8363488,
+      "row_count": 49577,
+      "positive_windows": 3326,
+      "split_counts": {
+        "test": 10309,
+        "train": 33853,
+        "val": 5415
+      }
+    },
+    {
+      "name": "splits",
+      "role": "splits",
+      "path": "reports/gate_c_msg_freeze_2026-05-23/artifacts/splits.csv",
+      "sha256": "f8bfd13cd107997bec217e18e56f2bdef0f8e18c52da5aa0012919fcb0ed287c",
+      "bytes": 3647613,
+      "row_count": 49577,
+      "split_counts": {
+        "test": 10309,
+        "train": 33853,
+        "val": 5415
+      }
+    },
+    {
+      "name": "source_discovery",
+      "role": "metadata",
+      "path": "reports/gate_c_source_recovery_2026-05-23/source_discovery/gate_c_source_discovery.json",
+      "sha256": "9b3bad3fb2d515273e69485c87f05074147927379e028cebb768263d0b62820e",
+      "bytes": 399
+    },
+    {
+      "name": "input_discovery",
+      "role": "metadata",
+      "path": "reports/gate_c_source_recovery_2026-05-23/input_discovery/gate_c_input_discovery.json",
+      "sha256": "dea97a9210023cd198e099f2f60d6d2de40ccc0d78a3e509c05ffd0731fd8399",
+      "bytes": 635
+    },
+    {
+      "name": "materialization_manifest",
+      "role": "metadata",
+      "path": "reports/gate_c_msg_freeze_2026-05-23/artifacts/gate_c_input_materialization_manifest.json",
+      "sha256": "68d3f32f7105e5e18dfa24ed9b3664f0a97cb8f41c1a98dd0558bc0168b4d817",
+      "bytes": 1987
+    },
+    {
+      "name": "leakage_audit",
+      "role": "metadata",
+      "path": "reports/gate_c_msg_freeze_2026-05-23/artifacts/leakage_audit.txt",
+      "sha256": "7f4fa64a824041ac46a7b33df09bee14952c3c4ef2e69cc5c14e5bf350511a8e",
+      "bytes": 1128
+    }
+  ],
+  "notes": "Local MSG Gate C freeze package from verified Zenodo source files. DOI is the MSG source dataset DOI; no independent benchmark/preregistration DOI was minted by this command."
+}
