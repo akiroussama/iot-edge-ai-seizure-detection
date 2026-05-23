@@ -1,0 +1,38 @@
+{
+  "readiness_status": "blocked",
+  "citable_ready": false,
+  "structural_ok": true,
+  "frozen_verification_ok": false,
+  "registry_id": "gate_c_prefreeze_2026-05-23",
+  "dataset": "epitwin_open",
+  "gate_b_status": "passed",
+  "gate_c_status": "partial",
+  "freeze_status": "pending_human_audit",
+  "doi_or_prereg_uri": null,
+  "artifact_count": 1,
+  "required_roles": [
+    "events",
+    "labels",
+    "splits"
+  ],
+  "present_roles": [
+    "metadata"
+  ],
+  "missing_roles": [
+    "events",
+    "labels",
+    "splits"
+  ],
+  "blockers": [
+    "registry.gate_c_status is not 'passed'",
+    "registry.freeze_status is not 'frozen'",
+    "doi_or_prereg_uri is required for Gate C",
+    "missing required artifact roles: ['events', 'labels', 'splits']"
+  ],
+  "warnings": [],
+  "structural_errors": [],
+  "frozen_errors": [
+    "frozen/citable outputs require registry.gate_c_status='passed'",
+    "frozen/citable outputs require registry.freeze_status='frozen'"
+  ]
+}

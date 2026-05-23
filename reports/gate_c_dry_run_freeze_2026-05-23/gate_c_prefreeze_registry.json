@@ -1,0 +1,32 @@
+{
+  "schema_version": "gate_c.registry.v1",
+  "registry_id": "gate_c_prefreeze_2026-05-23",
+  "dataset": "epitwin_open",
+  "dataset_version": "prefreeze_2026-05-23",
+  "source_uri": "reports/gate_b_final_human_closeout_2026-05-23/validation/gate_b_validation_summary.csv",
+  "gate_c_status": "partial",
+  "freeze_status": "pending_human_audit",
+  "doi_or_prereg_uri": null,
+  "generation_command": "Gate B passed; Gate C citable artifacts not yet materialized",
+  "split_manifest": {
+    "split_policy": "pending_frozen_split_manifest",
+    "split_ids": [
+      "pending"
+    ],
+    "split_ref": "pending_gate_c_split_manifest",
+    "horizon_name": "pending_gate_c_horizon",
+    "sph_minutes": 0.0,
+    "sop_minutes": 0.0
+  },
+  "artifacts": [
+    {
+      "name": "gate_b_validation_summary",
+      "role": "metadata",
+      "path": "reports/gate_b_final_human_closeout_2026-05-23/validation/gate_b_validation_summary.csv",
+      "sha256": "d971327c70f4aba68d12b3229247e8014fd986be43261a433816aa830511f67d",
+      "bytes": 651,
+      "row_count": 1
+    }
+  ],
+  "notes": "Gate B passed. Registry intentionally blocks citable freeze until events, labels, splits, and DOI/preregistration are present."
+}

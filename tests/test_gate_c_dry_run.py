@@ -120,6 +120,53 @@ def test_gate_c_dry_run_accepts_clean_frozen_registry(tmp_path) -> None:
     assert report.artifact_summary["role"].tolist() == ["events", "labels", "splits"]
 
 
+def test_gate_c_dry_run_next_actions_respect_passed_gate_b(tmp_path) -> None:
+    metadata_path = tmp_path / "gate_b_validation_summary.csv"
+    write_table(
+        pd.DataFrame(
+            {
+                "gate_b_validation_status": ["passed_ready_for_gate_c_dry_run"],
+                "gate_b_passed": [True],
+            }
+        ),
+        metadata_path,
+    )
+    registry = build_gate_c_registry(
+        registry_id="prefreeze_no_citable_artifacts",
+        dataset="synthetic",
+        dataset_version="v1",
+        source_uri=str(metadata_path),
+        generation_command="pytest tests/test_gate_c_dry_run.py",
+        artifacts=[
+            build_artifact_record(
+                name="gate_b_validation_summary",
+                role="metadata",
+                path=metadata_path,
+            )
+        ],
+        split_manifest={
+            "split_policy": "pending",
+            "split_ids": ["pending"],
+            "split_ref": "pending",
+            "horizon_name": "pending",
+            "sph_minutes": 0.0,
+            "sop_minutes": 0.0,
+        },
+        gate_c_status="partial",
+        freeze_status="pending_human_audit",
+    )
+
+    report = build_gate_c_dry_run_report(registry, gate_b_status="passed")
+
+    assert report.diagnostics["missing_roles"] == ["events", "labels", "splits"]
+    assert "Complete Gate B human label audit" not in report.markdown
+    assert "Keep the committed Gate B validation report" in report.markdown
+    assert (
+        "Materialize and register the required Gate C artifact roles: events, labels, splits."
+        in report.markdown
+    )
+
+
 def test_gate_c_dry_run_cli_writes_diagnostics(tmp_path) -> None:
     registry = _registry(tmp_path, gate_c_status="partial", freeze_status="pending_human_audit")
     registry_path = tmp_path / "registry.json"
