@@ -1,0 +1,21 @@
+{
+  "scan_status": "gate_c_sources_available",
+  "roots": [
+    "data/processed/msg"
+  ],
+  "files_scanned": 5,
+  "readable_tables": 5,
+  "role_ready_counts": {
+    "recordings": 1,
+    "events": 1
+  },
+  "candidate_files_by_role": {
+    "recordings": [
+      "data/processed/msg/recordings.parquet"
+    ],
+    "events": [
+      "data/processed/msg/events.parquet"
+    ]
+  },
+  "missing_roles": []
+}

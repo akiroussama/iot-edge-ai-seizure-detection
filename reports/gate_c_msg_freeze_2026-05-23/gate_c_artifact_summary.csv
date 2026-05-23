@@ -1,0 +1,8 @@
+name,role,path,bytes,row_count,event_count,positive_windows,split_counts
+events,events,reports/gate_c_msg_freeze_2026-05-23/artifacts/events.csv,104334,768.0,768.0,,
+labels,labels,reports/gate_c_msg_freeze_2026-05-23/artifacts/labels.csv,8363488,49577.0,,3326.0,"{'test': 10309, 'train': 33853, 'val': 5415}"
+splits,splits,reports/gate_c_msg_freeze_2026-05-23/artifacts/splits.csv,3647613,49577.0,,,"{'test': 10309, 'train': 33853, 'val': 5415}"
+source_discovery,metadata,reports/gate_c_source_recovery_2026-05-23/source_discovery/gate_c_source_discovery.json,399,,,,
+input_discovery,metadata,reports/gate_c_source_recovery_2026-05-23/input_discovery/gate_c_input_discovery.json,635,,,,
+materialization_manifest,metadata,reports/gate_c_msg_freeze_2026-05-23/artifacts/gate_c_input_materialization_manifest.json,1987,,,,
+leakage_audit,metadata,reports/gate_c_msg_freeze_2026-05-23/artifacts/leakage_audit.txt,1128,,,,

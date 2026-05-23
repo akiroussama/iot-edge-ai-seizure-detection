@@ -1,0 +1,38 @@
+{
+  "materialization_status": "gate_c_inputs_materialized",
+  "claim_status": "not_citable_until_gate_c_freeze_package",
+  "recordings_path": "data/processed/msg/recordings.parquet",
+  "source_events_path": "data/processed/msg/events.parquet",
+  "events_rows": 768,
+  "labels_rows": 49577,
+  "splits_rows": 49577,
+  "valid_label_rows": 7920,
+  "positive_valid_windows": 3326,
+  "split_ids": [
+    "test",
+    "train",
+    "val"
+  ],
+  "split_counts": {
+    "test": 10309,
+    "train": 33853,
+    "val": 5415
+  },
+  "window_duration": "1h",
+  "stride": "1h",
+  "horizon_name": "SPH60_SOP1440",
+  "sph_minutes": 60.0,
+  "sop_minutes": 1440.0,
+  "postictal_exclusion_minutes": 240.0,
+  "postictal_anchor": "seizure_start",
+  "include_ictal": false,
+  "split_strategy": "temporal_recording_elapsed_time",
+  "output_paths": {
+    "events": "data/processed/msg/gate_c_inputs_sph60_sop1440/events.csv",
+    "labels": "data/processed/msg/gate_c_inputs_sph60_sop1440/labels.csv",
+    "splits": "data/processed/msg/gate_c_inputs_sph60_sop1440/splits.csv",
+    "leakage_audit": "data/processed/msg/gate_c_inputs_sph60_sop1440/leakage_audit.txt",
+    "manifest": "data/processed/msg/gate_c_inputs_sph60_sop1440/gate_c_input_materialization_manifest.json"
+  },
+  "next_command": "python scripts/build_gate_c_freeze_package.py --events data/processed/msg/gate_c_inputs_sph60_sop1440/events.csv --labels data/processed/msg/gate_c_inputs_sph60_sop1440/labels.csv --splits data/processed/msg/gate_c_inputs_sph60_sop1440/splits.csv --out-dir <gate-c-freeze-out> --registry-id <registry-id> --dataset <dataset> --dataset-version <version> --source-uri <source-uri> --generation-command <exact-command> --split-policy temporal_recording_elapsed_time --split-ref data/processed/msg/gate_c_inputs_sph60_sop1440/gate_c_input_materialization_manifest.json --split-id test --split-id train --split-id val --horizon-name SPH60_SOP1440 --sph-minutes 60 --sop-minutes 1440 --doi-or-prereg-uri <doi-or-prereg-uri>"
+}

@@ -1,0 +1,26 @@
+{
+  "scan_status": "gate_c_inputs_available",
+  "roots": [
+    "data/processed/msg/gate_c_inputs_sph60_sop1440"
+  ],
+  "files_scanned": 3,
+  "readable_tables": 3,
+  "role_ready_counts": {
+    "events": 1,
+    "labels": 1,
+    "splits": 2
+  },
+  "candidate_files_by_role": {
+    "events": [
+      "data/processed/msg/gate_c_inputs_sph60_sop1440/events.csv"
+    ],
+    "labels": [
+      "data/processed/msg/gate_c_inputs_sph60_sop1440/labels.csv"
+    ],
+    "splits": [
+      "data/processed/msg/gate_c_inputs_sph60_sop1440/labels.csv",
+      "data/processed/msg/gate_c_inputs_sph60_sop1440/splits.csv"
+    ]
+  },
+  "missing_roles": []
+}
