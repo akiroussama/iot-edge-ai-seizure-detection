@@ -14,6 +14,7 @@ from src.epibench.szcore_bridge import import_szcore_metrics_as_result_bundle, m
 from src.epibench.validation import SchemaValidationError, validate_artifact
 from scripts.epibench_build_coverage_audit import build_coverage_audit
 from scripts.epibench_build_evidence_panels import build_evidence_panels
+from scripts.epibench_overclaim_audit import build_overclaim_audit
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -241,6 +242,28 @@ def test_epibench_builds_coverage_audit_with_explicit_gaps(tmp_path: Path) -> No
     assert "chbmit_patient_independent_d" in dataset_matrix
     assert "independent_mts_dsi_review" in gaps
     assert "track,W,major" in gaps
+
+
+def test_epibench_overclaim_audit_classifies_bounded_and_risky_wording(tmp_path: Path) -> None:
+    source = tmp_path / "claim_language.md"
+    source.write_text(
+        "\n".join(
+            [
+                "EpiBench-certified does not mean clinically approved.",
+                "This model is clinically approved and deployment ready.",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    result = build_overclaim_audit(roots=[source], out_dir=tmp_path / "audit")
+    findings = (tmp_path / "audit" / "overclaim_findings.csv").read_text(encoding="utf-8")
+
+    assert result["finding_count"] >= 3
+    assert result["bounded_count"] >= 1
+    assert result["requires_review_count"] >= 1
+    assert "clinically approved,bounded" in findings
+    assert "deployment ready,requires_review" in findings
 
 
 def test_epibench_maps_szcore_style_event_metrics(tmp_path: Path) -> None:

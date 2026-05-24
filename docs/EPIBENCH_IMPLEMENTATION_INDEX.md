@@ -36,6 +36,7 @@ This index lists the current v1.0-draft artefacts created from phase 1 through p
 - `scripts/epibench_build_chbmit_package.py`
 - `scripts/epibench_build_evidence_panels.py`
 - `scripts/epibench_build_coverage_audit.py`
+- `scripts/epibench_overclaim_audit.py`
 
 ## Worked Examples
 
@@ -86,6 +87,8 @@ This index lists the current v1.0-draft artefacts created from phase 1 through p
 - `reports/epibench_coverage_audit/rubric_item_coverage.csv`
 - `reports/epibench_coverage_audit/protocol_use_case_coverage.csv`
 - `reports/epibench_coverage_audit/coverage_gaps.csv`
+- `reports/epibench_overclaim_audit/README.md`
+- `reports/epibench_overclaim_audit/overclaim_findings.csv`
 - `reports/epibench_seizeit2_preliminary_claim.json`
 - `reports/epibench_seizeit2_preliminary_claim.md`
 - `reports/epibench_szcore_bridge_claim.json`
@@ -140,6 +143,7 @@ python scripts\epibench.py certify examples\epibench\early_warning_post_event_fa
 python scripts\epibench.py certify examples\epibench\far_explosion_failure_d\result_bundle.yaml --out reports\epibench_far_explosion_claim.json --report reports\epibench_far_explosion_claim.md
 python scripts\epibench_build_evidence_panels.py
 python scripts\epibench_build_coverage_audit.py
+python scripts\epibench_overclaim_audit.py
 python scripts\epibench.py certify examples\epibench\msg_preliminary_f\result_bundle.yaml --out reports\epibench_msg_preliminary_claim.json --report reports\epibench_msg_preliminary_claim.md
 python scripts\epibench.py certify examples\epibench\seizeit2_preliminary_f\result_bundle.yaml --out reports\epibench_seizeit2_preliminary_claim.json --report reports\epibench_seizeit2_preliminary_claim.md
 ```
