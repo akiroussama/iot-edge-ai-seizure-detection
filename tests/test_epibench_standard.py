@@ -20,6 +20,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 PILOT = REPO_ROOT / "examples" / "epibench" / "pilot_t1_eeg"
 LEAKAGE = REPO_ROOT / "examples" / "epibench" / "failure_leakage"
 PATIENT_DEPENDENT = REPO_ROOT / "examples" / "epibench" / "patient_dependent_demo"
+EARLY_WARNING_VALID = REPO_ROOT / "examples" / "epibench" / "early_warning_valid_w"
+EARLY_WARNING_FAILURE = REPO_ROOT / "examples" / "epibench" / "early_warning_post_event_failure_w"
 MSG_PRELIMINARY = REPO_ROOT / "examples" / "epibench" / "msg_preliminary_f"
 MSG_GATE_C_FROZEN = REPO_ROOT / "examples" / "epibench" / "msg_gate_c_frozen_f"
 CHBMIT_E2PI = REPO_ROOT / "examples" / "epibench" / "chbmit_patient_independent_d"
@@ -93,6 +95,18 @@ def test_epibench_chbmit_patient_independent_null_baseline_reaches_e2_pi_but_low
     assert report["score"]["floor_penalty_applied"] is True
     assert "EpiBench-Claim-E2-PI" in report["badges"]
     assert "real-time" in report["forbidden_phrases"]
+
+
+def test_epibench_early_warning_track_distinguishes_warning_from_post_event_detection() -> None:
+    valid = certify_result_bundle(EARLY_WARNING_VALID / "result_bundle.yaml")
+    failure = certify_result_bundle(EARLY_WARNING_FAILURE / "result_bundle.yaml")
+
+    assert valid["final_claim"] == "E2-PI"
+    assert valid["ceilings"]["failure_status"] == "E4"
+    assert failure["score"]["epi_score"] > valid["score"]["epi_score"]
+    assert failure["final_claim"] == "E1"
+    assert failure["ceilings"]["failure_status"] == "E1"
+    assert any("post-event alarms" in reason for reason in failure["blocking_reasons"])
 
 
 def test_epibench_loso_split_cannot_receive_e3_without_external_validation(tmp_path: Path) -> None:

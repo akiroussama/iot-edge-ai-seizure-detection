@@ -1,0 +1,32 @@
+schema_version: epibench.failure_trace.v1
+run_id: early_warning_valid_demo
+failure_policy: preserve_all
+sentinels:
+  - code: POST_EVENT_ALARM
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: all counted warning successes occur before seizure onset and respect the declared warning horizon
+  - code: FAR_EXPLOSION
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: false alarm burden remains inside the demonstration budget
+  - code: PATIENT_LEAKAGE
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: leave-one-subject-out grouping has no subject overlap
+  - code: TEMPORAL_LEAKAGE
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: no test-label threshold selection and no temporal overlap
+summary:
+  critical_failure_present: false
+  blocking_failure_present: false
+  failure_rate: 0.0

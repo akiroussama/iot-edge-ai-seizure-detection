@@ -65,6 +65,26 @@
       "actual_effective_tier": "T1"
     },
     {
+      "id": "early_warning_valid_loso_reaches_e2_pi",
+      "passed": true,
+      "expected_final_claim": "E2-PI",
+      "actual_final_claim": "E2-PI",
+      "missing_badges": [],
+      "missing_forbidden_phrases": [],
+      "expected_effective_tier": "T1",
+      "actual_effective_tier": "T1"
+    },
+    {
+      "id": "early_warning_post_event_alarm_downgrades_to_e1",
+      "passed": true,
+      "expected_final_claim": "E1",
+      "actual_final_claim": "E1",
+      "missing_badges": [],
+      "missing_forbidden_phrases": [],
+      "expected_effective_tier": "T1",
+      "actual_effective_tier": "T1"
+    },
+    {
       "id": "preliminary_seizeit2_single_subject_is_e1",
       "passed": true,
       "expected_final_claim": "E1",

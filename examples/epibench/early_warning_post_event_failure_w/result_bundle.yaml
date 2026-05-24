@@ -1,0 +1,43 @@
+schema_version: epibench.result_bundle.v1
+run_id: early_warning_post_event_failure_demo
+track: W
+requested_claim: E2-PI
+dataset_card_path: ../pilot_t1_eeg/dataset_card.yaml
+split_manifest_path: split_manifest.yaml
+failure_trace_path: failure_trace.yaml
+model:
+  name: post_event_alarm_demo
+  family: warning_failure_mode
+  commit_sha: demo-not-a-real-result
+environment:
+  python: "3.12"
+  platform: protocol-demo
+  dependencies:
+    - numpy
+inputs:
+  - path: examples/epibench/pilot_t1_eeg/result_bundle.yaml
+    sha256: null
+outputs:
+  - path: reports/epibench_early_warning_post_event_failure_claim.json
+    sha256: null
+metrics:
+  event_sensitivity: 0.91
+  false_alarms_per_24h: 0.9
+  event_f1: 0.74
+  precision: 0.62
+  warning_horizon_seconds: 300
+  median_warning_lead_time_seconds: -45
+  post_event_alarm_counted_as_success: true
+score_inputs:
+  subscores:
+    performance: 0.88
+    clinical_safety: 0.82
+    robustness: 0.78
+    stability: 0.76
+    latency: 0.84
+    calibration: 0.72
+hardware: null
+reproduction:
+  command: python scripts/epibench.py certify examples/epibench/early_warning_post_event_failure_w/result_bundle.yaml
+  container_or_env: local-python
+  checksums: []

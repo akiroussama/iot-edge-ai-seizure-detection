@@ -1,5 +1,4 @@
 category,value,severity,recommendation
-track,W,major,No result bundle covers this EpiBench track.
 dataset_core_mts,msg_preliminary_f,major,"Missing core MTS items: synchronization, missingness."
 dataset_mts_floor,msg_preliminary_f,major,At least one MTS item has score 0; tier and claims must remain fail-closed.
 dataset_core_mts,seizeit2_preliminary_f,major,"Missing core MTS items: acquisition_protocol, synchronization."
