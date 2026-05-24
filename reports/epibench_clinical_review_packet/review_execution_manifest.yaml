@@ -1,0 +1,53 @@
+schema_version: epibench.external_clinical_review_manifest.v1
+status: pending_external_review
+review_lock: A05
+purpose: obtain independent clinical and methods review of Dataset Evidence Cards before model metrics are interpreted
+blind_to_model_scores: true
+candidate_datasets:
+  - dataset_id: chbmit_patient_independent_d
+    role: real EEG patient-independent detection package
+    materials:
+      - examples/epibench/chbmit_patient_independent_d/dataset_card.yaml
+      - examples/epibench/chbmit_patient_independent_d/split_manifest.yaml
+      - examples/epibench/chbmit_patient_independent_d/failure_trace.yaml
+      - reports/epibench_chbmit_e2pi_package_report.md
+  - dataset_id: chbmit_waveform_micro_d
+    role: real EEG waveform micro evidence package
+    materials:
+      - examples/epibench/chbmit_waveform_micro_d/dataset_card.yaml
+      - examples/epibench/chbmit_waveform_micro_d/split_manifest.yaml
+      - examples/epibench/chbmit_waveform_micro_d/failure_trace.yaml
+      - reports/epibench_chbmit_waveform_micro_report.md
+  - dataset_id: msg_gate_c_frozen_f
+    role: wearable forecasting package with stricter claim ceiling
+    materials:
+      - examples/epibench/msg_gate_c_frozen_f/dataset_card.yaml
+      - examples/epibench/msg_gate_c_frozen_f/split_manifest.yaml
+      - examples/epibench/msg_gate_c_frozen_f/failure_trace.yaml
+      - reports/epibench_msg_gate_c_frozen_claim.md
+required_reviewers:
+  - reviewer_role: clinical_epilepsy_or_clinical_neurophysiology
+    independence: not an author, not a protocol designer, no model-development role
+    primary_questions:
+      - Are label quality, onset/offset uncertainty, seizure-type coverage, and clinical setting described honestly?
+      - Is the claim ceiling too high, too low, or appropriately bounded?
+  - reviewer_role: methods_or_reproducibility
+    independence: not an author, not a protocol designer, no model-development role
+    primary_questions:
+      - Can another lab reproduce the tier and claim ceiling from the evidence card?
+      - Are MTS/DSI rubric items sufficiently deterministic?
+preferred_reviewer:
+  reviewer_role: benchmark_or_dataset_curator
+  independence: external to project
+acceptance_criteria:
+  - at_least_two_independent_reviewers
+  - forms_completed_before_model_metric_access
+  - exact_agreement_or_adjudicated_resolution_on_claim_ceiling
+  - no_unresolved_mts_or_dsi_difference_gt_one
+  - adjudication_register_committed
+failure_conditions:
+  - reviewer_has_seen_model_metrics_before_dataset_scoring
+  - unresolved_claim_ceiling_disagreement
+  - unresolved_item_difference_gt_one
+  - conflict_of_interest_not_declared
+  - rubric_changed_to_improve_dataset_tier_after_metric_review

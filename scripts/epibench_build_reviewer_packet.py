@@ -16,6 +16,13 @@ WEIGHT_SENSITIVITY_DIR = REPO_ROOT / "reports" / "epibench_weight_sensitivity"
 REAL_EVIDENCE_DIR = REPO_ROOT / "reports" / "epibench_real_evidence_progression"
 READINESS_PATH = REPO_ROOT / "reports" / "epibench_submission_readiness_result.json"
 INTER_REVIEWER_PATH = REPO_ROOT / "reports" / "epibench_inter_reviewer_report.json"
+CLINICAL_REVIEW_PACKET_DIR = REPO_ROOT / "reports" / "epibench_clinical_review_packet"
+SZCORE_OFFICIAL_REPORT_PATH = REPO_ROOT / "reports" / "epibench_szcore_official_contract_report.md"
+SZCORE_OFFICIAL_RESULT_PATH = (
+    REPO_ROOT / "examples" / "epibench" / "szcore_official_smoke" / "szcore_evaluation_result.json"
+)
+LOCAL_HARDWARE_REPORT_PATH = REPO_ROOT / "reports" / "epibench_hardware_measurement" / "local_hardware_report.json"
+RELEASE_REPRODUCTION_PATH = REPO_ROOT / "reports" / "epibench_release_candidate" / "reproduction_result.json"
 
 
 def main() -> int:
@@ -93,6 +100,8 @@ def _collect_metrics(
     real_evidence_rows = _read_csv(real_evidence_dir / "real_package_matrix.csv")
     readiness = _read_json(readiness_path)
     inter_reviewer = _read_json(inter_reviewer_path)
+    local_hardware = _read_json(LOCAL_HARDWARE_REPORT_PATH)
+    release_reproduction = _read_json(RELEASE_REPRODUCTION_PATH)
 
     final_claims = _counts(row.get("final_claim", "") for row in bundles)
     tracks = sorted({row.get("track", "") for row in bundles if row.get("track")})
@@ -141,6 +150,8 @@ def _collect_metrics(
         "warning_failure_count": len(warning_failures),
         "far_failure_count": len(far_failures),
         "szcore_bundle_count": len(szcore_bundles),
+        "szcore_official_contract_exists": SZCORE_OFFICIAL_REPORT_PATH.exists(),
+        "szcore_official_result_exists": SZCORE_OFFICIAL_RESULT_PATH.exists(),
         "waveform_bundle_count": len(waveform_bundles),
         "waveform_claims": _counts(row.get("final_claim", "") for row in waveform_bundles),
         "real_evidence_package_count": len(real_evidence_rows),
@@ -162,6 +173,16 @@ def _collect_metrics(
         "readiness_operational_package_count": readiness.get("operational_package_count", 0),
         "inter_reviewer_status": inter_reviewer.get("status", "missing"),
         "inter_reviewer_dataset_count": inter_reviewer.get("dataset_count", 0),
+        "clinical_review_packet_exists": (CLINICAL_REVIEW_PACKET_DIR / "review_execution_manifest.yaml").exists(),
+        "local_hardware_report_exists": bool(local_hardware),
+        "local_hardware_scope": local_hardware.get("measurement_scope", "missing"),
+        "local_hardware_batch_p95_ms": local_hardware.get("latency", {}).get("batch_latency_ms_p95"),
+        "local_hardware_edge_authorized": local_hardware.get("edge_claim_authorized", False),
+        "release_reproduction_status": release_reproduction.get("status", "missing"),
+        "release_reproduction_matched_count": release_reproduction.get("matched_count", 0),
+        "release_reproduction_claim_count": release_reproduction.get("claim_count", 0),
+        "release_doi_status": release_reproduction.get("doi_status", "missing"),
+        "release_external_status": release_reproduction.get("external_reproduction_status", "missing"),
     }
 
 
@@ -198,19 +219,28 @@ def _build_attack_matrix(metrics: dict[str, Any]) -> list[dict[str, Any]]:
             "A04",
             "The protocol reinvents existing seizure event scoring such as SzCORE.",
             "critical",
-            "partial" if metrics["szcore_bundle_count"] >= 1 else "open",
-            "examples/epibench/szcore_bridge_demo/result_bundle.yaml",
-            f"{metrics['szcore_bundle_count']} SzCORE-bridge bundle is present.",
-            "Replace or supplement the demonstration import with official external scorer output.",
+            "strong"
+            if metrics["szcore_official_contract_exists"] and metrics["szcore_official_result_exists"]
+            else ("partial" if metrics["szcore_bundle_count"] >= 1 else "open"),
+            "reports/epibench_szcore_official_contract_report.md",
+            (
+                f"{metrics['szcore_bundle_count']} SzCORE-bridge bundle is present; "
+                f"official smoke output present={metrics['szcore_official_result_exists']}."
+            ),
+            "Use the official-contract report in Methods; add a full real EEG official SzCORE run when available.",
         ),
         _attack(
             "A05",
             "MTS and DSI are subjective and not reproducible between reviewers.",
             "critical",
             "partial" if metrics["inter_reviewer_status"] == "passed" else "open",
-            "reports/epibench_inter_reviewer_report.json",
-            f"Inter-reviewer report status {metrics['inter_reviewer_status']} on {metrics['inter_reviewer_dataset_count']} datasets.",
-            "Run independent clinical/methods reviewers and report adjudicated rubric changes.",
+            "reports/epibench_clinical_review_packet/README.md",
+            (
+                f"Inter-reviewer demo status {metrics['inter_reviewer_status']} on "
+                f"{metrics['inter_reviewer_dataset_count']} datasets; external review packet present="
+                f"{metrics['clinical_review_packet_exists']}."
+            ),
+            "Run the external clinical/methods review packet and commit adjudicated rubric changes.",
         ),
         _attack(
             "A06",
@@ -262,10 +292,16 @@ def _build_attack_matrix(metrics: dict[str, Any]) -> list[dict[str, Any]]:
             "A10",
             "Edge or real-time claims are not supported by measured hardware.",
             "high",
-            "partial" if metrics["hardware_failure_count"] >= 1 else "open",
-            "reports/epibench_evidence_panels/failure_matrix.csv",
-            f"{metrics['hardware_failure_count']} HARDWARE_UNMEASURED sentinel is visible.",
-            "Either add measured target hardware results or remove edge-readiness as a demonstrated claim.",
+            "partial" if metrics["local_hardware_report_exists"] or metrics["hardware_failure_count"] >= 1 else "open",
+            "reports/epibench_hardware_measurement/README.md",
+            (
+                f"local hardware report present={metrics['local_hardware_report_exists']}; "
+                f"scope={metrics['local_hardware_scope']}; "
+                f"batch p95 ms={metrics['local_hardware_batch_p95_ms']}; "
+                f"edge authorized={metrics['local_hardware_edge_authorized']}; "
+                f"HARDWARE_UNMEASURED sentinels={metrics['hardware_failure_count']}."
+            ),
+            "Measure the final model on a declared target IoT device before any edge-ready or real-time claim.",
         ),
         _attack(
             "A11",
@@ -285,9 +321,15 @@ def _build_attack_matrix(metrics: dict[str, Any]) -> list[dict[str, Any]]:
             "The standard is not yet community-adoptable from a clean checkout.",
             "high",
             "partial",
-            "docs/EPIBENCH_IMPLEMENTATION_INDEX.md",
-            "CLI, schemas, examples, tests, panels, and reports exist; DOI/release/external run remain open.",
-            "Freeze v1.0-rc, archive DOI, and document one-command reproduction for external users.",
+            "reports/epibench_release_candidate/README.md",
+            (
+                f"one-command reproduction {metrics['release_reproduction_status']} with "
+                f"{metrics['release_reproduction_matched_count']}/"
+                f"{metrics['release_reproduction_claim_count']} matched claims; "
+                f"DOI={metrics['release_doi_status']}; "
+                f"external={metrics['release_external_status']}."
+            ),
+            "Mint Zenodo DOI and obtain one independent external clean-checkout reproduction run.",
         ),
     ]
     return rows
@@ -369,6 +411,14 @@ def _build_evidence_index(metrics: dict[str, Any]) -> list[dict[str, str]]:
             ),
         },
         {
+            "evidence_family": "szcore_official_contract",
+            "path": "reports/epibench_szcore_official_contract_report.md",
+            "summary": (
+                f"official_contract={metrics['szcore_official_contract_exists']}; "
+                f"official_smoke_output={metrics['szcore_official_result_exists']}."
+            ),
+        },
+        {
             "evidence_family": "submission_readiness",
             "path": "reports/epibench_submission_readiness_result.json",
             "summary": (
@@ -383,6 +433,31 @@ def _build_evidence_index(metrics: dict[str, Any]) -> list[dict[str, str]]:
             "summary": (
                 f"status={metrics['inter_reviewer_status']}; "
                 f"datasets={metrics['inter_reviewer_dataset_count']}."
+            ),
+        },
+        {
+            "evidence_family": "clinical_review_packet",
+            "path": "reports/epibench_clinical_review_packet/README.md",
+            "summary": f"external_review_packet={metrics['clinical_review_packet_exists']}.",
+        },
+        {
+            "evidence_family": "local_hardware_measurement",
+            "path": "reports/epibench_hardware_measurement/README.md",
+            "summary": (
+                f"present={metrics['local_hardware_report_exists']}; "
+                f"scope={metrics['local_hardware_scope']}; "
+                f"edge_authorized={metrics['local_hardware_edge_authorized']}."
+            ),
+        },
+        {
+            "evidence_family": "release_candidate_reproduction",
+            "path": "reports/epibench_release_candidate/README.md",
+            "summary": (
+                f"status={metrics['release_reproduction_status']}; "
+                f"matched={metrics['release_reproduction_matched_count']}/"
+                f"{metrics['release_reproduction_claim_count']}; "
+                f"doi={metrics['release_doi_status']}; "
+                f"external={metrics['release_external_status']}."
             ),
         },
     ]

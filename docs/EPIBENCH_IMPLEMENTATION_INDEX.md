@@ -40,6 +40,8 @@ This index lists the current v1.0-draft artefacts created from phase 1 through p
 - `scripts/epibench_build_reviewer_packet.py`
 - `scripts/epibench_build_weight_sensitivity.py`
 - `scripts/epibench_build_real_evidence_progression.py`
+- `scripts/epibench_measure_local_hardware.py`
+- `scripts/epibench_reproduce_release_candidate.py`
 - `scripts/epibench_overclaim_audit.py`
 
 ## Worked Examples
@@ -60,6 +62,8 @@ This index lists the current v1.0-draft artefacts created from phase 1 through p
 - `examples/epibench/seizeit2_preliminary_f/result_bundle.yaml`
 - `examples/epibench/szcore_bridge_demo/result_bundle.yaml`
 - `examples/epibench/szcore_bridge_demo/imported_result_bundle.yaml`
+- `examples/epibench/szcore_official_smoke/README.md`
+- `examples/epibench/szcore_official_smoke/szcore_evaluation_result.json`
 - `examples/epibench/inter_reviewer_reviews.yaml`
 - `reports/epibench_pilot_claim.json`
 - `reports/epibench_pilot_claim.md`
@@ -105,6 +109,13 @@ This index lists the current v1.0-draft artefacts created from phase 1 through p
 - `reports/epibench_reviewer_packet/reviewer_attack_matrix.csv`
 - `reports/epibench_reviewer_packet/pre_submission_action_register.csv`
 - `reports/epibench_reviewer_packet/evidence_index.csv`
+- `reports/epibench_szcore_official_contract_report.md`
+- `reports/epibench_clinical_review_packet/README.md`
+- `reports/epibench_hardware_measurement/README.md`
+- `reports/epibench_hardware_measurement/local_hardware_report.json`
+- `reports/epibench_release_candidate/README.md`
+- `reports/epibench_release_candidate/reproduction_result.json`
+- `reports/epibench_release_candidate/release_manifest.json`
 - `reports/epibench_weight_sensitivity/README.md`
 - `reports/epibench_weight_sensitivity/weight_sensitivity_scores.csv`
 - `reports/epibench_weight_sensitivity/weight_sensitivity_rank_stability.csv`
@@ -170,6 +181,8 @@ python scripts\epibench_build_evidence_panels.py
 python scripts\epibench_build_coverage_audit.py
 python scripts\epibench_build_weight_sensitivity.py
 python scripts\epibench_build_real_evidence_progression.py
+python scripts\epibench_measure_local_hardware.py
+python scripts\epibench_reproduce_release_candidate.py
 python scripts\epibench_overclaim_audit.py
 python scripts\epibench_build_reviewer_packet.py
 python scripts\epibench.py certify examples\epibench\msg_preliminary_f\result_bundle.yaml --out reports\epibench_msg_preliminary_claim.json --report reports\epibench_msg_preliminary_claim.md

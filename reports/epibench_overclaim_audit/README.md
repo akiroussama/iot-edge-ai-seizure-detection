@@ -9,22 +9,22 @@ generalization, or SOTA overclaim. It is a review aid, not a scientific certific
 
 ## Summary
 
-- Findings: `360`.
-- Bounded/anti-overclaim context: `284`.
-- Requires wording review: `76`.
+- Findings: `378`.
+- Bounded/anti-overclaim context: `308`.
+- Requires wording review: `70`.
 
 ## Category Counts
 
-- `clinical_or_regulatory`: `97`
-- `edge_or_realtime`: `98`
-- `scope_or_generality`: `22`
-- `sota_or_leaderboard`: `143`
+- `clinical_or_regulatory`: `101`
+- `edge_or_realtime`: `109`
+- `scope_or_generality`: `24`
+- `sota_or_leaderboard`: `144`
 
 ## Severity Counts
 
-- `bounded`: `284`
-- `major`: `25`
-- `moderate`: `51`
+- `bounded`: `308`
+- `major`: `21`
+- `moderate`: `49`
 
 ## Files With Most Review Findings
 
@@ -35,9 +35,9 @@ generalization, or SOTA overclaim. It is a review aid, not a scientific certific
 - `docs/EPIBENCH_PHASE1_DETAILED_PLAN.md`: `5`
 - `docs/EPIBENCH_PHASE7_GOVERNANCE_ADOPTION.md`: `5`
 - `docs/EPIBENCH_PROTOCOL.md`: `4`
-- `docs/EPIBENCH_SPEC_V1.md`: `4`
-- `docs/EPIBENCH_PHASE1_REVIEW_CHECKLIST.md`: `3`
 - `docs/EPIBENCH_Q1_STANDARD_ROADMAP.md`: `3`
+- `docs/paper/EPIBENCH_SUPPLEMENTARY_METHODS_DRAFT.md`: `3`
+- `docs/EPIBENCH_PHASE1_ADJUDICATION_EXAMPLES.md`: `2`
 
 ## Findings Requiring Review
 
@@ -50,7 +50,6 @@ generalization, or SOTA overclaim. It is a review aid, not a scientific certific
 - `docs/EPIBENCH_PHASE1_DETAILED_PLAN.md:908` real-time (major) -> Review wording; add evidence boundary or remove unsupported claim.
 - `docs/EPIBENCH_PHASE1_REVIEW_CHECKLIST.md:144` real-time (major) -> Review wording; add evidence boundary or remove unsupported claim.
 - `docs/EPIBENCH_PHASE1_REVIEW_CHECKLIST.md:156` real-time (major) -> Review wording; add evidence boundary or remove unsupported claim.
-- `docs/EPIBENCH_PHASE1_REVIEW_CHECKLIST.md:194` real-time (major) -> Review wording; add evidence boundary or remove unsupported claim.
 - `docs/EPIBENCH_PHASE2_SINGLE_SOURCE_OF_TRUTH.md:87` sota (moderate) -> Review wording; add evidence boundary or remove unsupported claim.
 - `docs/EPIBENCH_PHASE2_SINGLE_SOURCE_OF_TRUTH.md:121` sota (moderate) -> Review wording; add evidence boundary or remove unsupported claim.
 - `docs/EPIBENCH_PHASE4_REFERENCE_IMPLEMENTATION.md:29` sota (moderate) -> Review wording; add evidence boundary or remove unsupported claim.
@@ -61,6 +60,7 @@ generalization, or SOTA overclaim. It is a review aid, not a scientific certific
 - `docs/EPIBENCH_PHASE7_GOVERNANCE_ADOPTION.md:149` sota (moderate) -> Review wording; add evidence boundary or remove unsupported claim.
 - `docs/EPIBENCH_PHASE7_GOVERNANCE_ADOPTION.md:158` sota (moderate) -> Review wording; add evidence boundary or remove unsupported claim.
 - `docs/EPIBENCH_PROTOCOL.md:293` real-time (major) -> Review wording; add evidence boundary or remove unsupported claim.
+- `docs/EPIBENCH_PROTOCOL.md:478` generalize (major) -> Review wording; add evidence boundary or remove unsupported claim.
 
 ## Boundary
 

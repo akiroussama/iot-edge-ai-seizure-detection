@@ -1,0 +1,21 @@
+schema_version: epibench.szcore_official_smoke.v1
+purpose: verify that EpiBench imports the raw official szcore-evaluation JSON contract without reimplementing event scoring
+scoring_tool:
+  package: szcore-evaluation
+  version: 0.0.7
+  source: PyPI
+  command: python -m szcore_evaluation reference hypothesis szcore_evaluation_result.json
+dependencies:
+  - szcore-evaluation==0.0.7
+  - epilepsy2bids==0.0.7
+  - timescoring==0.0.7
+input_scope: synthetic two-TSV smoke fixture, not a model performance claim
+output_contract:
+  primary_function: szcore_evaluation.evaluate.evaluate_dataset
+  mapped_section: event_results
+  mapped_fields:
+    event_results.sensitivity: event_sensitivity
+    event_results.precision: event_precision
+    event_results.f1: event_f1
+    event_results.fpRate: false_alarms_per_24h
+claim_boundary: compatibility evidence only; this fixture must not be used as clinical, dataset, or algorithmic evidence

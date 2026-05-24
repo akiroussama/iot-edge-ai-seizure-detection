@@ -79,6 +79,8 @@ SAFE_MARKERS = [
     "interdire",
     "interdits",
     "interdit",
+    "block unless",
+    "blocked",
     "reformulee",
     "feasibility",
 ]
@@ -99,6 +101,8 @@ STRUCTURAL_SAFE_MARKERS = [
     "it is not",
     "interdire les termes",
     "termes interdits",
+    "block unless",
+    "blocked",
     "doit éviter",
     "doit eviter",
     "definition of done",

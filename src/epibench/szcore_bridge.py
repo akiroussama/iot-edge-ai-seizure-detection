@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import json
 from pathlib import Path
 from typing import Any
 
@@ -24,6 +25,13 @@ SZCORE_TO_EPIBENCH_METRICS = {
     "detection_delay_seconds_p95": "detection_latency_seconds_p95",
 }
 
+SZCORE_OFFICIAL_EVENT_RESULTS_TO_EPIBENCH_METRICS = {
+    "sensitivity": "event_sensitivity",
+    "precision": "event_precision",
+    "f1": "event_f1",
+    "fpRate": "false_alarms_per_24h",
+}
+
 
 def map_szcore_metrics_to_result_bundle(
     szcore_metrics_path: str | Path,
@@ -43,20 +51,32 @@ def map_szcore_metrics_to_result_bundle(
     mapped = deepcopy(base_bundle)
     mapped.setdefault("metrics", {})
 
-    source_metrics = szcore_metrics.get("metrics", szcore_metrics)
+    official_event_results = szcore_metrics.get("event_results")
+    if isinstance(official_event_results, dict):
+        source_metrics = official_event_results
+        metric_map = SZCORE_OFFICIAL_EVENT_RESULTS_TO_EPIBENCH_METRICS
+        source_prefix = "event_results."
+        mapped["metrics"]["external_event_scoring_official_contract"] = (
+            "szcore-evaluation.evaluate_dataset:event_results"
+        )
+        mapped["metrics"]["event_scoring_source"] = "szcore-evaluation official output contract"
+    else:
+        source_metrics = szcore_metrics.get("metrics", szcore_metrics)
+        metric_map = SZCORE_TO_EPIBENCH_METRICS
+        source_prefix = ""
     if not isinstance(source_metrics, dict):
         raise ValueError("SzCORE metrics input must be a mapping or contain a 'metrics' mapping")
 
     mapped_fields: dict[str, str] = {}
-    for source_key, target_key in SZCORE_TO_EPIBENCH_METRICS.items():
+    for source_key, target_key in metric_map.items():
         if source_key in source_metrics:
             mapped["metrics"][target_key] = source_metrics[source_key]
-            mapped_fields[source_key] = target_key
+            mapped_fields[f"{source_prefix}{source_key}"] = target_key
 
     if "event_matching_rule" in szcore_metrics:
         mapped["metrics"]["event_matching_rule"] = szcore_metrics["event_matching_rule"]
     if "scoring_tool" in szcore_metrics:
-        mapped["metrics"]["event_scoring_source"] = szcore_metrics["scoring_tool"]
+        mapped["metrics"]["event_scoring_source"] = _format_scoring_tool(szcore_metrics["scoring_tool"])
 
     mapped["metrics"]["external_event_scoring_mapped"] = True
     mapped["metrics"]["external_event_scoring_relationship"] = "MAP"
@@ -73,6 +93,18 @@ def map_szcore_metrics_to_result_bundle(
     output_path.write_text(yaml.safe_dump(mapped, sort_keys=False), encoding="utf-8")
     validate_artifact("result-bundle", output_path)
     return mapped
+
+
+def _format_scoring_tool(scoring_tool: Any) -> str:
+    if isinstance(scoring_tool, str):
+        return scoring_tool
+    if isinstance(scoring_tool, dict):
+        name = scoring_tool.get("name")
+        version = scoring_tool.get("version")
+        if name and version:
+            return f"{name}=={version}"
+        return json.dumps(scoring_tool, sort_keys=True)
+    return str(scoring_tool)
 
 
 def import_szcore_metrics_as_result_bundle(

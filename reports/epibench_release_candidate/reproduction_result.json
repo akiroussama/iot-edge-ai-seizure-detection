@@ -1,0 +1,151 @@
+{
+  "schema_version": "epibench.release_candidate_reproduction.v1",
+  "release_candidate": "v1.0-rc-local",
+  "status": "passed",
+  "generation_base_commit": "417fd082ac9b03c37c884e7e6526df309ed736fc",
+  "git_commit_boundary": "The report cannot embed the final commit that contains itself. The final archive or Git tag is the authoritative source commit.",
+  "claim_count": 4,
+  "matched_count": 4,
+  "claim_results": [
+    {
+      "claim_id": "pilot_t1_eeg",
+      "bundle_path": "examples/epibench/pilot_t1_eeg/result_bundle.yaml",
+      "reference_path": "reports/epibench_pilot_claim.json",
+      "reproduced_path": "reports/epibench_release_candidate/reproduced_claims/pilot_t1_eeg.json",
+      "matched": true,
+      "reference_sha256": "91ffce4d64723e442318e24c93bde342369ee10b174dbf92e9ea306d13a387ed",
+      "reproduced_sha256": "91ffce4d64723e442318e24c93bde342369ee10b174dbf92e9ea306d13a387ed",
+      "final_claim": "E2-PI",
+      "epi_score": 74.158
+    },
+    {
+      "claim_id": "chbmit_waveform_micro_d",
+      "bundle_path": "examples/epibench/chbmit_waveform_micro_d/result_bundle.yaml",
+      "reference_path": "reports/epibench_chbmit_waveform_micro_claim.json",
+      "reproduced_path": "reports/epibench_release_candidate/reproduced_claims/chbmit_waveform_micro_d.json",
+      "matched": true,
+      "reference_sha256": "a9e6a23c6ca7c7051b781738a781931b3cc0a99021726f003c43ad4df6fc13b3",
+      "reproduced_sha256": "a9e6a23c6ca7c7051b781738a781931b3cc0a99021726f003c43ad4df6fc13b3",
+      "final_claim": "E2-PI",
+      "epi_score": 7.529
+    },
+    {
+      "claim_id": "msg_gate_c_frozen_f",
+      "bundle_path": "examples/epibench/msg_gate_c_frozen_f/result_bundle.yaml",
+      "reference_path": "reports/epibench_msg_gate_c_frozen_claim.json",
+      "reproduced_path": "reports/epibench_release_candidate/reproduced_claims/msg_gate_c_frozen_f.json",
+      "matched": true,
+      "reference_sha256": "d11315020fec4f3ca7cd4fcedcc20eefff4a4efc97be0bc1686ba46bf80c4763",
+      "reproduced_sha256": "d11315020fec4f3ca7cd4fcedcc20eefff4a4efc97be0bc1686ba46bf80c4763",
+      "final_claim": "E2-PD",
+      "epi_score": 58.984
+    },
+    {
+      "claim_id": "far_explosion_failure_d",
+      "bundle_path": "examples/epibench/far_explosion_failure_d/result_bundle.yaml",
+      "reference_path": "reports/epibench_far_explosion_claim.json",
+      "reproduced_path": "reports/epibench_release_candidate/reproduced_claims/far_explosion_failure_d.json",
+      "matched": true,
+      "reference_sha256": "3c18acb5c6041b8a56048a53621c6c5960e568206679d9010dbc668538366657",
+      "reproduced_sha256": "3c18acb5c6041b8a56048a53621c6c5960e568206679d9010dbc668538366657",
+      "final_claim": "E1",
+      "epi_score": 19.629
+    }
+  ],
+  "checksums": [
+    {
+      "path": "docs/EPIBENCH_SPEC_V1.md",
+      "sha256": "962fa284b31f586bd49c30b66fad87d251ba5a27f57b7dc5db874c490fbdf97a",
+      "exists": true
+    },
+    {
+      "path": "configs/epibench/epibench_v1.yaml",
+      "sha256": "df8ca5450deadb2a0d88e2dc0324eb8704bdc3b3d10c50898a9a85e71e21855d",
+      "exists": true
+    },
+    {
+      "path": "schemas/epibench/dataset_evidence_card.schema.json",
+      "sha256": "19120a771a71026f6e661f2dcea4f2f9b091742502de1474e3f4a9bd69633cda",
+      "exists": true
+    },
+    {
+      "path": "schemas/epibench/split_manifest.schema.json",
+      "sha256": "77d120b2eab201fa379806d93833e950a7e084d0bc5bab585567cdab84950c27",
+      "exists": true
+    },
+    {
+      "path": "schemas/epibench/failure_trace.schema.json",
+      "sha256": "953a65e15ac1cad080598d06012d460a09d684b363849717ad2c605d791cd847",
+      "exists": true
+    },
+    {
+      "path": "schemas/epibench/result_bundle.schema.json",
+      "sha256": "fd39e73f312cd9ba0ae7db4b8d7e194f211b3201ea864806221cc79062c643cb",
+      "exists": true
+    },
+    {
+      "path": "schemas/epibench/claim_eligibility.schema.json",
+      "sha256": "cae6dde4cf03b7c0b7e6f321737f7c22ebfb2c66954ffdb630116d241646849d",
+      "exists": true
+    },
+    {
+      "path": "src/epibench/certification.py",
+      "sha256": "41ca4e45db8bf3ba5b55e3fccd542304cdd19bd84c3cea40402facaa14076f5a",
+      "exists": true
+    },
+    {
+      "path": "src/epibench/scoring.py",
+      "sha256": "bf0159db9f4c40dc2458c7f2cdf47a4b24dbf79c343ba27a74cf18589427540a",
+      "exists": true
+    },
+    {
+      "path": "src/epibench/szcore_bridge.py",
+      "sha256": "35bc22364d639143354846bcceb7647266c68c3645eb0cebf1f6e005c964f8a1",
+      "exists": true
+    },
+    {
+      "path": "scripts/epibench.py",
+      "sha256": "250491180847aa772b1d6c06e523d42c8045f583dd39dc34ddc15ba92bf77695",
+      "exists": true
+    },
+    {
+      "path": "scripts/epibench_build_reviewer_packet.py",
+      "sha256": "3504e221b0a2985557975fa68f1ea898f0e133bbcba0595b8f5af665de68e9a3",
+      "exists": true
+    },
+    {
+      "path": "scripts/epibench_measure_local_hardware.py",
+      "sha256": "67edb10a609f375c529fa3dca16b0e5f8e1db6c321cc9476991db46aabae0350",
+      "exists": true
+    },
+    {
+      "path": "scripts/epibench_overclaim_audit.py",
+      "sha256": "fb56f41986645ce19358530f9faf298960cb32b4d3fedfc89d0b949c69f0244c",
+      "exists": true
+    },
+    {
+      "path": "scripts/epibench_reproduce_release_candidate.py",
+      "sha256": "ee33051d58b4e4492c16e5525ead57ae693a4061277d6e7106216cd296c0f036",
+      "exists": true
+    },
+    {
+      "path": "tests/test_epibench_standard.py",
+      "sha256": "f87c45ea73cb81cbd2fc317f011d43650bc27cd5d9db838cc366403a0e0561e2",
+      "exists": true
+    },
+    {
+      "path": "docs/EPIBENCH_IMPLEMENTATION_INDEX.md",
+      "sha256": "cd85aa60783fcbed0686a55a822a6f887ee4907c79dd78d546d942f5cbc2d35f",
+      "exists": true
+    },
+    {
+      "path": "reports/epibench_reviewer_packet/README.md",
+      "sha256": "62c3de84753761f2ef6e7ca66cdb71e6ca0dc1f9f01beffe3d4936ea2a5b0f80",
+      "exists": true
+    }
+  ],
+  "doi_status": "pending_zenodo_deposition",
+  "external_reproduction_status": "pending_external_lab_run",
+  "one_command": "python scripts/epibench_reproduce_release_candidate.py",
+  "boundary": "This package verifies scientific reproducibility of EpiBench artefacts from the checkout. It is not clinical validation, regulatory clearance, or a DOI minting event."
+}

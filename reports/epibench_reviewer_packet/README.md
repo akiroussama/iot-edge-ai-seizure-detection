@@ -12,12 +12,12 @@ specific artefact, quantitative indicator, and required action.
 ## Summary
 
 - Reviewer attacks tracked: `12`.
-- Defense status: `partial=5, strong=7`.
+- Defense status: `partial=4, strong=8`.
 - Severity distribution: `critical=5, high=7`.
 - Result bundles represented in evidence panels: `16`.
 - Protocol tracks represented: `D, E, F, W`.
 - Submission-readiness gate: `passed`.
-- Open or partial action count: `5`.
+- Open or partial action count: `4`.
 
 ## Files Generated
 
@@ -27,11 +27,10 @@ specific artefact, quantitative indicator, and required action.
 
 ## Highest-Priority Remaining Actions
 
-- `A04` partial: Replace or supplement the demonstration import with official external scorer output.
-- `A05` partial: Run independent clinical/methods reviewers and report adjudicated rubric changes.
+- `A05` partial: Run the external clinical/methods review packet and commit adjudicated rubric changes.
 - `A06` partial: Scale CHB-MIT waveform evidence beyond the micro-subset and add stronger patient-independent baselines.
-- `A10` partial: Either add measured target hardware results or remove edge-readiness as a demonstrated claim.
-- `A12` partial: Freeze v1.0-rc, archive DOI, and document one-command reproduction for external users.
+- `A10` partial: Measure the final model on a declared target IoT device before any edge-ready or real-time claim.
+- `A12` partial: Mint Zenodo DOI and obtain one independent external clean-checkout reproduction run.
 
 ## Boundary
 

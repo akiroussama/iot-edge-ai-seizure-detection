@@ -1,0 +1,41 @@
+{
+  "schema_version": "epibench.local_hardware_report.v1",
+  "created_utc": "2026-05-24T16:14:35+00:00",
+  "measurement_scope": "local_reference_cpu_threshold_inference_only",
+  "edge_claim_authorized": false,
+  "target_hardware_claim": "not_authorized_without_target_iot_device_measurement",
+  "input": {
+    "features_path": "C:\\doctorat\\iot\\iot-edge-ai-seizure-detection\\data\\processed\\chbmit_waveform_micro\\window_features.csv",
+    "metrics_path": "C:\\doctorat\\iot\\iot-edge-ai-seizure-detection\\reports\\chbmit_waveform_micro_metrics.json",
+    "feature_column": "robust_z",
+    "window_count_per_batch": 2161,
+    "repeat": 200,
+    "threshold": 10.773137
+  },
+  "hardware": {
+    "system": "Windows",
+    "release": "11",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 167 Stepping 1, GenuineIntel",
+    "python": "3.12.6",
+    "cpu_count": 16
+  },
+  "latency": {
+    "batch_latency_ms_median": 0.0465,
+    "batch_latency_ms_p95": 0.09432,
+    "per_window_latency_us_median": 0.021518,
+    "per_window_latency_us_p95": 0.043646,
+    "predictions_per_second_median": 46473118.28
+  },
+  "memory": {
+    "python_tracemalloc_peak_kb": 41.641,
+    "ram_claim_scope": "python_process_peak_during_threshold_loop_not_full_device_ram"
+  },
+  "energy": {
+    "measured": false,
+    "energy_mj_per_inference": null,
+    "reason": "No target power monitor or IoT board was available in this run."
+  },
+  "claim_boundary": "This is a real local CPU timing measurement for a tiny threshold inference loop. It does not authorize real-time, edge-ready, battery-life, or medical-device deployment claims.",
+  "prediction_count": 432200
+}

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -17,7 +18,9 @@ from scripts.epibench_build_evidence_panels import build_evidence_panels
 from scripts.epibench_build_real_evidence_progression import build_real_evidence_progression
 from scripts.epibench_build_reviewer_packet import build_reviewer_packet
 from scripts.epibench_build_weight_sensitivity import build_weight_sensitivity
+from scripts.epibench_measure_local_hardware import build_local_hardware_report
 from scripts.epibench_overclaim_audit import build_overclaim_audit
+from scripts.epibench_reproduce_release_candidate import reproduce_release_candidate
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -333,6 +336,37 @@ def test_epibench_real_evidence_progression_tracks_real_packages(tmp_path: Path)
     assert "chbmit_waveform_micro_d,highest" in actions
 
 
+def test_epibench_local_hardware_report_is_real_but_not_edge_authorizing(tmp_path: Path) -> None:
+    features = tmp_path / "window_features.csv"
+    metrics = tmp_path / "metrics.json"
+    features.write_text(
+        "robust_z\n0.1\n0.5\n1.1\n2.0\n",
+        encoding="utf-8",
+    )
+    metrics.write_text(json.dumps({"threshold": 1.0}), encoding="utf-8")
+
+    report = build_local_hardware_report(
+        features_path=features,
+        metrics_path=metrics,
+        out_dir=tmp_path / "hardware",
+        repeat=20,
+    )
+
+    assert report["edge_claim_authorized"] is False
+    assert report["latency"]["batch_latency_ms_p95"] >= 0
+    assert report["energy"]["measured"] is False
+    assert (tmp_path / "hardware" / "README.md").exists()
+
+
+def test_epibench_release_candidate_reproduction_matches_reference_claims(tmp_path: Path) -> None:
+    result = reproduce_release_candidate(out_dir=tmp_path / "release_candidate")
+
+    assert result["status"] == "passed"
+    assert result["matched_count"] == result["claim_count"] == 4
+    assert result["doi_status"] == "pending_zenodo_deposition"
+    assert (tmp_path / "release_candidate" / "README.md").exists()
+
+
 def test_epibench_maps_szcore_style_event_metrics(tmp_path: Path) -> None:
     mapped_path = tmp_path / "mapped_result_bundle.yaml"
 
@@ -346,6 +380,30 @@ def test_epibench_maps_szcore_style_event_metrics(tmp_path: Path) -> None:
     assert bundle["metrics"]["event_sensitivity"] == 0.81
     assert bundle["metrics"]["false_alarms_per_24h"] == 1.25
     assert bundle["metrics"]["external_event_scoring_relationship"] == "MAP"
+    assert report["final_claim"] == "E2-PI"
+
+
+def test_epibench_maps_official_szcore_evaluation_event_results(tmp_path: Path) -> None:
+    mapped_path = tmp_path / "official_mapped_result_bundle.yaml"
+
+    bundle = map_szcore_metrics_to_result_bundle(
+        REPO_ROOT / "examples" / "epibench" / "szcore_official_smoke" / "szcore_evaluation_result.json",
+        PILOT / "result_bundle.yaml",
+        mapped_path,
+    )
+    report = certify_result_bundle(mapped_path)
+
+    assert bundle["metrics"]["event_sensitivity"] == 1.0
+    assert bundle["metrics"]["event_precision"] == 1.0
+    assert bundle["metrics"]["event_f1"] == 1.0
+    assert bundle["metrics"]["false_alarms_per_24h"] == 0.0
+    assert bundle["metrics"]["external_event_scoring_official_contract"] == (
+        "szcore-evaluation.evaluate_dataset:event_results"
+    )
+    assert bundle["metrics"]["external_event_scoring_mapped_fields"] == (
+        "event_results.f1->event_f1,event_results.fpRate->false_alarms_per_24h,"
+        "event_results.precision->event_precision,event_results.sensitivity->event_sensitivity"
+    )
     assert report["final_claim"] == "E2-PI"
 
 
