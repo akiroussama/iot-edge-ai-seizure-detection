@@ -74,6 +74,12 @@ SAFE_MARKERS = [
     "not a",
     "not clinical",
     "not clinically",
+    "never",
+    "it is never",
+    "interdire",
+    "interdits",
+    "interdit",
+    "reformulee",
     "feasibility",
 ]
 
@@ -82,6 +88,8 @@ STRUCTURAL_SAFE_MARKERS = [
     "blocks claim phrases",
     "forbidden phrases",
     "forbidden:",
+    "forbidden wording",
+    "it does not mean:",
     "sota_registry",
     "preferred_source",
     "relationship:",
@@ -89,6 +97,13 @@ STRUCTURAL_SAFE_MARKERS = [
     "anti_overclaim",
     "anti-overclaim",
     "it is not",
+    "interdire les termes",
+    "termes interdits",
+    "doit éviter",
+    "doit eviter",
+    "definition of done",
+    "ambiguity removed",
+    "limitations section explicitly separates",
     "optional but expected",
     "sota alignment",
     "sota registry",
@@ -97,6 +112,7 @@ STRUCTURAL_SAFE_MARKERS = [
     "compatibility",
     "compatible",
     "citation",
+    "search dans les docs",
     "source",
 ]
 
@@ -175,7 +191,8 @@ def _scan_file(path: Path) -> list[dict[str, Any]]:
             for phrase in phrases:
                 if _phrase_matches(normalized, phrase):
                     context = _context(lines, index)
-                    classification = _classify(line, context, phrase, path)
+                    near_context = _near_context(lines, index)
+                    classification = _classify(line, context, near_context, phrase, path)
                     findings.append(
                         {
                             "file": _repo_relative(path),
@@ -198,12 +215,15 @@ def _phrase_matches(normalized_line: str, phrase: str) -> bool:
     return normalized_phrase in normalized_line
 
 
-def _classify(line: str, context: str, phrase: str, path: Path) -> str:
+def _classify(line: str, context: str, near_context: str, phrase: str, path: Path) -> str:
     normalized_line = _normalize(line)
     normalized_context = _normalize(context)
+    normalized_near_context = _normalize(near_context)
     if phrase == "sota" and "sota_registry" in path.name:
         return "bounded"
     if any(marker in normalized_line for marker in SAFE_MARKERS):
+        return "bounded"
+    if any(marker in normalized_near_context for marker in SAFE_MARKERS):
         return "bounded"
     if any(marker in normalized_context for marker in STRUCTURAL_SAFE_MARKERS):
         return "bounded"
@@ -236,6 +256,12 @@ def _severity(category: str, classification: str) -> str:
 def _context(lines: list[str], line_number: int) -> str:
     start = max(0, line_number - 7)
     end = min(len(lines), line_number + 1)
+    return " ".join(lines[start:end])
+
+
+def _near_context(lines: list[str], line_number: int) -> str:
+    start = max(0, line_number - 2)
+    end = min(len(lines), line_number)
     return " ".join(lines[start:end])
 
 

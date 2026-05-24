@@ -252,6 +252,8 @@ def test_epibench_overclaim_audit_classifies_bounded_and_risky_wording(tmp_path:
         "\n".join(
             [
                 "EpiBench-certified does not mean clinically approved.",
+                "It does not mean",
+                "clinically safe, regulatory approved, or ready for deployment as a medical device.",
                 "This model is clinically approved and deployment ready.",
             ]
         ),
@@ -262,9 +264,10 @@ def test_epibench_overclaim_audit_classifies_bounded_and_risky_wording(tmp_path:
     findings = (tmp_path / "audit" / "overclaim_findings.csv").read_text(encoding="utf-8")
 
     assert result["finding_count"] >= 3
-    assert result["bounded_count"] >= 1
+    assert result["bounded_count"] >= 4
     assert result["requires_review_count"] >= 1
     assert "clinically approved,bounded" in findings
+    assert "clinically safe,bounded" in findings
     assert "deployment ready,requires_review" in findings
 
 

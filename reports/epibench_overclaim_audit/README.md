@@ -10,8 +10,8 @@ generalization, or SOTA overclaim. It is a review aid, not a scientific certific
 ## Summary
 
 - Findings: `355`.
-- Bounded/anti-overclaim context: `187`.
-- Requires wording review: `168`.
+- Bounded/anti-overclaim context: `279`.
+- Requires wording review: `76`.
 
 ## Category Counts
 
@@ -22,46 +22,45 @@ generalization, or SOTA overclaim. It is a review aid, not a scientific certific
 
 ## Severity Counts
 
-- `bounded`: `187`
-- `critical`: `77`
-- `major`: `38`
-- `moderate`: `53`
+- `bounded`: `279`
+- `major`: `25`
+- `moderate`: `51`
 
 ## Files With Most Review Findings
 
-- `docs/EPIBENCH_PHASE1_DETAILED_PLAN.md`: `13`
 - `docs/research/2026-05-20_q1_publishable_task_roadmap.md`: `9`
-- `docs/research/2026-05-20_step1_execution_log.md`: `8`
 - `docs/research/2026-05-20_step1_sota_leaderboard_plan.md`: `8`
-- `docs/EPIBENCH_PROTOCOL.md`: `7`
-- `docs/EPIBENCH_SPEC_V1.md`: `7`
+- `docs/research/2026-05-20_step1_execution_log.md`: `7`
 - `docs/research/2026-05-22_general_status_and_roadmap.md`: `6`
+- `docs/EPIBENCH_PHASE1_DETAILED_PLAN.md`: `5`
 - `docs/EPIBENCH_PHASE7_GOVERNANCE_ADOPTION.md`: `5`
-- `reports/epibench_chbmit_e2pi_package_report.md`: `5`
-- `docs/EPIBENCH_PHASE1_REVIEW_CHECKLIST.md`: `4`
+- `docs/EPIBENCH_PROTOCOL.md`: `4`
+- `docs/EPIBENCH_SPEC_V1.md`: `4`
+- `docs/EPIBENCH_PHASE1_REVIEW_CHECKLIST.md`: `3`
+- `docs/EPIBENCH_Q1_STANDARD_ROADMAP.md`: `3`
 
 ## Findings Requiring Review
 
 - `docs/EPIBENCH_PHASE1_ADJUDICATION_EXAMPLES.md:358` real-time (major) -> Review wording; add evidence boundary or remove unsupported claim.
 - `docs/EPIBENCH_PHASE1_ADJUDICATION_EXAMPLES.md:370` real-time (major) -> Review wording; add evidence boundary or remove unsupported claim.
 - `docs/EPIBENCH_PHASE1_DETAILED_PLAN.md:151` sota (moderate) -> Review wording; add evidence boundary or remove unsupported claim.
-- `docs/EPIBENCH_PHASE1_DETAILED_PLAN.md:196` clinical certification (critical) -> Review wording; add evidence boundary or remove unsupported claim.
-- `docs/EPIBENCH_PHASE1_DETAILED_PLAN.md:197` clinically approved (critical) -> Review wording; add evidence boundary or remove unsupported claim.
-- `docs/EPIBENCH_PHASE1_DETAILED_PLAN.md:217` clinically certified (critical) -> Review wording; add evidence boundary or remove unsupported claim.
 - `docs/EPIBENCH_PHASE1_DETAILED_PLAN.md:478` real-time (major) -> Review wording; add evidence boundary or remove unsupported claim.
 - `docs/EPIBENCH_PHASE1_DETAILED_PLAN.md:553` generalize (major) -> Review wording; add evidence boundary or remove unsupported claim.
-- `docs/EPIBENCH_PHASE1_DETAILED_PLAN.md:695` real-time (major) -> Review wording; add evidence boundary or remove unsupported claim.
-- `docs/EPIBENCH_PHASE1_DETAILED_PLAN.md:845` generalize (major) -> Review wording; add evidence boundary or remove unsupported claim.
 - `docs/EPIBENCH_PHASE1_DETAILED_PLAN.md:864` real-time (major) -> Review wording; add evidence boundary or remove unsupported claim.
-- `docs/EPIBENCH_PHASE1_DETAILED_PLAN.md:869` real-time (major) -> Review wording; add evidence boundary or remove unsupported claim.
-- `docs/EPIBENCH_PHASE1_DETAILED_PLAN.md:904` clinically certified (critical) -> Review wording; add evidence boundary or remove unsupported claim.
-- `docs/EPIBENCH_PHASE1_DETAILED_PLAN.md:907` generalizable (major) -> Review wording; add evidence boundary or remove unsupported claim.
 - `docs/EPIBENCH_PHASE1_DETAILED_PLAN.md:908` real-time (major) -> Review wording; add evidence boundary or remove unsupported claim.
-- `docs/EPIBENCH_PHASE1_REVIEW_CHECKLIST.md:110` real-time (major) -> Review wording; add evidence boundary or remove unsupported claim.
 - `docs/EPIBENCH_PHASE1_REVIEW_CHECKLIST.md:144` real-time (major) -> Review wording; add evidence boundary or remove unsupported claim.
 - `docs/EPIBENCH_PHASE1_REVIEW_CHECKLIST.md:156` real-time (major) -> Review wording; add evidence boundary or remove unsupported claim.
 - `docs/EPIBENCH_PHASE1_REVIEW_CHECKLIST.md:194` real-time (major) -> Review wording; add evidence boundary or remove unsupported claim.
 - `docs/EPIBENCH_PHASE2_SINGLE_SOURCE_OF_TRUTH.md:87` sota (moderate) -> Review wording; add evidence boundary or remove unsupported claim.
+- `docs/EPIBENCH_PHASE2_SINGLE_SOURCE_OF_TRUTH.md:121` sota (moderate) -> Review wording; add evidence boundary or remove unsupported claim.
+- `docs/EPIBENCH_PHASE4_REFERENCE_IMPLEMENTATION.md:29` sota (moderate) -> Review wording; add evidence boundary or remove unsupported claim.
+- `docs/EPIBENCH_PHASE6_Q1_PAPER_STRATEGY.md:192` sota (moderate) -> Review wording; add evidence boundary or remove unsupported claim.
+- `docs/EPIBENCH_PHASE7_GOVERNANCE_ADOPTION.md:31` sota (moderate) -> Review wording; add evidence boundary or remove unsupported claim.
+- `docs/EPIBENCH_PHASE7_GOVERNANCE_ADOPTION.md:59` sota (moderate) -> Review wording; add evidence boundary or remove unsupported claim.
+- `docs/EPIBENCH_PHASE7_GOVERNANCE_ADOPTION.md:116` sota (moderate) -> Review wording; add evidence boundary or remove unsupported claim.
+- `docs/EPIBENCH_PHASE7_GOVERNANCE_ADOPTION.md:149` sota (moderate) -> Review wording; add evidence boundary or remove unsupported claim.
+- `docs/EPIBENCH_PHASE7_GOVERNANCE_ADOPTION.md:158` sota (moderate) -> Review wording; add evidence boundary or remove unsupported claim.
+- `docs/EPIBENCH_PROTOCOL.md:293` real-time (major) -> Review wording; add evidence boundary or remove unsupported claim.
 
 ## Boundary
 

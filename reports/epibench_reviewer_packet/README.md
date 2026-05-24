@@ -12,12 +12,12 @@ specific artefact, quantitative indicator, and required action.
 ## Summary
 
 - Reviewer attacks tracked: `12`.
-- Defense status: `partial=6, strong=6`.
+- Defense status: `partial=5, strong=7`.
 - Severity distribution: `critical=5, high=7`.
 - Result bundles represented in evidence panels: `15`.
 - Protocol tracks represented: `D, E, F, W`.
 - Submission-readiness gate: `passed`.
-- Open or partial action count: `6`.
+- Open or partial action count: `5`.
 
 ## Files Generated
 
@@ -27,7 +27,6 @@ specific artefact, quantitative indicator, and required action.
 
 ## Highest-Priority Remaining Actions
 
-- `A01` partial: Resolve or explicitly waive every critical overclaim finding before manuscript freeze.
 - `A04` partial: Replace or supplement the demonstration import with official external scorer output.
 - `A05` partial: Run independent clinical/methods reviewers and report adjudicated rubric changes.
 - `A06` partial: Upgrade CHB-MIT from metadata/null baseline to waveform-derived patient-independent result.
