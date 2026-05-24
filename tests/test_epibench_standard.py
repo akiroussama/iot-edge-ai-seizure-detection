@@ -22,6 +22,7 @@ LEAKAGE = REPO_ROOT / "examples" / "epibench" / "failure_leakage"
 PATIENT_DEPENDENT = REPO_ROOT / "examples" / "epibench" / "patient_dependent_demo"
 EARLY_WARNING_VALID = REPO_ROOT / "examples" / "epibench" / "early_warning_valid_w"
 EARLY_WARNING_FAILURE = REPO_ROOT / "examples" / "epibench" / "early_warning_post_event_failure_w"
+FAR_EXPLOSION = REPO_ROOT / "examples" / "epibench" / "far_explosion_failure_d"
 MSG_PRELIMINARY = REPO_ROOT / "examples" / "epibench" / "msg_preliminary_f"
 MSG_GATE_C_FROZEN = REPO_ROOT / "examples" / "epibench" / "msg_gate_c_frozen_f"
 CHBMIT_E2PI = REPO_ROOT / "examples" / "epibench" / "chbmit_patient_independent_d"
@@ -109,6 +110,14 @@ def test_epibench_early_warning_track_distinguishes_warning_from_post_event_dete
     assert any("post-event alarms" in reason for reason in failure["blocking_reasons"])
 
 
+def test_epibench_far_explosion_blocks_high_sensitivity_detection_claim() -> None:
+    report = certify_result_bundle(FAR_EXPLOSION / "result_bundle.yaml")
+
+    assert report["final_claim"] == "E1"
+    assert report["ceilings"]["failure_status"] == "E1"
+    assert any("False alarm burden" in reason for reason in report["blocking_reasons"])
+
+
 def test_epibench_loso_split_cannot_receive_e3_without_external_validation(tmp_path: Path) -> None:
     import yaml
 
@@ -190,22 +199,26 @@ def test_epibench_builds_evidence_panels_that_expose_claim_gating(tmp_path: Path
             LEAKAGE / "result_bundle.yaml",
             CHBMIT_E2PI / "result_bundle.yaml",
             MSG_GATE_C_FROZEN / "result_bundle.yaml",
+            FAR_EXPLOSION / "result_bundle.yaml",
         ],
         out_dir=tmp_path,
     )
 
-    assert result["bundle_count"] == 4
+    assert result["bundle_count"] == 5
     readme = (tmp_path / "README.md").read_text(encoding="utf-8")
     rank_comparison = (tmp_path / "rank_comparison.csv").read_text(encoding="utf-8")
     waterfall = (tmp_path / "claim_gate_waterfall.csv").read_text(encoding="utf-8")
     failure_matrix = (tmp_path / "failure_matrix.csv").read_text(encoding="utf-8")
+    sensitivity = (tmp_path / "sensitivity_only_leaderboard.csv").read_text(encoding="utf-8")
 
     assert "high_or_mid_score_claim_limited_by_evidence_gate" in rank_comparison
     assert "claim_structure_valid_but_performance_poor" in rank_comparison
-    assert "Bundle count: `4`" in readme
+    assert "Bundle count: `5`" in readme
     assert "chbmit_always_negative_patient_independent" in rank_comparison
     assert "PATIENT_LEAKAGE" in failure_matrix
     assert "failure_status" in waterfall
+    assert "ranking_mode" in sensitivity
+    assert "far_explosion_high_sensitivity_demo" in sensitivity
 
 
 def test_epibench_builds_coverage_audit_with_explicit_gaps(tmp_path: Path) -> None:

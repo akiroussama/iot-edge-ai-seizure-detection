@@ -6,6 +6,7 @@ pilot_t1_eeg,examples/epibench/pilot_t1_eeg/dataset_card.yaml,T1,T1,2.833,2,,Tru
 pilot_t1_eeg,examples/epibench/pilot_t1_eeg/dataset_card.yaml,T1,T1,2.833,2,,True,hospital,expert_adjudicated_onset_offset,3,True,3,True,,False,,False,2,True,3,True,3,True,3,True,2,0,,,2,2,,1,
 pilot_t1_eeg,examples/epibench/pilot_t1_eeg/dataset_card.yaml,T1,T1,2.833,2,,True,hospital,expert_adjudicated_onset_offset,3,True,3,True,,False,,False,2,True,3,True,3,True,3,True,2,0,,,2,2,,1,
 pilot_t1_eeg,examples/epibench/pilot_t1_eeg/dataset_card.yaml,T1,T1,2.833,2,,True,hospital,expert_adjudicated_onset_offset,3,True,3,True,,False,,False,2,True,3,True,3,True,3,True,2,0,,,2,2,,1,
+pilot_t1_eeg,examples/epibench/pilot_t1_eeg/dataset_card.yaml,T1,T1,2.833,2,,True,hospital,expert_adjudicated_onset_offset,3,True,3,True,,False,,False,2,True,3,True,3,True,3,True,2,0,,,2,2,,1,
 msg_gate_c_frozen_f,examples/epibench/msg_gate_c_frozen_f/dataset_card.yaml,T2,T2,2.143,1,,True,home,clinical_record_verified_no_precise_timing,2,True,2,True,3,False,,False,1,True,3,True,3,True,1,True,,0,3,3,1,,,1,
 msg_preliminary_f,examples/epibench/msg_preliminary_f/dataset_card.yaml,T2,T3,1.143,0,synchronization;missingness,False,home,proxy_or_device_label,1,True,1,True,2,False,,False,,True,2,True,2,True,,True,,0,3,3,1,,,2,
 pilot_t1_eeg,examples/epibench/pilot_t1_eeg/dataset_card.yaml,T1,T1,2.833,2,,True,hospital,expert_adjudicated_onset_offset,3,True,3,True,,False,,False,2,True,3,True,3,True,3,True,2,0,,,2,2,,1,

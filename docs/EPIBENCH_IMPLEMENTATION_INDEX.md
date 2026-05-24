@@ -47,6 +47,7 @@ This index lists the current v1.0-draft artefacts created from phase 1 through p
 - `examples/epibench/chbmit_patient_independent_d/result_bundle.yaml`
 - `examples/epibench/early_warning_valid_w/result_bundle.yaml`
 - `examples/epibench/early_warning_post_event_failure_w/result_bundle.yaml`
+- `examples/epibench/far_explosion_failure_d/result_bundle.yaml`
 - `examples/epibench/seizeit2_preliminary_f/result_bundle.yaml`
 - `examples/epibench/szcore_bridge_demo/result_bundle.yaml`
 - `examples/epibench/szcore_bridge_demo/imported_result_bundle.yaml`
@@ -69,9 +70,12 @@ This index lists the current v1.0-draft artefacts created from phase 1 through p
 - `reports/epibench_early_warning_valid_claim.md`
 - `reports/epibench_early_warning_post_event_failure_claim.json`
 - `reports/epibench_early_warning_post_event_failure_claim.md`
+- `reports/epibench_far_explosion_claim.json`
+- `reports/epibench_far_explosion_claim.md`
 - `reports/epibench_evidence_panels/README.md`
 - `reports/epibench_evidence_panels/bundle_summary.csv`
 - `reports/epibench_evidence_panels/naive_score_leaderboard.csv`
+- `reports/epibench_evidence_panels/sensitivity_only_leaderboard.csv`
 - `reports/epibench_evidence_panels/claim_gated_leaderboard.csv`
 - `reports/epibench_evidence_panels/rank_comparison.csv`
 - `reports/epibench_evidence_panels/claim_gate_waterfall.csv`
@@ -133,6 +137,7 @@ python scripts\epibench_build_chbmit_package.py
 python scripts\epibench.py certify examples\epibench\chbmit_patient_independent_d\result_bundle.yaml --out reports\epibench_chbmit_patient_independent_claim.json --report reports\epibench_chbmit_patient_independent_claim.md
 python scripts\epibench.py certify examples\epibench\early_warning_valid_w\result_bundle.yaml --out reports\epibench_early_warning_valid_claim.json --report reports\epibench_early_warning_valid_claim.md
 python scripts\epibench.py certify examples\epibench\early_warning_post_event_failure_w\result_bundle.yaml --out reports\epibench_early_warning_post_event_failure_claim.json --report reports\epibench_early_warning_post_event_failure_claim.md
+python scripts\epibench.py certify examples\epibench\far_explosion_failure_d\result_bundle.yaml --out reports\epibench_far_explosion_claim.json --report reports\epibench_far_explosion_claim.md
 python scripts\epibench_build_evidence_panels.py
 python scripts\epibench_build_coverage_audit.py
 python scripts\epibench.py certify examples\epibench\msg_preliminary_f\result_bundle.yaml --out reports\epibench_msg_preliminary_claim.json --report reports\epibench_msg_preliminary_claim.md

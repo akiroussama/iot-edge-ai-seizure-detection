@@ -47,6 +47,7 @@ def build_evidence_panels(bundle_paths: list[Path], out_dir: Path) -> dict[str, 
 
     summary_rows = _summary_rows(records)
     naive_rows = _rank_rows(summary_rows, ranks, mode="naive")
+    sensitivity_rows = _rank_rows(summary_rows, ranks, mode="sensitivity")
     claim_gated_rows = _rank_rows(summary_rows, ranks, mode="claim_gated")
     rank_comparison_rows = _rank_comparison(naive_rows, claim_gated_rows)
     waterfall_rows = _waterfall_rows(records, ranks)
@@ -55,6 +56,7 @@ def build_evidence_panels(bundle_paths: list[Path], out_dir: Path) -> dict[str, 
 
     _write_csv(out_dir / "bundle_summary.csv", summary_rows)
     _write_csv(out_dir / "naive_score_leaderboard.csv", naive_rows)
+    _write_csv(out_dir / "sensitivity_only_leaderboard.csv", sensitivity_rows)
     _write_csv(out_dir / "claim_gated_leaderboard.csv", claim_gated_rows)
     _write_csv(out_dir / "rank_comparison.csv", rank_comparison_rows)
     _write_csv(out_dir / "claim_gate_waterfall.csv", waterfall_rows)
@@ -142,6 +144,8 @@ def _rank_rows(
 ) -> list[dict[str, Any]]:
     if mode == "naive":
         sorted_rows = sorted(rows, key=lambda row: float(row["epi_score"]), reverse=True)
+    elif mode == "sensitivity":
+        sorted_rows = sorted(rows, key=lambda row: _numeric_or_minus_one(row["event_sensitivity"]), reverse=True)
     elif mode == "claim_gated":
         sorted_rows = sorted(
             rows,
@@ -284,6 +288,7 @@ and claim eligibility.
 
 - `bundle_summary.csv`: one row per result bundle.
 - `naive_score_leaderboard.csv`: ranking by Epi-Score only.
+- `sensitivity_only_leaderboard.csv`: ranking by event sensitivity only where available.
 - `claim_gated_leaderboard.csv`: ranking by final claim, then Epi-Score.
 - `rank_comparison.csv`: explicit naive versus claim-gated rank movement.
 - `claim_gate_waterfall.csv`: all claim ceilings per run.
@@ -311,6 +316,15 @@ def _counts(values: Any) -> dict[str, int]:
     for value in values:
         counts[str(value)] = counts.get(str(value), 0) + 1
     return dict(sorted(counts.items()))
+
+
+def _numeric_or_minus_one(value: Any) -> float:
+    if value in {None, ""}:
+        return -1.0
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return -1.0
 
 
 def _render_counts(counts: dict[str, int]) -> str:

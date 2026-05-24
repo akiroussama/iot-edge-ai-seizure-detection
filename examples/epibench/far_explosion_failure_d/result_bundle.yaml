@@ -1,0 +1,44 @@
+schema_version: epibench.result_bundle.v1
+run_id: far_explosion_high_sensitivity_demo
+track: D
+requested_claim: E2-PI
+dataset_card_path: ../pilot_t1_eeg/dataset_card.yaml
+split_manifest_path: split_manifest.yaml
+failure_trace_path: failure_trace.yaml
+model:
+  name: high_sensitivity_alarm_storm_demo
+  family: failure_mode_baseline
+  commit_sha: demo-not-a-real-result
+environment:
+  python: "3.12"
+  platform: protocol-demo
+  dependencies:
+    - numpy
+inputs:
+  - path: examples/epibench/pilot_t1_eeg/result_bundle.yaml
+    sha256: null
+outputs:
+  - path: reports/epibench_far_explosion_claim.json
+    sha256: null
+metrics:
+  event_sensitivity: 0.98
+  false_alarms_per_24h: 216.0
+  event_f1: 0.08
+  precision: 0.041
+  detection_delay_median_seconds: 12
+  detection_delay_p95_seconds: 28
+  false_alarm_count: 1314
+  alarm_burden_interpretation: alarm storm despite high sensitivity
+score_inputs:
+  subscores:
+    performance: 0.92
+    clinical_safety: 0.08
+    robustness: 0.62
+    stability: 0.36
+    latency: 0.82
+    calibration: 0.42
+hardware: null
+reproduction:
+  command: python scripts/epibench.py certify examples/epibench/far_explosion_failure_d/result_bundle.yaml
+  container_or_env: local-python
+  checksums: []

@@ -85,6 +85,16 @@
       "actual_effective_tier": "T1"
     },
     {
+      "id": "high_sensitivity_far_explosion_downgrades_to_e1",
+      "passed": true,
+      "expected_final_claim": "E1",
+      "actual_final_claim": "E1",
+      "missing_badges": [],
+      "missing_forbidden_phrases": [],
+      "expected_effective_tier": "T1",
+      "actual_effective_tier": "T1"
+    },
+    {
       "id": "preliminary_seizeit2_single_subject_is_e1",
       "passed": true,
       "expected_final_claim": "E1",

@@ -65,6 +65,14 @@ cases:
       - EpiBench-Claim-E1
       - EpiBench-Leakage-Checked
     expected_effective_tier: T1
+  - id: high_sensitivity_far_explosion_downgrades_to_e1
+    result_bundle: examples/epibench/far_explosion_failure_d/result_bundle.yaml
+    expected_final_claim: E1
+    expected_badges:
+      - EpiBench-Dataset-T1
+      - EpiBench-Claim-E1
+      - EpiBench-Leakage-Checked
+    expected_effective_tier: T1
   - id: preliminary_seizeit2_single_subject_is_e1
     result_bundle: examples/epibench/seizeit2_preliminary_f/result_bundle.yaml
     expected_final_claim: E1
