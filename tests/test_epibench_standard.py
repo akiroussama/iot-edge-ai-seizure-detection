@@ -14,6 +14,7 @@ from src.epibench.szcore_bridge import import_szcore_metrics_as_result_bundle, m
 from src.epibench.validation import SchemaValidationError, validate_artifact
 from scripts.epibench_build_coverage_audit import build_coverage_audit
 from scripts.epibench_build_evidence_panels import build_evidence_panels
+from scripts.epibench_build_reviewer_packet import build_reviewer_packet
 from scripts.epibench_overclaim_audit import build_overclaim_audit
 
 
@@ -264,6 +265,20 @@ def test_epibench_overclaim_audit_classifies_bounded_and_risky_wording(tmp_path:
     assert result["requires_review_count"] >= 1
     assert "clinically approved,bounded" in findings
     assert "deployment ready,requires_review" in findings
+
+
+def test_epibench_reviewer_packet_links_attacks_to_evidence(tmp_path: Path) -> None:
+    result = build_reviewer_packet(out_dir=tmp_path / "reviewer_packet")
+    matrix = (tmp_path / "reviewer_packet" / "reviewer_attack_matrix.csv").read_text(encoding="utf-8")
+    actions = (tmp_path / "reviewer_packet" / "pre_submission_action_register.csv").read_text(encoding="utf-8")
+    readme = (tmp_path / "reviewer_packet" / "README.md").read_text(encoding="utf-8")
+
+    assert result["attack_count"] == 12
+    assert result["open_count"] >= 1
+    assert "This is just another leaderboard" in matrix
+    assert "reports/epibench_evidence_panels/rank_comparison.csv" in matrix
+    assert "A11,open" in actions
+    assert "Protocol tracks represented: `D, E, F, W`" in readme
 
 
 def test_epibench_maps_szcore_style_event_metrics(tmp_path: Path) -> None:

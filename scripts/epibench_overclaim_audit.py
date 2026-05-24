@@ -17,6 +17,7 @@ EXCLUDED_DIR_PARTS = {
     ".uv-win",
     "__pycache__",
     "epibench_overclaim_audit",
+    "epibench_reviewer_packet",
     "commits",
     "delivery",
 }

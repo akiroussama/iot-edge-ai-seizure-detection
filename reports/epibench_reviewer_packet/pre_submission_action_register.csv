@@ -1,0 +1,8 @@
+attack_id,defense_status,severity,required_action,evidence_to_update
+A11,open,high,Add a weight-perturbation panel showing claim gates dominate score-weight choices.,configs/epibench/epibench_v1.yaml
+A01,partial,critical,Resolve or explicitly waive every critical overclaim finding before manuscript freeze.,reports/epibench_overclaim_audit/README.md
+A04,partial,critical,Replace or supplement the demonstration import with official external scorer output.,examples/epibench/szcore_bridge_demo/result_bundle.yaml
+A05,partial,critical,Run independent clinical/methods reviewers and report adjudicated rubric changes.,reports/epibench_inter_reviewer_report.json
+A06,partial,critical,Upgrade CHB-MIT from metadata/null baseline to waveform-derived patient-independent result.,reports/epibench_submission_readiness_result.json
+A10,partial,high,Either add measured target hardware results or remove edge-readiness as a demonstrated claim.,reports/epibench_evidence_panels/failure_matrix.csv
+A12,partial,high,"Freeze v1.0-rc, archive DOI, and document one-command reproduction for external users.",docs/EPIBENCH_IMPLEMENTATION_INDEX.md

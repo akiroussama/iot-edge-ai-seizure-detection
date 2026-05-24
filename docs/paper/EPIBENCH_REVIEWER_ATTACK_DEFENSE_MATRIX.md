@@ -4,6 +4,15 @@
 
 This document anticipates major reviewer objections for a high-selectivity Q1 submission and defines the evidence required to neutralize each objection.
 
+Machine-generated companion packet:
+
+- `reports/epibench_reviewer_packet/README.md`
+- `reports/epibench_reviewer_packet/reviewer_attack_matrix.csv`
+- `reports/epibench_reviewer_packet/pre_submission_action_register.csv`
+- `reports/epibench_reviewer_packet/evidence_index.csv`
+
+The generated packet is the review-control source for current artefact coverage; this document remains the narrative version for manuscript planning.
+
 ## Attack Matrix
 
 | Reviewer attack | Severity | Current defense | Missing evidence | Required fix |
