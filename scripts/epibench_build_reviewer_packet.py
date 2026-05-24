@@ -226,7 +226,7 @@ def _build_attack_matrix(metrics: dict[str, Any]) -> list[dict[str, Any]]:
                 f"{metrics['waveform_bundle_count']} waveform-derived package(s) with claims "
                 f"{metrics['waveform_claims']}."
             ),
-            "Upgrade CHB-MIT from metadata/null baseline to waveform-derived patient-independent result.",
+            "Scale CHB-MIT waveform evidence beyond the micro-subset and add stronger patient-independent baselines.",
         ),
         _attack(
             "A07",

@@ -29,7 +29,7 @@ specific artefact, quantitative indicator, and required action.
 
 - `A04` partial: Replace or supplement the demonstration import with official external scorer output.
 - `A05` partial: Run independent clinical/methods reviewers and report adjudicated rubric changes.
-- `A06` partial: Upgrade CHB-MIT from metadata/null baseline to waveform-derived patient-independent result.
+- `A06` partial: Scale CHB-MIT waveform evidence beyond the micro-subset and add stronger patient-independent baselines.
 - `A10` partial: Either add measured target hardware results or remove edge-readiness as a demonstrated claim.
 - `A12` partial: Freeze v1.0-rc, archive DOI, and document one-command reproduction for external users.
 
