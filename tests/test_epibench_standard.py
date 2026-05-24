@@ -12,6 +12,7 @@ from src.epibench.spec import load_spec
 from src.epibench.submission_readiness import assess_submission_readiness
 from src.epibench.szcore_bridge import import_szcore_metrics_as_result_bundle, map_szcore_metrics_to_result_bundle
 from src.epibench.validation import SchemaValidationError, validate_artifact
+from scripts.epibench_build_evidence_panels import build_evidence_panels
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -165,6 +166,31 @@ def test_epibench_submission_readiness_gate_passes_with_chbmit_and_msg_gate_c() 
     assert report["status"] == "passed"
     assert report["submission_grade_count"] == 2
     assert report["operational_package_count"] == 1
+
+
+def test_epibench_builds_evidence_panels_that_expose_claim_gating(tmp_path: Path) -> None:
+    result = build_evidence_panels(
+        bundle_paths=[
+            PILOT / "result_bundle.yaml",
+            LEAKAGE / "result_bundle.yaml",
+            CHBMIT_E2PI / "result_bundle.yaml",
+            MSG_GATE_C_FROZEN / "result_bundle.yaml",
+        ],
+        out_dir=tmp_path,
+    )
+
+    assert result["bundle_count"] == 4
+    readme = (tmp_path / "README.md").read_text(encoding="utf-8")
+    rank_comparison = (tmp_path / "rank_comparison.csv").read_text(encoding="utf-8")
+    waterfall = (tmp_path / "claim_gate_waterfall.csv").read_text(encoding="utf-8")
+    failure_matrix = (tmp_path / "failure_matrix.csv").read_text(encoding="utf-8")
+
+    assert "high_or_mid_score_claim_limited_by_evidence_gate" in rank_comparison
+    assert "claim_structure_valid_but_performance_poor" in rank_comparison
+    assert "Bundle count: `4`" in readme
+    assert "chbmit_always_negative_patient_independent" in rank_comparison
+    assert "PATIENT_LEAKAGE" in failure_matrix
+    assert "failure_status" in waterfall
 
 
 def test_epibench_maps_szcore_style_event_metrics(tmp_path: Path) -> None:

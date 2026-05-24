@@ -1,0 +1,59 @@
+run_id,bundle_id,dataset_id,final_claim,sentinel_code,present,severity,count,scope,evidence
+chbmit_always_negative_patient_independent,chbmit_patient_independent_d:chbmit_always_negative_patient_independent,chbmit_patient_independent_d,E2-PI,HARDWARE_UNMEASURED,True,warning,1,run,metadata-only package; no embedded hardware latency or energy measurement
+chbmit_always_negative_patient_independent,chbmit_patient_independent_d:chbmit_always_negative_patient_independent,chbmit_patient_independent_d,E2-PI,PREDICTION_MISSING,False,none,0,none,always-negative predictions are defined for all test recording time
+chbmit_always_negative_patient_independent,chbmit_patient_independent_d:chbmit_always_negative_patient_independent,chbmit_patient_independent_d,E2-PI,PATIENT_LEAKAGE,False,none,0,none,test cases are disjoint by subject group; chb01 and chb21 are kept together
+chbmit_always_negative_patient_independent,chbmit_patient_independent_d:chbmit_always_negative_patient_independent,chbmit_patient_independent_d,E2-PI,TEMPORAL_LEAKAGE,False,none,0,none,fixed patient-independent split; no threshold uses test labels
+chbmit_always_negative_patient_independent,chbmit_patient_independent_d:chbmit_always_negative_patient_independent,chbmit_patient_independent_d,E2-PI,LABEL_UNAUDITED,False,none,0,none,official CHB-MIT summaries provide onset and end annotations
+embedded_no_hardware_demo,embedded_no_hardware_demo:embedded_no_hardware_demo,pilot_t1_eeg,E1,HARDWARE_UNMEASURED,True,major,1,run,result requests embedded viability but no measured target hardware report is supplied
+external_requested_e4_demo,external_requested_e4_demo:external_requested_e4_demo,pilot_t1_eeg,E3,PATIENT_LEAKAGE,False,none,0,none,no patient overlap
+external_requested_e4_demo,external_requested_e4_demo:external_requested_e4_demo,pilot_t1_eeg,E3,TEMPORAL_LEAKAGE,False,none,0,none,no temporal overlap
+external_validation_claim_demo,external_validation_demo:external_validation_claim_demo,pilot_t1_eeg,E3,PATIENT_LEAKAGE,False,none,0,none,external dataset split has no patient overlap
+external_validation_claim_demo,external_validation_demo:external_validation_claim_demo,pilot_t1_eeg,E3,TEMPORAL_LEAKAGE,False,none,0,none,external dataset split has no temporal overlap
+external_validation_claim_demo,external_validation_demo:external_validation_claim_demo,pilot_t1_eeg,E3,SPLIT_NONCOMPLIANT,False,none,0,none,split manifest declares external dataset validation
+leakage_high_metric_demo,failure_leakage:leakage_high_metric_demo,pilot_t1_eeg,E1,PATIENT_LEAKAGE,True,critical,3,run,held-out patient identifiers overlap with training fold
+leakage_high_metric_demo,failure_leakage:leakage_high_metric_demo,pilot_t1_eeg,E1,TEMPORAL_LEAKAGE,False,none,0,none,no direct temporal overlap detected
+leakage_high_metric_demo,failure_leakage:leakage_high_metric_demo,pilot_t1_eeg,E1,SPLIT_NONCOMPLIANT,True,critical,1,run,split violates preregistered patient-independent policy
+leakage_high_metric_demo,failure_leakage:leakage_high_metric_demo,pilot_t1_eeg,E1,FAR_EXPLOSION,False,none,0,none,reported FAR is low but invalid because leakage blocks interpretation
+msg_cycle_preserving_random_gate_c_frozen,msg_gate_c_frozen_f:msg_cycle_preserving_random_gate_c_frozen,msg_gate_c_frozen_f,E2-PD,DEVICE_MISSINGNESS,True,warning,1,dataset,"device metadata, calibration, and absolute synchronization are incomplete, but missingness is explicitly reported and evaluation is restricted to matched prediction-coverable events"
+msg_cycle_preserving_random_gate_c_frozen,msg_gate_c_frozen_f:msg_cycle_preserving_random_gate_c_frozen,msg_gate_c_frozen_f,E2-PD,DENOMINATOR_RESTRICTION,True,warning,1,dataset,metrics use 54 matched prediction-coverable test events from 768 source events and 510 matched events
+msg_cycle_preserving_random_gate_c_frozen,msg_gate_c_frozen_f:msg_cycle_preserving_random_gate_c_frozen,msg_gate_c_frozen_f,E2-PD,PATIENT_LEAKAGE,False,none,0,none,Gate C frozen-only benchmark guard passed
+msg_cycle_preserving_random_gate_c_frozen,msg_gate_c_frozen_f:msg_cycle_preserving_random_gate_c_frozen,msg_gate_c_frozen_f,E2-PD,TEMPORAL_LEAKAGE,False,none,0,none,no temporal leakage reported in frozen benchmark guard
+msg_cycle_preserving_random_gate_c_frozen,msg_gate_c_frozen_f:msg_cycle_preserving_random_gate_c_frozen,msg_gate_c_frozen_f,E2-PD,LABEL_UNAUDITED,False,none,0,none,label audit status in the frozen benchmark row is sampled_human_attested; EpiBench maps this conservatively to clinical_record_verified_no_precise_timing
+msg_cycle_preserving_random_preliminary,msg_preliminary_f:msg_cycle_preserving_random_preliminary,msg_preliminary_f,E1,LABEL_UNAUDITED,True,major,1,dataset,clinical adjudication and seizure offset verification are not established in this preliminary package
+msg_cycle_preserving_random_preliminary,msg_preliminary_f:msg_cycle_preserving_random_preliminary,msg_preliminary_f,E1,DEVICE_MISSINGNESS,True,warning,1,dataset,device metadata and complete observability audit remain incomplete for submission use
+msg_cycle_preserving_random_preliminary,msg_preliminary_f:msg_cycle_preserving_random_preliminary,msg_preliminary_f,E1,PATIENT_LEAKAGE,False,none,0,none,Gate C frozen-only benchmark guard passed
+msg_cycle_preserving_random_preliminary,msg_preliminary_f:msg_cycle_preserving_random_preliminary,msg_preliminary_f,E1,TEMPORAL_LEAKAGE,False,none,0,none,no temporal leakage reported in frozen benchmark guard
+patient_dependent_claim_demo,patient_dependent_demo:patient_dependent_claim_demo,pilot_t1_eeg,E2-PD,PREDICTION_MISSING,False,none,0,none,complete prediction table for all test windows
+patient_dependent_claim_demo,patient_dependent_demo:patient_dependent_claim_demo,pilot_t1_eeg,E2-PD,PATIENT_LEAKAGE,False,none,0,none,patient-dependent split is declared honestly; no undeclared leakage
+patient_dependent_claim_demo,patient_dependent_demo:patient_dependent_claim_demo,pilot_t1_eeg,E2-PD,TEMPORAL_LEAKAGE,False,none,0,none,temporal audit passed
+patient_dependent_claim_demo,patient_dependent_demo:patient_dependent_claim_demo,pilot_t1_eeg,E2-PD,SPLIT_NONCOMPLIANT,False,none,0,none,split manifest matches patient-dependent policy
+pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,PREDICTION_MISSING,False,none,0,none,complete prediction table for all test windows
+pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,SEGMENT_CRASH,False,none,0,none,no inference crash in log
+pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,NAN_OR_INF_OUTPUT,False,none,0,none,finite probability audit passed
+pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,LATENCY_BUDGET_EXCEEDED,False,none,0,none,p95 latency below preregistered budget on declared target
+pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,POST_EVENT_ALARM,False,none,0,none,detection alarms matched by declared event rule
+pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,FAR_EXPLOSION,False,none,0,none,FAR/day below warning budget
+pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,PATIENT_LEAKAGE,False,none,0,none,LOSO split audit passed
+pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,TEMPORAL_LEAKAGE,False,none,0,none,"no temporal overlap across train, validation, and test"
+pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,SPLIT_NONCOMPLIANT,False,none,0,none,split manifest matches preregistered policy
+pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,LABEL_UNAUDITED,False,none,0,none,expert label audit complete
+pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,DEVICE_MISSINGNESS,False,none,0,none,missingness modeled and denominator preserved
+pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,HARDWARE_UNMEASURED,False,none,0,none,edge target latency and memory report provided
+prospective_e4_claim_demo,prospective_e4_demo:prospective_e4_claim_demo,pilot_t1_eeg,E4,PATIENT_LEAKAGE,False,none,0,none,prospective multisite split has no patient overlap
+prospective_e4_claim_demo,prospective_e4_demo:prospective_e4_claim_demo,pilot_t1_eeg,E4,TEMPORAL_LEAKAGE,False,none,0,none,prospective multisite split has no temporal overlap
+prospective_e4_claim_demo,prospective_e4_demo:prospective_e4_claim_demo,pilot_t1_eeg,E4,SPLIT_NONCOMPLIANT,False,none,0,none,prospective multisite protocol declared
+seizeit2_sub125_random_preliminary,seizeit2_preliminary_f:seizeit2_sub125_random_preliminary,seizeit2_preliminary_f,E1,LABEL_UNAUDITED,True,major,1,dataset,local manual audit is incomplete
+seizeit2_sub125_random_preliminary,seizeit2_preliminary_f:seizeit2_sub125_random_preliminary,seizeit2_preliminary_f,E1,SPLIT_NONCOMPLIANT,True,major,1,run,single-subject pipeline check cannot support operational split claim
+seizeit2_sub125_random_preliminary,seizeit2_preliminary_f:seizeit2_sub125_random_preliminary,seizeit2_preliminary_f,E1,DEVICE_MISSINGNESS,True,warning,1,dataset,full modality availability audit pending
+pilot_t1_eeg_edge_cnn_demo,szcore_bridge_demo:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,PREDICTION_MISSING,False,none,0,none,complete prediction table for all test windows
+pilot_t1_eeg_edge_cnn_demo,szcore_bridge_demo:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,SEGMENT_CRASH,False,none,0,none,no inference crash in log
+pilot_t1_eeg_edge_cnn_demo,szcore_bridge_demo:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,NAN_OR_INF_OUTPUT,False,none,0,none,finite probability audit passed
+pilot_t1_eeg_edge_cnn_demo,szcore_bridge_demo:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,LATENCY_BUDGET_EXCEEDED,False,none,0,none,p95 latency below preregistered budget on declared target
+pilot_t1_eeg_edge_cnn_demo,szcore_bridge_demo:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,POST_EVENT_ALARM,False,none,0,none,detection alarms matched by declared event rule
+pilot_t1_eeg_edge_cnn_demo,szcore_bridge_demo:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,FAR_EXPLOSION,False,none,0,none,FAR/day below warning budget
+pilot_t1_eeg_edge_cnn_demo,szcore_bridge_demo:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,PATIENT_LEAKAGE,False,none,0,none,LOSO split audit passed
+pilot_t1_eeg_edge_cnn_demo,szcore_bridge_demo:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,TEMPORAL_LEAKAGE,False,none,0,none,"no temporal overlap across train, validation, and test"
+pilot_t1_eeg_edge_cnn_demo,szcore_bridge_demo:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,SPLIT_NONCOMPLIANT,False,none,0,none,split manifest matches preregistered policy
+pilot_t1_eeg_edge_cnn_demo,szcore_bridge_demo:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,LABEL_UNAUDITED,False,none,0,none,expert label audit complete
+pilot_t1_eeg_edge_cnn_demo,szcore_bridge_demo:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,DEVICE_MISSINGNESS,False,none,0,none,missingness modeled and denominator preserved
+pilot_t1_eeg_edge_cnn_demo,szcore_bridge_demo:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,HARDWARE_UNMEASURED,False,none,0,none,edge target latency and memory report provided
