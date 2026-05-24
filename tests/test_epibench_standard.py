@@ -12,6 +12,7 @@ from src.epibench.spec import load_spec
 from src.epibench.submission_readiness import assess_submission_readiness
 from src.epibench.szcore_bridge import import_szcore_metrics_as_result_bundle, map_szcore_metrics_to_result_bundle
 from src.epibench.validation import SchemaValidationError, validate_artifact
+from scripts.epibench_build_coverage_audit import build_coverage_audit
 from scripts.epibench_build_evidence_panels import build_evidence_panels
 
 
@@ -191,6 +192,28 @@ def test_epibench_builds_evidence_panels_that_expose_claim_gating(tmp_path: Path
     assert "chbmit_always_negative_patient_independent" in rank_comparison
     assert "PATIENT_LEAKAGE" in failure_matrix
     assert "failure_status" in waterfall
+
+
+def test_epibench_builds_coverage_audit_with_explicit_gaps(tmp_path: Path) -> None:
+    result = build_coverage_audit(
+        bundle_paths=[
+            CHBMIT_E2PI / "result_bundle.yaml",
+            MSG_GATE_C_FROZEN / "result_bundle.yaml",
+            SEIZEIT2_PRELIMINARY / "result_bundle.yaml",
+        ],
+        out_dir=tmp_path,
+    )
+
+    assert result["bundle_count"] == 3
+    assert result["dataset_count"] == 3
+    readme = (tmp_path / "README.md").read_text(encoding="utf-8")
+    dataset_matrix = (tmp_path / "dataset_evidence_matrix.csv").read_text(encoding="utf-8")
+    gaps = (tmp_path / "coverage_gaps.csv").read_text(encoding="utf-8")
+
+    assert "Covered tracks: `D, F`" in readme
+    assert "chbmit_patient_independent_d" in dataset_matrix
+    assert "independent_mts_dsi_review" in gaps
+    assert "track,W,major" in gaps
 
 
 def test_epibench_maps_szcore_style_event_metrics(tmp_path: Path) -> None:
