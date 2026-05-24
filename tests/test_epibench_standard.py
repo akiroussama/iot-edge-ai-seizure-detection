@@ -14,6 +14,7 @@ from src.epibench.szcore_bridge import import_szcore_metrics_as_result_bundle, m
 from src.epibench.validation import SchemaValidationError, validate_artifact
 from scripts.epibench_build_coverage_audit import build_coverage_audit
 from scripts.epibench_build_evidence_panels import build_evidence_panels
+from scripts.epibench_build_real_evidence_progression import build_real_evidence_progression
 from scripts.epibench_build_reviewer_packet import build_reviewer_packet
 from scripts.epibench_build_weight_sensitivity import build_weight_sensitivity
 from scripts.epibench_overclaim_audit import build_overclaim_audit
@@ -314,6 +315,21 @@ def test_epibench_weight_sensitivity_preserves_claim_gate_dominance(tmp_path: Pa
     assert result["max_claim_gated_rank_range"] == 0
     assert "leakage_high_metric_demo,E1" in summary
     assert "top claim-gated final claims observed across scenarios: `E4`".casefold() in readme.casefold()
+
+
+def test_epibench_real_evidence_progression_tracks_real_packages(tmp_path: Path) -> None:
+    result = build_real_evidence_progression(
+        bundle_summary_path=REPO_ROOT / "reports" / "epibench_evidence_panels" / "bundle_summary.csv",
+        out_dir=tmp_path / "real_evidence",
+    )
+    matrix = (tmp_path / "real_evidence" / "real_package_matrix.csv").read_text(encoding="utf-8")
+    actions = (tmp_path / "real_evidence" / "next_step_register.csv").read_text(encoding="utf-8")
+
+    assert result["package_count"] == 4
+    assert result["strongest_claim"] == "E2-PI"
+    assert "chbmit_waveform_micro_d" in matrix
+    assert "real_eeg_waveform_failure_case" in matrix
+    assert "chbmit_waveform_micro_d,highest" in actions
 
 
 def test_epibench_maps_szcore_style_event_metrics(tmp_path: Path) -> None:

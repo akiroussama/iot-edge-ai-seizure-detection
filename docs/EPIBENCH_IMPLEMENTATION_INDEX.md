@@ -39,6 +39,7 @@ This index lists the current v1.0-draft artefacts created from phase 1 through p
 - `scripts/epibench_build_coverage_audit.py`
 - `scripts/epibench_build_reviewer_packet.py`
 - `scripts/epibench_build_weight_sensitivity.py`
+- `scripts/epibench_build_real_evidence_progression.py`
 - `scripts/epibench_overclaim_audit.py`
 
 ## Worked Examples
@@ -108,6 +109,9 @@ This index lists the current v1.0-draft artefacts created from phase 1 through p
 - `reports/epibench_weight_sensitivity/weight_sensitivity_scores.csv`
 - `reports/epibench_weight_sensitivity/weight_sensitivity_rank_stability.csv`
 - `reports/epibench_weight_sensitivity/weight_sensitivity_summary.csv`
+- `reports/epibench_real_evidence_progression/README.md`
+- `reports/epibench_real_evidence_progression/real_package_matrix.csv`
+- `reports/epibench_real_evidence_progression/next_step_register.csv`
 - `reports/epibench_seizeit2_preliminary_claim.json`
 - `reports/epibench_seizeit2_preliminary_claim.md`
 - `reports/epibench_szcore_bridge_claim.json`
@@ -165,6 +169,7 @@ python scripts\epibench.py certify examples\epibench\far_explosion_failure_d\res
 python scripts\epibench_build_evidence_panels.py
 python scripts\epibench_build_coverage_audit.py
 python scripts\epibench_build_weight_sensitivity.py
+python scripts\epibench_build_real_evidence_progression.py
 python scripts\epibench_overclaim_audit.py
 python scripts\epibench_build_reviewer_packet.py
 python scripts\epibench.py certify examples\epibench\msg_preliminary_f\result_bundle.yaml --out reports\epibench_msg_preliminary_claim.json --report reports\epibench_msg_preliminary_claim.md

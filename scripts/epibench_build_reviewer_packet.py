@@ -13,6 +13,7 @@ EVIDENCE_DIR = REPO_ROOT / "reports" / "epibench_evidence_panels"
 COVERAGE_DIR = REPO_ROOT / "reports" / "epibench_coverage_audit"
 OVERCLAIM_DIR = REPO_ROOT / "reports" / "epibench_overclaim_audit"
 WEIGHT_SENSITIVITY_DIR = REPO_ROOT / "reports" / "epibench_weight_sensitivity"
+REAL_EVIDENCE_DIR = REPO_ROOT / "reports" / "epibench_real_evidence_progression"
 READINESS_PATH = REPO_ROOT / "reports" / "epibench_submission_readiness_result.json"
 INTER_REVIEWER_PATH = REPO_ROOT / "reports" / "epibench_inter_reviewer_report.json"
 
@@ -38,6 +39,7 @@ def build_reviewer_packet(
     coverage_dir: Path = COVERAGE_DIR,
     overclaim_dir: Path = OVERCLAIM_DIR,
     weight_sensitivity_dir: Path = WEIGHT_SENSITIVITY_DIR,
+    real_evidence_dir: Path = REAL_EVIDENCE_DIR,
     readiness_path: Path = READINESS_PATH,
     inter_reviewer_path: Path = INTER_REVIEWER_PATH,
 ) -> dict[str, Any]:
@@ -47,6 +49,7 @@ def build_reviewer_packet(
         coverage_dir=coverage_dir,
         overclaim_dir=overclaim_dir,
         weight_sensitivity_dir=weight_sensitivity_dir,
+        real_evidence_dir=real_evidence_dir,
         readiness_path=readiness_path,
         inter_reviewer_path=inter_reviewer_path,
     )
@@ -75,6 +78,7 @@ def _collect_metrics(
     coverage_dir: Path,
     overclaim_dir: Path,
     weight_sensitivity_dir: Path,
+    real_evidence_dir: Path,
     readiness_path: Path,
     inter_reviewer_path: Path,
 ) -> dict[str, Any]:
@@ -86,6 +90,7 @@ def _collect_metrics(
     overclaims = _read_csv(overclaim_dir / "overclaim_findings.csv")
     weight_summary = _read_csv(weight_sensitivity_dir / "weight_sensitivity_summary.csv")
     weight_stability = _read_csv(weight_sensitivity_dir / "weight_sensitivity_rank_stability.csv")
+    real_evidence_rows = _read_csv(real_evidence_dir / "real_package_matrix.csv")
     readiness = _read_json(readiness_path)
     inter_reviewer = _read_json(inter_reviewer_path)
 
@@ -138,6 +143,8 @@ def _collect_metrics(
         "szcore_bundle_count": len(szcore_bundles),
         "waveform_bundle_count": len(waveform_bundles),
         "waveform_claims": _counts(row.get("final_claim", "") for row in waveform_bundles),
+        "real_evidence_package_count": len(real_evidence_rows),
+        "real_evidence_claims": _counts(row.get("final_claim", "") for row in real_evidence_rows),
         "patient_dependent_count": len(patient_dependent),
         "real_package_count": len(real_packages),
         "operational_package_count": len(operational_packages),
@@ -210,10 +217,12 @@ def _build_attack_matrix(metrics: dict[str, Any]) -> list[dict[str, Any]]:
             "Real evidence is too thin; examples are mostly demos.",
             "critical",
             "partial" if metrics["readiness_status"] == "passed" else "open",
-            "reports/epibench_submission_readiness_result.json",
+            "reports/epibench_real_evidence_progression/README.md",
             (
                 f"Submission gate {metrics['readiness_status']} with "
                 f"{metrics['readiness_submission_grade_count']} submission-grade packages; "
+                f"{metrics['real_evidence_package_count']} real/provisional packages "
+                f"{metrics['real_evidence_claims']}; "
                 f"{metrics['waveform_bundle_count']} waveform-derived package(s) with claims "
                 f"{metrics['waveform_claims']}."
             ),
@@ -349,6 +358,14 @@ def _build_evidence_index(metrics: dict[str, Any]) -> list[dict[str, str]]:
                 f"{metrics['weight_sensitivity_scenario_count']} scenarios; "
                 f"max_score_rank_range={metrics['weight_sensitivity_max_score_rank_range']}; "
                 f"max_claim_gated_rank_range={metrics['weight_sensitivity_max_claim_rank_range']}."
+            ),
+        },
+        {
+            "evidence_family": "real_evidence_progression",
+            "path": "reports/epibench_real_evidence_progression/README.md",
+            "summary": (
+                f"{metrics['real_evidence_package_count']} real/provisional packages; "
+                f"claims={metrics['real_evidence_claims']}."
             ),
         },
         {

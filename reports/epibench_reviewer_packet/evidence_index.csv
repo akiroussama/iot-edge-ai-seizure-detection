@@ -3,5 +3,6 @@ evidence_panels,reports/epibench_evidence_panels/README.md,"16 bundles across cl
 coverage_audit,reports/epibench_coverage_audit/README.md,"4 gaps, 4 major."
 overclaim_audit,reports/epibench_overclaim_audit/README.md,76 wording findings require review; 0 critical.
 weight_sensitivity,reports/epibench_weight_sensitivity/README.md,11 scenarios; max_score_rank_range=5; max_claim_gated_rank_range=0.
+real_evidence_progression,reports/epibench_real_evidence_progression/README.md,"4 real/provisional packages; claims={'E2-PI': 1, 'E1': 2, 'E2-PD': 1}."
 submission_readiness,reports/epibench_submission_readiness_result.json,status=passed; submission_grade=2; operational=1.
 inter_reviewer,reports/epibench_inter_reviewer_report.json,status=passed; datasets=2.
