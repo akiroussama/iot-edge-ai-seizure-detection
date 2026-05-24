@@ -1,5 +1,5 @@
 dataset_id,priority,current_claim,current_blocker,next_step
 chbmit_patient_independent_d,medium,E2-PI,metadata-only null baseline; no waveform-derived performance,Replace null baseline with waveform-derived detector over a larger patient-independent EDF subset.
-chbmit_waveform_micro_d,highest,E1,waveform-derived baseline is blocked by false-alarm burden and tiny denominator,Scale to more patients and add robust baselines before requesting operational E2-PI.
+chbmit_waveform_micro_d,highest,E2-PI,waveform-derived baseline has tiny denominator and zero test sensitivity,Scale to more patients and add robust baselines before requesting operational E2-PI.
 msg_gate_c_frozen_f,medium,E2-PD,patient-dependent forecasting denominator; no patient-independent claim,Add patient-independent or external forecasting evidence before claiming E2-PI or E3.
 seizeit2_preliminary_f,high,E1,preliminary wearable evidence with incomplete labels/split/provenance,"Complete label audit, acquisition provenance, and patient-independent split manifest."

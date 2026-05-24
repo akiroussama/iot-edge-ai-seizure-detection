@@ -24,14 +24,14 @@ outputs:
 - path: data/processed/chbmit_waveform_micro/window_features.csv
   sha256: 86a2de9c564bc1c2d7d1bd0e58de2063e7d398629e3608239001403b3fe9cdf1
 - path: data/processed/chbmit_waveform_micro/window_predictions.csv
-  sha256: 81f0ae2059bac6ac33ddfb969d81eded18dddb30dfe6cc70958e4ddf202af4ca
+  sha256: 5f22328ac2f1be8af26a9ed65114ff08d5592bf9122f919ad1f37c06890b159b
 - path: reports/chbmit_waveform_micro_metrics.json
-  sha256: 0d4be0ca5d28ec630ed6e86709469cb757db5b4b312884e5f4be869ccdc16d87
+  sha256: 9308486ef7e7ac9819193a784c49841251e061b62e4553b3dec262008c69bd84
 metrics:
   task_type: seizure_detection
   baseline_type: line_length_robust_threshold
   event_sensitivity: 0.0
-  false_alarms_per_24h: 311.480865
+  false_alarms_per_24h: 0.0
   precision: 0.0
   event_f1: 0.0
   events_used_for_metrics: 2
@@ -44,7 +44,7 @@ metrics:
 score_inputs:
   subscores:
     performance: 0.02
-    clinical_safety: 0.02
+    clinical_safety: 0.5
     robustness: 0.25
     stability: 0.3
     latency: 0.5

@@ -28,6 +28,7 @@ REPORT_DIR = REPO_ROOT / "reports"
 METADATA_DIR = REPO_ROOT / "data" / "processed" / "chbmit_metadata"
 
 WINDOW_SECONDS = 5
+TRAIN_FALSE_ALARM_BUDGET_PER_24H = 24.0
 SELECTED_RECORDINGS = [
     {"case_id": "chb01", "recording_id": "chb01_03", "split": "train"},
     {"case_id": "chb03", "recording_id": "chb03_01", "split": "train"},
@@ -265,9 +266,21 @@ def _select_threshold(rows: list[dict[str, Any]]) -> tuple[float, dict[str, Any]
     train = [row for row in rows if row["split"] == "train"]
     candidates = sorted({float(row["robust_z"]) for row in train})
     if len(candidates) > 200:
+        unique_values = candidates
         quantiles = np.linspace(0.50, 0.995, 120)
-        candidates = sorted({float(np.quantile([float(row["robust_z"]) for row in train], q)) for q in quantiles})
-    best = {"threshold": candidates[0], "event_f1": -1.0, "precision": 0.0, "sensitivity": 0.0}
+        train_values = [float(row["robust_z"]) for row in train]
+        tail_values = unique_values[-100:]
+        candidates = sorted({float(np.quantile(train_values, q)) for q in quantiles} | set(tail_values))
+    best = {
+        "threshold": candidates[0],
+        "event_f1": -1.0,
+        "precision": 0.0,
+        "sensitivity": 0.0,
+        "train_false_alarms_per_24h": float("inf"),
+        "selection_rule": "fallback_unconstrained_window_f1",
+    }
+    best_under_budget: dict[str, Any] | None = None
+    train_hours = len(train) * WINDOW_SECONDS / 3600.0
     for threshold in candidates:
         predictions = [float(row["robust_z"]) >= threshold for row in train]
         labels = [int(row["label"]) == 1 for row in train]
@@ -277,14 +290,30 @@ def _select_threshold(rows: list[dict[str, Any]]) -> tuple[float, dict[str, Any]
         precision = tp / (tp + fp) if tp + fp else 0.0
         sensitivity = tp / (tp + fn) if tp + fn else 0.0
         f1 = 2 * precision * sensitivity / (precision + sensitivity) if precision + sensitivity else 0.0
+        train_alarm_count = _threshold_alarm_episode_count(train, threshold)
+        train_far = train_alarm_count / (train_hours / 24.0) if train_hours else 0.0
+        candidate = {
+            "threshold": float(threshold),
+            "event_f1": f1,
+            "precision": precision,
+            "sensitivity": sensitivity,
+            "train_false_alarms_per_24h": train_far,
+            "selection_rule": "max_train_window_f1_subject_to_train_far_budget",
+        }
         if f1 > best["event_f1"]:
-            best = {
-                "threshold": float(threshold),
-                "event_f1": f1,
-                "precision": precision,
-                "sensitivity": sensitivity,
-            }
+            best = {**candidate, "selection_rule": "fallback_unconstrained_window_f1"}
+        if train_far <= TRAIN_FALSE_ALARM_BUDGET_PER_24H and (
+            best_under_budget is None or f1 > best_under_budget["event_f1"]
+        ):
+            best_under_budget = candidate
+    if best_under_budget is not None:
+        return float(best_under_budget["threshold"]), best_under_budget
     return float(best["threshold"]), best
+
+
+def _threshold_alarm_episode_count(rows: list[dict[str, Any]], threshold: float) -> int:
+    proxy_rows = [{**row, "prediction": int(float(row["robust_z"]) >= threshold)} for row in rows]
+    return len(_alarm_episodes(proxy_rows))
 
 
 def _predict_windows(rows: list[dict[str, Any]], threshold: float) -> list[dict[str, Any]]:

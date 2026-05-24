@@ -2,9 +2,9 @@ category,value,count
 effective_tier,T1,13
 effective_tier,T2,1
 effective_tier,T3,2
-final_claim,E1,7
+final_claim,E1,6
 final_claim,E2-PD,2
-final_claim,E2-PI,4
+final_claim,E2-PI,5
 final_claim,E3,2
 final_claim,E4,1
 label_audit,clinical_record_verified_no_precise_timing,1
@@ -13,7 +13,7 @@ label_audit,proxy_or_device_label,1
 label_audit,unaudited_or_unknown,1
 present_sentinel,DENOMINATOR_RESTRICTION,1
 present_sentinel,DEVICE_MISSINGNESS,3
-present_sentinel,FAR_EXPLOSION,2
+present_sentinel,FAR_EXPLOSION,1
 present_sentinel,HARDWARE_UNMEASURED,3
 present_sentinel,LABEL_UNAUDITED,2
 present_sentinel,PATIENT_LEAKAGE,1

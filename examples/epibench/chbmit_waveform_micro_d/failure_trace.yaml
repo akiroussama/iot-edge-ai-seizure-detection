@@ -21,11 +21,11 @@ sentinels:
   scope: none
   evidence: threshold is selected on train windows only
 - code: FAR_EXPLOSION
-  present: true
-  severity: major
-  count: 13
-  scope: run
-  evidence: false alarms per 24h = 311.480865
+  present: false
+  severity: none
+  count: 0
+  scope: none
+  evidence: false alarms per 24h = 0.0
 - code: HARDWARE_UNMEASURED
   present: true
   severity: warning
@@ -34,5 +34,5 @@ sentinels:
   evidence: waveform baseline is not measured on target IoT hardware
 summary:
   critical_failure_present: false
-  blocking_failure_present: true
+  blocking_failure_present: false
   failure_rate: 0.0

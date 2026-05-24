@@ -11,13 +11,13 @@ failure state, split policy, label audit, and denominator strength.
 ## Summary
 
 - Real or preliminary real-data packages tracked: `4`.
-- Claim distribution among these packages: `E1=2, E2-PD=1, E2-PI=1`.
+- Claim distribution among these packages: `E1=1, E2-PD=1, E2-PI=2`.
 - Strongest real-data claim currently present: `E2-PI`.
 
 ## Package Interpretation
 
 - `chbmit_patient_independent_d`: `E2-PI`; T1 patient-independent CHB-MIT structure is certified, but the model is always-negative.
-- `chbmit_waveform_micro_d`: `E1`; EDF-derived line-length baseline is real signal processing but fails by false-alarm burden.
+- `chbmit_waveform_micro_d`: `E2-PI`; EDF-derived line-length baseline reaches structural E2-PI after train FAR-budgeted thresholding, but detects no test seizures and scores poorly.
 - `msg_gate_c_frozen_f`: `E2-PD`; Frozen MSG forecasting package reaches E2-PD under denominator restrictions.
 - `seizeit2_preliminary_f`: `E1`; Wearable package remains E1 because labels/split/acquisition evidence are incomplete.
 

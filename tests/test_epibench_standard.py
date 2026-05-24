@@ -107,13 +107,14 @@ def test_epibench_chbmit_patient_independent_null_baseline_reaches_e2_pi_but_low
     assert "real-time" in report["forbidden_phrases"]
 
 
-def test_epibench_chbmit_waveform_micro_preserves_far_failure() -> None:
+def test_epibench_chbmit_waveform_micro_reaches_e2_pi_but_has_poor_score() -> None:
     report = certify_result_bundle(CHBMIT_WAVEFORM_MICRO / "result_bundle.yaml")
 
     assert report["requested_claim"] == "E2-PI"
-    assert report["final_claim"] == "E1"
-    assert report["ceilings"]["failure_status"] == "E1"
-    assert any("False alarm burden" in reason for reason in report["blocking_reasons"])
+    assert report["final_claim"] == "E2-PI"
+    assert report["ceilings"]["failure_status"] == "E4"
+    assert report["blocking_reasons"] == []
+    assert report["score"]["epi_score"] < 10
     assert report["score"]["floor_penalty_applied"] is True
 
 
@@ -328,7 +329,7 @@ def test_epibench_real_evidence_progression_tracks_real_packages(tmp_path: Path)
     assert result["package_count"] == 4
     assert result["strongest_claim"] == "E2-PI"
     assert "chbmit_waveform_micro_d" in matrix
-    assert "real_eeg_waveform_failure_case" in matrix
+    assert "real_eeg_waveform_far_budgeted_poor_detector" in matrix
     assert "chbmit_waveform_micro_d,highest" in actions
 
 

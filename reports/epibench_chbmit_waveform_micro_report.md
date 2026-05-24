@@ -1,4 +1,4 @@
-﻿# CHB-MIT Waveform Micro EpiBench Package Report
+# CHB-MIT Waveform Micro EpiBench Package Report
 
 Date: 2026-05-24
 Package: `examples/epibench/chbmit_waveform_micro_d/`
@@ -7,11 +7,11 @@ Model: 5-second robust line-length threshold baseline
 
 ## Result
 
-- final claim: `E1`;
-- Epi-Score: `3.079`;
+- final claim: `E2-PI`;
+- Epi-Score: `7.529`;
 - test events: `2`;
 - event sensitivity: `0.0`;
-- false alarms per 24h: `311.480865`;
+- false alarms per 24h: `0.0`;
 - event F1: `0.0`;
 - median latency seconds: `None`;
 - p95 latency seconds: `None`.

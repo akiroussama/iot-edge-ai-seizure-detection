@@ -24,8 +24,11 @@ PACKAGE_INTERPRETATIONS = {
         "next_step": "Replace null baseline with waveform-derived detector over a larger patient-independent EDF subset.",
     },
     "chbmit_waveform_micro_d": {
-        "evidence_role": "real_eeg_waveform_failure_case",
-        "scientific_read": "EDF-derived line-length baseline is real signal processing but fails by false-alarm burden.",
+        "evidence_role": "real_eeg_waveform_far_budgeted_poor_detector",
+        "scientific_read": (
+            "EDF-derived line-length baseline reaches structural E2-PI after train FAR-budgeted "
+            "thresholding, but detects no test seizures and scores poorly."
+        ),
         "next_step": "Scale to more patients and add robust baselines before requesting operational E2-PI.",
     },
     "msg_gate_c_frozen_f": {
@@ -127,7 +130,7 @@ def _blocker(row: dict[str, Any]) -> str:
     if row["dataset_id"] == "chbmit_patient_independent_d":
         return "metadata-only null baseline; no waveform-derived performance"
     if row["dataset_id"] == "chbmit_waveform_micro_d":
-        return "waveform-derived baseline is blocked by false-alarm burden and tiny denominator"
+        return "waveform-derived baseline has tiny denominator and zero test sensitivity"
     if row["dataset_id"] == "msg_gate_c_frozen_f":
         return "patient-dependent forecasting denominator; no patient-independent claim"
     if row["dataset_id"] == "seizeit2_preliminary_f":
