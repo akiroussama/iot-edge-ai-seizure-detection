@@ -1,0 +1,80 @@
+schema_version: epibench.failure_trace.v1
+run_id: pilot_t1_eeg_edge_cnn_demo
+failure_policy: preserve_all
+sentinels:
+  - code: PREDICTION_MISSING
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: complete prediction table for all test windows
+  - code: SEGMENT_CRASH
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: no inference crash in log
+  - code: NAN_OR_INF_OUTPUT
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: finite probability audit passed
+  - code: LATENCY_BUDGET_EXCEEDED
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: p95 latency below preregistered budget on declared target
+  - code: POST_EVENT_ALARM
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: detection alarms matched by declared event rule
+  - code: FAR_EXPLOSION
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: FAR/day below warning budget
+  - code: PATIENT_LEAKAGE
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: LOSO split audit passed
+  - code: TEMPORAL_LEAKAGE
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: no temporal overlap across train, validation, and test
+  - code: SPLIT_NONCOMPLIANT
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: split manifest matches preregistered policy
+  - code: LABEL_UNAUDITED
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: expert label audit complete
+  - code: DEVICE_MISSINGNESS
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: missingness modeled and denominator preserved
+  - code: HARDWARE_UNMEASURED
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: edge target latency and memory report provided
+summary:
+  critical_failure_present: false
+  blocking_failure_present: false
+  failure_rate: 0.0

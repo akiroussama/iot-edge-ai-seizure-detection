@@ -1,0 +1,41 @@
+schema_version: epibench.result_bundle.v1
+run_id: external_validation_claim_demo
+track: D
+requested_claim: E3
+dataset_card_path: ../pilot_t1_eeg/dataset_card.yaml
+split_manifest_path: split_manifest.yaml
+failure_trace_path: failure_trace.yaml
+model:
+  name: external_validation_demo_model
+  family: small_cnn
+  commit_sha: demo-not-a-real-result
+environment:
+  python: "3.11"
+  platform: demo
+  dependencies:
+    - numpy
+    - pandas
+    - pyyaml
+inputs:
+  - path: canonical/events.parquet
+    sha256: null
+outputs:
+  - path: reports/event_metrics.json
+    sha256: null
+metrics:
+  event_sensitivity: 0.80
+  event_precision: 0.72
+  event_f1: 0.76
+  false_alarms_per_24h: 1.4
+score_inputs:
+  subscores:
+    performance: 0.76
+    clinical_safety: 0.72
+    robustness: 0.70
+    stability: 0.68
+    latency: 0.75
+hardware: null
+reproduction:
+  command: python scripts/epibench.py certify examples/epibench/external_validation_demo/result_bundle.yaml
+  container_or_env: local-demo
+  checksums: []

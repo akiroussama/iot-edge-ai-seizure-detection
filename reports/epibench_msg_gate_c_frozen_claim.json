@@ -1,0 +1,46 @@
+{
+  "schema_version": "epibench.claim_eligibility.v1",
+  "run_id": "msg_cycle_preserving_random_gate_c_frozen",
+  "epibench_version": "v1.0-draft",
+  "requested_claim": "E2-PD",
+  "final_claim": "E2-PD",
+  "ceilings": {
+    "dataset_tier": "E2-PI",
+    "split_policy": "E2-PD",
+    "label_audit": "E2-PI",
+    "leakage_audit": "E4",
+    "threshold_policy": "E4",
+    "failure_status": "E4",
+    "hardware_evidence": "E4",
+    "track_consistency": "E4"
+  },
+  "score": {
+    "epi_score": 58.984,
+    "axis_scores": {
+      "performance": 0.62,
+      "clinical_safety": 0.7,
+      "robustness": 0.48,
+      "stability": 0.55,
+      "latency": 0.5,
+      "calibration": 0.58
+    },
+    "floor_penalty_applied": false
+  },
+  "dataset_tier_evaluation": {
+    "declared_tier": "T2",
+    "effective_tier": "T2",
+    "mts_mean": 2.143,
+    "mts_item_floor": 1,
+    "missing_core_mts_items": [],
+    "downgraded": false
+  },
+  "badges": [
+    "EpiBench-Dataset-T2",
+    "EpiBench-Run-Complete",
+    "EpiBench-Failure-Transparent",
+    "EpiBench-Claim-E2-PD",
+    "EpiBench-Leakage-Checked"
+  ],
+  "blocking_reasons": [],
+  "forbidden_phrases": []
+}

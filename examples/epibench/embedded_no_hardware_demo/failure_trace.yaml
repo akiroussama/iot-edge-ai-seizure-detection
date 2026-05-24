@@ -1,0 +1,14 @@
+schema_version: epibench.failure_trace.v1
+run_id: embedded_no_hardware_demo
+failure_policy: preserve_all
+sentinels:
+  - code: HARDWARE_UNMEASURED
+    present: true
+    severity: major
+    count: 1
+    scope: run
+    evidence: result requests embedded viability but no measured target hardware report is supplied
+summary:
+  critical_failure_present: false
+  blocking_failure_present: true
+  failure_rate: 0.0

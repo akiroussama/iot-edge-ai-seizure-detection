@@ -1,0 +1,55 @@
+schema_version: epibench.result_bundle.v1
+run_id: pilot_t1_eeg_edge_cnn_demo
+track: D
+requested_claim: E2-PI
+dataset_card_path: dataset_card.yaml
+split_manifest_path: split_manifest.yaml
+failure_trace_path: failure_trace.yaml
+model:
+  name: edge_cnn_demo
+  family: small_cnn
+  commit_sha: demo-not-a-real-result
+environment:
+  python: "3.11"
+  platform: windows-demo
+  dependencies:
+    - numpy
+    - pandas
+    - pyyaml
+inputs:
+  - path: canonical/events.parquet
+    sha256: null
+  - path: canonical/predictions.parquet
+    sha256: null
+outputs:
+  - path: reports/event_metrics.json
+    sha256: null
+  - path: reports/latency_report.json
+    sha256: null
+metrics:
+  event_sensitivity: 0.83
+  event_precision: 0.71
+  event_f1: 0.77
+  false_alarms_per_24h: 1.2
+  detection_latency_seconds_median: 7.0
+  detection_latency_seconds_p95: 18.0
+  worst_patient_event_sensitivity: 0.67
+  missing_prediction_rate: 0.0
+score_inputs:
+  subscores:
+    performance: 0.78
+    clinical_safety: 0.74
+    robustness: 0.68
+    stability: 0.70
+    latency: 0.82
+    embedded_viability: 0.76
+    calibration: 0.66
+hardware:
+  target: cortex-m7-demo
+  latency_ms_p95: 42.0
+  ram_kb: 192.0
+  energy_mj_per_inference: 0.8
+reproduction:
+  command: python scripts/epibench.py certify examples/epibench/pilot_t1_eeg/result_bundle.yaml
+  container_or_env: local-demo
+  checksums: []

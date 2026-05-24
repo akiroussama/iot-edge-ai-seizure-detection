@@ -1,0 +1,26 @@
+schema_version: epibench.failure_trace.v1
+run_id: seizeit2_sub125_random_preliminary
+failure_policy: preserve_all
+sentinels:
+  - code: LABEL_UNAUDITED
+    present: true
+    severity: major
+    count: 1
+    scope: dataset
+    evidence: local manual audit is incomplete
+  - code: SPLIT_NONCOMPLIANT
+    present: true
+    severity: major
+    count: 1
+    scope: run
+    evidence: single-subject pipeline check cannot support operational split claim
+  - code: DEVICE_MISSINGNESS
+    present: true
+    severity: warning
+    count: 1
+    scope: dataset
+    evidence: full modality availability audit pending
+summary:
+  critical_failure_present: false
+  blocking_failure_present: true
+  failure_rate: 0.0

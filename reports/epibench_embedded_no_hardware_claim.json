@@ -1,0 +1,51 @@
+{
+  "schema_version": "epibench.claim_eligibility.v1",
+  "run_id": "embedded_no_hardware_demo",
+  "epibench_version": "v1.0-draft",
+  "requested_claim": "E4",
+  "final_claim": "E1",
+  "ceilings": {
+    "dataset_tier": "E4",
+    "split_policy": "E4",
+    "label_audit": "E4",
+    "leakage_audit": "E4",
+    "threshold_policy": "E4",
+    "failure_status": "E4",
+    "hardware_evidence": "E1",
+    "track_consistency": "E4"
+  },
+  "score": {
+    "epi_score": 68.733,
+    "axis_scores": {
+      "performance": 0.74,
+      "clinical_safety": 0.7,
+      "robustness": 0.72,
+      "stability": 0.7,
+      "latency": 0.5
+    },
+    "floor_penalty_applied": false
+  },
+  "dataset_tier_evaluation": {
+    "declared_tier": "T1",
+    "effective_tier": "T1",
+    "mts_mean": 2.833,
+    "mts_item_floor": 2,
+    "missing_core_mts_items": [],
+    "downgraded": false
+  },
+  "badges": [
+    "EpiBench-Dataset-T1",
+    "EpiBench-Run-Complete",
+    "EpiBench-Failure-Transparent",
+    "EpiBench-Claim-E1",
+    "EpiBench-Leakage-Checked"
+  ],
+  "blocking_reasons": [
+    "Embedded viability track lacks measured p95 hardware latency."
+  ],
+  "forbidden_phrases": [
+    "edge-ready",
+    "on-device",
+    "real-time"
+  ]
+}

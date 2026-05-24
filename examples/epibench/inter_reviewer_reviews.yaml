@@ -1,0 +1,77 @@
+schema_version: epibench.inter_reviewer_reviews.v1
+review_id: epibench_demo_two_dataset_review
+datasets:
+  - dataset_id: pilot_t1_eeg
+    reviewers:
+      - reviewer_id: technical_reviewer
+        role: reproducibility
+        dataset_tier: T1
+        claim_ceiling: E2-PI
+        mts:
+          source_official: 3
+          acquisition_protocol: 3
+          label_quality: 3
+          synchronization: 3
+          raw_to_processed_trace: 3
+          missingness: 2
+        dsi:
+          patient_diversity: 2
+          seizure_type_diversity: 2
+          setting_diversity: 1
+          artifact_stress: 2
+          external_validation: 0
+      - reviewer_id: clinical_reviewer
+        role: clinical_neurophysiology_proxy
+        dataset_tier: T1
+        claim_ceiling: E2-PI
+        mts:
+          source_official: 3
+          acquisition_protocol: 3
+          label_quality: 3
+          synchronization: 3
+          raw_to_processed_trace: 2
+          missingness: 2
+        dsi:
+          patient_diversity: 2
+          seizure_type_diversity: 2
+          setting_diversity: 1
+          artifact_stress: 1
+          external_validation: 0
+  - dataset_id: msg_preliminary_f
+    reviewers:
+      - reviewer_id: technical_reviewer
+        role: reproducibility
+        dataset_tier: T3
+        claim_ceiling: E1
+        mts:
+          source_official: 2
+          acquisition_protocol: 1
+          label_quality: 1
+          raw_to_processed_trace: 2
+          leakage_audit: 2
+          synchronization: 0
+          missingness: 0
+        dsi:
+          patient_diversity: 1
+          monitoring_duration: 3
+          setting_diversity: 2
+          forecasting_relevance: 3
+          external_validation: 0
+      - reviewer_id: clinical_reviewer
+        role: clinical_neurophysiology_proxy
+        dataset_tier: T3
+        claim_ceiling: E1
+        mts:
+          source_official: 2
+          acquisition_protocol: 1
+          label_quality: 0
+          raw_to_processed_trace: 2
+          leakage_audit: 2
+          synchronization: 0
+          missingness: 0
+        dsi:
+          patient_diversity: 1
+          monitoring_duration: 3
+          setting_diversity: 2
+          forecasting_relevance: 2
+          external_validation: 0

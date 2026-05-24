@@ -1,0 +1,28 @@
+schema_version: epibench.split_manifest.v1
+split_id: seizeit2_sub125_local_check
+dataset_id: seizeit2_preliminary_f
+track: F
+split_policy: synthetic_or_demo
+train_units:
+  n_patients: 1
+  n_recordings: 0
+  n_events: 0
+  monitoring_hours: 0
+validation_units:
+  n_patients: 1
+  n_recordings: 0
+  n_events: 0
+  monitoring_hours: 0
+test_units:
+  n_patients: 1
+  n_recordings: 85
+  n_events: 2
+  monitoring_hours: 77.73333333333333
+leakage_checks:
+  patient_overlap: false
+  temporal_overlap: false
+  normalization_scope: unknown
+  status: not_audited
+threshold_selection_policy:
+  selection_split: none
+  uses_test_labels: false

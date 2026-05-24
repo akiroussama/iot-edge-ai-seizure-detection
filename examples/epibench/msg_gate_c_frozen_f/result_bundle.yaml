@@ -1,0 +1,78 @@
+schema_version: epibench.result_bundle.v1
+run_id: msg_cycle_preserving_random_gate_c_frozen
+track: F
+requested_claim: E2-PD
+dataset_card_path: dataset_card.yaml
+split_manifest_path: split_manifest.yaml
+failure_trace_path: failure_trace.yaml
+model:
+  name: cycle_preserving_random
+  family: forecast_null
+  commit_sha: 391bca3a05d0
+environment:
+  python: '3.11'
+  platform: local-gate-c-freeze
+  dependencies:
+  - numpy
+  - pandas
+  - pyyaml
+inputs:
+- path: reports/gate_c_frozen_benchmark_2026-05-23/frozen_benchmark_manifest.json
+  sha256: null
+- path: reports/gate_c_msg_freeze_2026-05-23/gate_c_registry.json
+  sha256: null
+- path: reports/gate_c_msg_freeze_2026-05-23/artifacts/splits.csv
+  sha256: null
+outputs:
+- path: reports/gate_c_frozen_benchmark_2026-05-23/leaderboard_rows_with_ci.csv
+  sha256: null
+- path: reports/gate_c_frozen_benchmark_2026-05-23/calibration/cycle_preserving_random/calibration_report.json
+  sha256: null
+- path: reports/gate_c_frozen_benchmark_2026-05-23/frozen_benchmark_audit.md
+  sha256: null
+metrics:
+  task_type: forecasting
+  horizon_name: SPH60_SOP1440
+  sph_minutes: 60.0
+  sop_minutes: 1440.0
+  split_policy_source: temporal_recording
+  event_filter: recording_match_status=matched
+  restrict_events_to_prediction_coverage: true
+  events_source_total: 768
+  events_after_filter: 510
+  events_used_for_metrics: 54
+  monitored_hours_test: 1418.0
+  prediction_rows: 10309
+  valid_prediction_rows: 1418
+  n_forecasted_or_detected: 40
+  event_sensitivity: 0.7407407407407407
+  false_alarms_per_24h: 0.5923836389280677
+  false_alarm_rate_per_hour: 0.02468265162200282
+  time_in_warning: 0.09732016925246827
+  precision: 0.43478260869565216
+  event_f1: 0.2348336594911937
+  median_lead_time_seconds: 36640.0
+  brier_score: 0.22237042583524766
+  brier_skill_score: 0.06953434996389507
+  brier_skill_score_ci_low: 0.03406978460542379
+  brier_skill_score_ci_high: 0.08880311651094253
+  expected_calibration_error: 0.19091797503053085
+  auroc: 0.6332414023115307
+  auprc: 0.3740136766294927
+  gate_b_status: passed
+  gate_c_status: passed
+  leakage_status: clean
+  split_frozen_status: frozen_git_tag
+score_inputs:
+  subscores:
+    performance: 0.62
+    clinical_safety: 0.7
+    robustness: 0.48
+    stability: 0.55
+    latency: 0.5
+    calibration: 0.58
+hardware: null
+reproduction:
+  command: python scripts/epibench.py certify examples/epibench/msg_gate_c_frozen_f/result_bundle.yaml
+  container_or_env: local-gate-c-freeze
+  checksums: []

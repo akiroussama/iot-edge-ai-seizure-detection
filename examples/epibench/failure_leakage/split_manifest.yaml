@@ -1,0 +1,28 @@
+schema_version: epibench.split_manifest.v1
+split_id: leakage_demo_split
+dataset_id: pilot_t1_eeg
+track: D
+split_policy: patient_independent
+train_units:
+  n_patients: 18
+  n_recordings: 180
+  n_events: 72
+  monitoring_hours: 900
+validation_units:
+  n_patients: 3
+  n_recordings: 30
+  n_events: 12
+  monitoring_hours: 150
+test_units:
+  n_patients: 3
+  n_recordings: 30
+  n_events: 12
+  monitoring_hours: 150
+leakage_checks:
+  patient_overlap: true
+  temporal_overlap: false
+  normalization_scope: all_data
+  status: failed
+threshold_selection_policy:
+  selection_split: test
+  uses_test_labels: true

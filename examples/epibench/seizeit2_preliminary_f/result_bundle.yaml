@@ -1,0 +1,44 @@
+schema_version: epibench.result_bundle.v1
+run_id: seizeit2_sub125_random_preliminary
+track: F
+requested_claim: E2-PI
+dataset_card_path: dataset_card.yaml
+split_manifest_path: split_manifest.yaml
+failure_trace_path: failure_trace.yaml
+model:
+  name: random_rate_matched_tiw10
+  family: null_baseline
+  commit_sha: local-sub125-check-2026-05-24
+environment:
+  python: "3.11"
+  platform: local-pipeline-check
+  dependencies:
+    - numpy
+    - pandas
+    - pyyaml
+inputs:
+  - path: reports/seizeit2_sub125_real_check/dataset_report.md
+    sha256: null
+outputs:
+  - path: reports/seizeit2_sub125_real_check/dataset_report.md
+    sha256: null
+metrics:
+  event_sensitivity: 1.0
+  false_alarms_per_24h: 95.85523481258079
+  time_in_warning: 0.13377854373115036
+  brier_score: 0.15362555189125732
+  expected_calibration_error: 0.3034601423489731
+  events_used_for_metrics: 2
+score_inputs:
+  subscores:
+    performance: 0.30
+    clinical_safety: 0.05
+    robustness: 0.05
+    stability: 0.10
+    latency: 0.50
+    calibration: 0.30
+hardware: null
+reproduction:
+  command: python scripts/epibench.py certify examples/epibench/seizeit2_preliminary_f/result_bundle.yaml
+  container_or_env: local-pipeline-check
+  checksums: []

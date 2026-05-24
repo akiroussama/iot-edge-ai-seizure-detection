@@ -1,0 +1,32 @@
+schema_version: epibench.failure_trace.v1
+run_id: leakage_high_metric_demo
+failure_policy: preserve_all
+sentinels:
+  - code: PATIENT_LEAKAGE
+    present: true
+    severity: critical
+    count: 3
+    scope: run
+    evidence: held-out patient identifiers overlap with training fold
+  - code: TEMPORAL_LEAKAGE
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: no direct temporal overlap detected
+  - code: SPLIT_NONCOMPLIANT
+    present: true
+    severity: critical
+    count: 1
+    scope: run
+    evidence: split violates preregistered patient-independent policy
+  - code: FAR_EXPLOSION
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: reported FAR is low but invalid because leakage blocks interpretation
+summary:
+  critical_failure_present: true
+  blocking_failure_present: true
+  failure_rate: 0.15

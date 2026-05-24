@@ -1,0 +1,47 @@
+name: BSEBench reproduction kit
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "bsebench-runner/**"
+      - "REPRODUCTION_KIT_README.md"
+      - "REPRODUCTION_KIT_REPORT.md"
+      - ".github/workflows/bsebench_reproduction_kit.yml"
+
+jobs:
+  python-smoke:
+    name: Python runner smoke (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install runner dependencies
+        run: python -m pip install pyyaml
+      - name: Runner smoke
+        run: python bsebench-runner/runner/bsebench.py smoke
+      - name: Bit-exact smoke reproduction
+        run: python bsebench-runner/runner/bsebench.py reproduce --bundle smoke_bit_exact_v1 --bundles-dir bsebench-runner/bundles --work-dir reproduction-work
+
+  docker-smoke:
+    name: Docker image smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: bash bsebench-runner/docker/scripts/build_image.sh bsebench-runner:ci
+      - name: CLI smoke
+        run: docker run --rm bsebench-runner:ci bsebench smoke
+      - name: Bit-exact smoke reproduction
+        run: >
+          docker run --rm
+          -v "$PWD/bsebench-runner/bundles:/opt/bsebench/bundles:ro"
+          -v "$PWD/reproduction-work:/opt/bsebench/work"
+          bsebench-runner:ci
+          bsebench reproduce --bundle smoke_bit_exact_v1

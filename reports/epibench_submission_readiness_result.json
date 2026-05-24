@@ -1,0 +1,134 @@
+{
+  "schema_version": "epibench.submission_readiness_report.v1",
+  "gate_id": "q1_minimum_real_evidence_packages",
+  "epibench_version": "v1.0-draft",
+  "status": "passed",
+  "package_count": 2,
+  "submission_grade_count": 2,
+  "operational_package_count": 1,
+  "blockers": [],
+  "packages": [
+    {
+      "bundle_path": "examples\\epibench\\chbmit_patient_independent_d\\result_bundle.yaml",
+      "run_id": "chbmit_always_negative_patient_independent",
+      "track": "D",
+      "dataset_id": "chbmit_patient_independent_d",
+      "final_claim": "E2-PI",
+      "effective_tier": "T1",
+      "submission_grade": true,
+      "blockers": [],
+      "warnings": [
+        "Hospital evidence must not be generalized to home IoT without external support."
+      ],
+      "claim_report": {
+        "schema_version": "epibench.claim_eligibility.v1",
+        "run_id": "chbmit_always_negative_patient_independent",
+        "epibench_version": "v1.0-draft",
+        "requested_claim": "E2-PI",
+        "final_claim": "E2-PI",
+        "ceilings": {
+          "dataset_tier": "E2-PI",
+          "split_policy": "E2-PI",
+          "label_audit": "E4",
+          "leakage_audit": "E4",
+          "threshold_policy": "E4",
+          "failure_status": "E4",
+          "hardware_evidence": "E4",
+          "track_consistency": "E4"
+        },
+        "score": {
+          "epi_score": 3.186,
+          "axis_scores": {
+            "performance": 0.02,
+            "clinical_safety": 0.05,
+            "robustness": 0.1,
+            "stability": 0.2,
+            "latency": 0.5,
+            "calibration": 0.1
+          },
+          "floor_penalty_applied": true
+        },
+        "dataset_tier_evaluation": {
+          "declared_tier": "T1",
+          "effective_tier": "T1",
+          "mts_mean": 2.714,
+          "mts_item_floor": 2,
+          "missing_core_mts_items": [],
+          "downgraded": false
+        },
+        "badges": [
+          "EpiBench-Dataset-T1",
+          "EpiBench-Run-Complete",
+          "EpiBench-Failure-Transparent",
+          "EpiBench-Claim-E2-PI",
+          "EpiBench-Leakage-Checked"
+        ],
+        "blocking_reasons": [],
+        "forbidden_phrases": [
+          "edge-ready",
+          "on-device",
+          "real-time"
+        ]
+      }
+    },
+    {
+      "bundle_path": "examples\\epibench\\msg_gate_c_frozen_f\\result_bundle.yaml",
+      "run_id": "msg_cycle_preserving_random_gate_c_frozen",
+      "track": "F",
+      "dataset_id": "msg_gate_c_frozen_f",
+      "final_claim": "E2-PD",
+      "effective_tier": "T2",
+      "submission_grade": true,
+      "blockers": [],
+      "warnings": [
+        "Package may be valid but cannot support patient-independent claims."
+      ],
+      "claim_report": {
+        "schema_version": "epibench.claim_eligibility.v1",
+        "run_id": "msg_cycle_preserving_random_gate_c_frozen",
+        "epibench_version": "v1.0-draft",
+        "requested_claim": "E2-PD",
+        "final_claim": "E2-PD",
+        "ceilings": {
+          "dataset_tier": "E2-PI",
+          "split_policy": "E2-PD",
+          "label_audit": "E2-PI",
+          "leakage_audit": "E4",
+          "threshold_policy": "E4",
+          "failure_status": "E4",
+          "hardware_evidence": "E4",
+          "track_consistency": "E4"
+        },
+        "score": {
+          "epi_score": 58.984,
+          "axis_scores": {
+            "performance": 0.62,
+            "clinical_safety": 0.7,
+            "robustness": 0.48,
+            "stability": 0.55,
+            "latency": 0.5,
+            "calibration": 0.58
+          },
+          "floor_penalty_applied": false
+        },
+        "dataset_tier_evaluation": {
+          "declared_tier": "T2",
+          "effective_tier": "T2",
+          "mts_mean": 2.143,
+          "mts_item_floor": 1,
+          "missing_core_mts_items": [],
+          "downgraded": false
+        },
+        "badges": [
+          "EpiBench-Dataset-T2",
+          "EpiBench-Run-Complete",
+          "EpiBench-Failure-Transparent",
+          "EpiBench-Claim-E2-PD",
+          "EpiBench-Leakage-Checked"
+        ],
+        "blocking_reasons": [],
+        "forbidden_phrases": []
+      }
+    }
+  ]
+}

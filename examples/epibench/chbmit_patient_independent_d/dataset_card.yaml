@@ -1,0 +1,113 @@
+schema_version: epibench.dataset_card.v1
+dataset_id: chbmit_patient_independent_d
+name: CHB-MIT PhysioNet Metadata Patient-Independent Detection Evidence Package
+version: 1.0.0-metadata-package-2026-05-24
+license: Open Data Commons Attribution License v1.0
+source:
+  url_or_doi: https://doi.org/10.13026/C2K01R
+  access_date: '2026-05-24'
+  official_source: true
+provenance: Official PhysioNet CHB-MIT RECORDS, RECORDS-WITH-SEIZURES, SUBJECT-INFO,
+  and chbXX-summary.txt files downloaded from https://physionet.org/files/chbmit/1.0.0/.
+  No EDF waveform download is required for this null-baseline package.
+sensors:
+- modality: scalp_eeg
+  sampling_rate_hz: 256
+  placement: international_10_20_scalp_eeg_montage
+  calibration: 16-bit EDF signals; calibration details are inherited from the PhysioNet
+    EDF files
+  synchronization: per-recording relative seizure onset and offset seconds from official
+    summary files
+population:
+  n_patients: 23
+  n_seizures: 198
+  monitoring_hours: 973.639
+  setting: hospital
+  age_summary: 1.5-22 for cases listed in SUBJECT-INFO
+  sex_summary: 17 female and 5 male subjects in SUBJECT-INFO; chb24 not listed
+  seizure_types: []
+labels:
+  label_source: expert_adjudicated
+  onset_available: true
+  offset_available: true
+  temporal_uncertainty_seconds: null
+  audit_status: expert_adjudicated_onset_offset
+mts:
+  source_official:
+    score: 3
+    evidence: PhysioNet official project DOI and open access page
+    review_status: self_reviewed
+  acquisition_protocol:
+    score: 3
+    evidence: PhysioNet methods document pediatric hospital EEG acquisition, 10-20
+      montage, 256 Hz sampling, and EDF organization
+    review_status: self_reviewed
+  label_quality:
+    score: 3
+    evidence: official summaries provide seizure onset and end seconds for annotated
+      seizure files
+    review_status: self_reviewed
+  synchronization:
+    score: 2
+    evidence: relative timing within each EDF is explicit; absolute dates are surrogate
+      and recording gaps exist
+    review_status: self_reviewed
+  raw_to_processed_trace:
+    score: 3
+    evidence: metadata parser is deterministic and stores raw summaries, processed
+      recordings, events, split cases, and metrics
+    review_status: self_reviewed
+  missingness:
+    score: 2
+    evidence: official documentation reports recording gaps; this metadata baseline
+      avoids waveform missingness claims
+    review_status: self_reviewed
+  leakage_audit:
+    score: 3
+    evidence: fixed split keeps chb01/chb21 same-subject cases together and separates
+      train/validation/test subjects
+    review_status: self_reviewed
+dsi:
+  patient_diversity:
+    score: 2
+    evidence: 22 documented pediatric subjects plus additional chb24 case, with age/sex
+      metadata for listed cases
+    review_status: self_reviewed
+  setting_diversity:
+    score: 0
+    evidence: hospital monitoring only
+    review_status: self_reviewed
+  seizure_type_diversity:
+    score: 1
+    evidence: dataset contains seizure events but this metadata package does not adjudicate
+      seizure semiology
+    review_status: self_reviewed
+  sensor_realism:
+    score: 3
+    evidence: clinical scalp EEG with standard montage and 256 Hz sampling
+    review_status: self_reviewed
+  external_validation:
+    score: 0
+    evidence: no external dataset validation in this package
+    review_status: self_reviewed
+tier:
+  declared: T1
+  rationale: Official PhysioNet source, explicit onset/offset annotations, public
+    provenance, and patient-independent split support strong retrospective evidence.
+    Hospital-only pediatric context and metadata-only baseline limit domain scope,
+    not metrological tier.
+limitations:
+- This package evaluates an always-negative null baseline; it is not a useful seizure
+  detector.
+- The package downloads official metadata and annotations, not the 42.6 GB EDF waveform
+  archive.
+- CHB-MIT is a hospital pediatric dataset and does not support home IoT generalization.
+- Case chb21 is documented as the same subject as chb01 and is kept in the same split
+  group.
+- Case chb24 is present in RECORDS but not in SUBJECT-INFO.
+raw_to_processed_trace:
+  available: true
+  description: scripts/epibench_build_chbmit_package.py downloads official metadata,
+    parses summaries, materializes recordings/events/splits, and emits the EpiBench
+    evidence package.
+  checksums_available: false

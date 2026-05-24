@@ -1,0 +1,8 @@
+bundle_id: bundle_calce_a123_lfp_dst_v1.0
+description: >
+  Template recipe for the CALCE A123 LFP DST v1.0 reproduction bundle. Replace the
+  commands and reference manifest with the frozen BSEBench publication artefacts.
+reference_manifest: reference_manifest.json
+output_root: outputs
+commands:
+  - "python -m bsebench_pipeline.run_bundle --bundle bundle_calce_a123_lfp_dst_v1.0 --out outputs"

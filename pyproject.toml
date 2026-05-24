@@ -13,6 +13,9 @@ dependencies = [
     "pyyaml>=6.0",
 ]
 
+[project.scripts]
+epibench = "src.epibench.cli:main"
+
 [project.optional-dependencies]
 dev = ["pytest>=7.0", "ruff>=0.4"]
 torch = ["torch>=2.1"]

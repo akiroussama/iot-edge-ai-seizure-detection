@@ -1,0 +1,84 @@
+schema_version: epibench.dataset_card.v1
+dataset_id: msg_preliminary_f
+name: My Seizure Gauge Preliminary Forecasting Evidence Package
+version: "2026-05-23-local-freeze"
+license: restricted-public-research-pending-verification
+source:
+  url_or_doi: https://zenodo.org/records/17380899
+  access_date: "2026-05-24"
+  official_source: true
+provenance: Local frozen benchmark artefacts summarized in reports/gate_c_frozen_benchmark_2026-05-23/frozen_benchmark_audit.md.
+sensors:
+  - modality: wearable_hr_steps
+    sampling_rate_hz: null
+    placement: wrist_or_consumer_wearable_reported
+    calibration: not verified in this preliminary evidence package
+    synchronization: recording timestamps parsed locally; full device-time audit pending
+population:
+  n_patients: 8
+  n_seizures: 768
+  monitoring_hours: 49577
+  setting: home
+  age_summary: not verified in preliminary package
+  sex_summary: not verified in preliminary package
+  seizure_types: []
+labels:
+  label_source: self_report
+  onset_available: true
+  offset_available: false
+  temporal_uncertainty_seconds: null
+  audit_status: proxy_or_device_label
+mts:
+  source_official:
+    score: 2
+    evidence: source DOI available, but local evidence package still needs independent citation and file audit
+    review_status: self_reviewed
+  acquisition_protocol:
+    score: 1
+    evidence: wearable acquisition context partially known; device placement and calibration not fully verified
+    review_status: self_reviewed
+  label_quality:
+    score: 1
+    evidence: onset labels parsed, but seizure ends are imputed and clinical adjudication is not established
+    review_status: self_reviewed
+  raw_to_processed_trace:
+    score: 2
+    evidence: frozen benchmark manifest verifies committed freeze artefacts for the null benchmark
+    review_status: self_reviewed
+  leakage_audit:
+    score: 2
+    evidence: Gate C frozen-only guard passed for benchmark artefacts
+    review_status: self_reviewed
+dsi:
+  patient_diversity:
+    score: 1
+    evidence: eight local patients; not population representative
+    review_status: self_reviewed
+  monitoring_duration:
+    score: 3
+    evidence: long-term longitudinal monitoring hours are available in local report
+    review_status: self_reviewed
+  setting_diversity:
+    score: 2
+    evidence: home or real-world wearable context, but device metadata incomplete
+    review_status: self_reviewed
+  forecasting_relevance:
+    score: 3
+    evidence: SPH60/SOP1440 frozen benchmark exists
+    review_status: self_reviewed
+  external_validation:
+    score: 0
+    evidence: no external dataset validation in this package
+    review_status: self_reviewed
+tier:
+  declared: T2
+  rationale: Useful longitudinal wearable forecasting evidence, but label adjudication, device metadata, and clinical timing precision are incomplete.
+limitations:
+  - Preliminary package, not submission-ready clinical evidence.
+  - Seizure end times are imputed.
+  - Event denominator is a matched, prediction-coverable subset for benchmark comparisons.
+  - No external validation.
+raw_to_processed_trace:
+  available: true
+  description: Gate C frozen benchmark manifest exists; independent public reproduction still required.
+  checksums_available: true

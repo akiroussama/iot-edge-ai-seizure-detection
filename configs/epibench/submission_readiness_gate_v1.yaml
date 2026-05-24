@@ -1,0 +1,35 @@
+schema_version: epibench.submission_readiness_gate.v1
+gate_id: q1_minimum_real_evidence_packages
+epibench_version: v1.0-draft
+minimum_packages: 2
+minimum_operational_packages: 1
+minimum_operational_claim: E2-PI
+minimum_patients:
+  D: 10
+  W: 10
+  F: 8
+  E: 10
+minimum_events:
+  D: 30
+  W: 30
+  F: 50
+  E: 30
+disallowed_model_commit_values:
+  - demo-not-a-real-result
+disallowed_split_policies:
+  - synthetic_or_demo
+  - noncompliant_or_unknown
+blocking_label_audit_statuses:
+  - proxy_or_device_label
+  - unaudited_or_unknown
+required_for_detection_track:
+  require_event_scoring_mapping_or_native_event_fields: true
+  accepted_native_event_fields:
+    - event_sensitivity
+    - false_alarms_per_24h
+    - event_f1
+  accepted_external_mapping_flag: external_event_scoring_mapped
+submission_grade_definition: >
+  A package is submission-grade only if it is real-data, non-demo, schema-valid,
+  claim-certified, free of blocking failures, label-audited above proxy level,
+  and large enough for the declared track. This gate does not make clinical claims.

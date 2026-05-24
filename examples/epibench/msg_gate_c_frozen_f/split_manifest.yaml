@@ -1,0 +1,28 @@
+schema_version: epibench.split_manifest.v1
+split_id: msg_gate_c_sph60_sop1440_2026-05-23
+dataset_id: msg_gate_c_frozen_f
+track: F
+split_policy: temporal_within_patient
+train_units:
+  n_patients: 8
+  n_recordings: 0
+  n_events: 0
+  monitoring_hours: 0
+validation_units:
+  n_patients: 8
+  n_recordings: 0
+  n_events: 0
+  monitoring_hours: 0
+test_units:
+  n_patients: 8
+  n_recordings: 0
+  n_events: 54
+  monitoring_hours: 1418.0
+leakage_checks:
+  patient_overlap: false
+  temporal_overlap: false
+  normalization_scope: train_only
+  status: passed
+threshold_selection_policy:
+  selection_split: validation
+  uses_test_labels: false

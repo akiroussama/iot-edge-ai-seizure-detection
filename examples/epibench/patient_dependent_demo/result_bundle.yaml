@@ -1,0 +1,41 @@
+schema_version: epibench.result_bundle.v1
+run_id: patient_dependent_claim_demo
+track: D
+requested_claim: E2-PI
+dataset_card_path: ../pilot_t1_eeg/dataset_card.yaml
+split_manifest_path: split_manifest.yaml
+failure_trace_path: failure_trace.yaml
+model:
+  name: patient_threshold_demo
+  family: patient_specific_threshold
+  commit_sha: demo-not-a-real-result
+environment:
+  python: "3.11"
+  platform: windows-demo
+  dependencies:
+    - numpy
+    - pandas
+    - pyyaml
+inputs:
+  - path: canonical/events.parquet
+    sha256: null
+outputs:
+  - path: reports/event_metrics.json
+    sha256: null
+metrics:
+  event_sensitivity: 0.88
+  event_precision: 0.80
+  event_f1: 0.84
+  false_alarms_per_24h: 1.0
+score_inputs:
+  subscores:
+    performance: 0.84
+    clinical_safety: 0.78
+    robustness: 0.55
+    stability: 0.72
+    latency: 0.75
+hardware: null
+reproduction:
+  command: python scripts/epibench.py certify examples/epibench/patient_dependent_demo/result_bundle.yaml
+  container_or_env: local-demo
+  checksums: []

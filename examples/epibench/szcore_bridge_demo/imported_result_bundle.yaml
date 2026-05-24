@@ -1,0 +1,44 @@
+schema_version: epibench.result_bundle.v1
+run_id: szcore_import_demo
+track: D
+requested_claim: E2-PI
+dataset_card_path: C:\doctorat\iot\iot-edge-ai-seizure-detection\examples\epibench\pilot_t1_eeg\dataset_card.yaml
+split_manifest_path: C:\doctorat\iot\iot-edge-ai-seizure-detection\examples\epibench\pilot_t1_eeg\split_manifest.yaml
+failure_trace_path: C:\doctorat\iot\iot-edge-ai-seizure-detection\examples\epibench\szcore_bridge_demo\import_failure_trace.yaml
+model:
+  name: szcore_import_demo_model
+  family: external_event_scorer
+  commit_sha: external-commit-sha
+environment:
+  python: external-import
+  platform: external-szcore-compatible-output
+  dependencies:
+  - szcore-compatible-event-scoring-export
+inputs:
+- path: C:\doctorat\iot\iot-edge-ai-seizure-detection\examples\epibench\szcore_bridge_demo\szcore_event_metrics.yaml
+  sha256: null
+outputs: []
+metrics:
+  event_sensitivity: 0.81
+  event_precision: 0.73
+  event_f1: 0.77
+  false_alarms_per_24h: 1.25
+  detection_latency_seconds_median: 6.5
+  detection_latency_seconds_p95: 19.0
+  event_matching_rule: overlap_with_refractory_period_demo
+  event_scoring_source: SzCORE-compatible event scorer demo export
+  external_event_scoring_mapped: true
+  external_event_scoring_relationship: MAP
+  external_event_scoring_mapped_fields: detection_delay_seconds_median->detection_latency_seconds_median,detection_delay_seconds_p95->detection_latency_seconds_p95,f1_score->event_f1,false_positives_per_day->false_alarms_per_24h,precision->event_precision,sensitivity->event_sensitivity
+score_inputs:
+  subscores:
+    performance: 0.76
+    clinical_safety: 0.72
+    robustness: 0.7
+    stability: 0.68
+    latency: 0.75
+hardware: null
+reproduction:
+  command: external SzCORE-compatible event scoring followed by epibench import-szcore
+  container_or_env: external
+  checksums: []

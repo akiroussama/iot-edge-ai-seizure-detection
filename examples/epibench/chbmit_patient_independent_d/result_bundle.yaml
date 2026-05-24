@@ -1,0 +1,61 @@
+schema_version: epibench.result_bundle.v1
+run_id: chbmit_always_negative_patient_independent
+track: D
+requested_claim: E2-PI
+dataset_card_path: dataset_card.yaml
+split_manifest_path: split_manifest.yaml
+failure_trace_path: failure_trace.yaml
+model:
+  name: always_negative
+  family: null_baseline
+  commit_sha: metadata-baseline-2026-05-24
+environment:
+  python: '3.12'
+  platform: metadata-only-public-physionet
+  dependencies:
+  - pyyaml
+inputs:
+- path: data/raw/chbmit_metadata/RECORDS
+  sha256: null
+- path: data/raw/chbmit_metadata/RECORDS-WITH-SEIZURES
+  sha256: null
+- path: data/raw/chbmit_metadata/SUBJECT-INFO
+  sha256: null
+- path: data/raw/chbmit_metadata/chb*/chb*-summary.txt
+  sha256: null
+outputs:
+- path: data/processed/chbmit_metadata/recordings.csv
+  sha256: null
+- path: data/processed/chbmit_metadata/events.csv
+  sha256: null
+- path: data/processed/chbmit_metadata/split_cases.csv
+  sha256: null
+- path: reports/chbmit_patient_independent_null_metrics.json
+  sha256: null
+metrics:
+  task_type: seizure_detection
+  baseline_type: always_negative
+  event_sensitivity: 0.0
+  false_alarms_per_24h: 0.0
+  precision: null
+  event_f1: 0.0
+  events_used_for_metrics: 106
+  monitored_hours_test: 155.306
+  median_detection_latency_seconds: null
+  p95_detection_latency_seconds: null
+  missing_prediction_rate: 0.0
+  clinical_utility_statement: not clinically useful; null baseline only
+score_inputs:
+  subscores:
+    performance: 0.02
+    clinical_safety: 0.05
+    robustness: 0.1
+    stability: 0.2
+    latency: 0.5
+    calibration: 0.1
+hardware: null
+reproduction:
+  command: python scripts/epibench_build_chbmit_package.py && python scripts/epibench.py
+    certify examples/epibench/chbmit_patient_independent_d/result_bundle.yaml
+  container_or_env: local-python
+  checksums: []

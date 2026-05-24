@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/akiroussama/iot-edge-ai-seizure-detection/schemas/epibench/claim_eligibility.schema.json",
+  "title": "EpiBench Claim Eligibility Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "epibench_version",
+    "requested_claim",
+    "final_claim",
+    "ceilings",
+    "score",
+    "dataset_tier_evaluation",
+    "badges",
+    "blocking_reasons",
+    "forbidden_phrases"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "epibench.claim_eligibility.v1" },
+    "run_id": { "type": "string", "minLength": 1 },
+    "epibench_version": { "type": "string", "minLength": 1 },
+    "requested_claim": { "type": "string", "enum": ["E0", "E1", "E2-PD", "E2-PI", "E3", "E4"] },
+    "final_claim": { "type": "string", "enum": ["E0", "E1", "E2-PD", "E2-PI", "E3", "E4"] },
+    "ceilings": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "score": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["epi_score", "axis_scores", "floor_penalty_applied"],
+      "properties": {
+        "epi_score": { "type": "number", "minimum": 0, "maximum": 100 },
+        "axis_scores": { "type": "object", "additionalProperties": { "type": "number" } },
+        "floor_penalty_applied": { "type": "boolean" }
+      }
+    },
+    "dataset_tier_evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "declared_tier",
+        "effective_tier",
+        "mts_mean",
+        "mts_item_floor",
+        "missing_core_mts_items",
+        "downgraded"
+      ],
+      "properties": {
+        "declared_tier": { "type": "string", "enum": ["T1", "T2", "T3"] },
+        "effective_tier": { "type": "string", "enum": ["T1", "T2", "T3"] },
+        "mts_mean": { "type": "number", "minimum": 0, "maximum": 3 },
+        "mts_item_floor": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "missing_core_mts_items": { "type": "array", "items": { "type": "string" } },
+        "downgraded": { "type": "boolean" }
+      }
+    },
+    "badges": { "type": "array", "items": { "type": "string" } },
+    "blocking_reasons": { "type": "array", "items": { "type": "string" } },
+    "forbidden_phrases": { "type": "array", "items": { "type": "string" } }
+  }
+}

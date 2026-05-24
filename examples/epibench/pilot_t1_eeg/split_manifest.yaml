@@ -1,0 +1,28 @@
+schema_version: epibench.split_manifest.v1
+split_id: pilot_t1_eeg_loso_demo
+dataset_id: pilot_t1_eeg
+track: D
+split_policy: leave_one_subject_out
+train_units:
+  n_patients: 18
+  n_recordings: 180
+  n_events: 72
+  monitoring_hours: 900
+validation_units:
+  n_patients: 3
+  n_recordings: 30
+  n_events: 12
+  monitoring_hours: 150
+test_units:
+  n_patients: 3
+  n_recordings: 30
+  n_events: 12
+  monitoring_hours: 150
+leakage_checks:
+  patient_overlap: false
+  temporal_overlap: false
+  normalization_scope: train_only
+  status: passed
+threshold_selection_policy:
+  selection_split: validation
+  uses_test_labels: false

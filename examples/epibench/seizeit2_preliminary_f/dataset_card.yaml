@@ -1,0 +1,85 @@
+schema_version: epibench.dataset_card.v1
+dataset_id: seizeit2_preliminary_f
+name: SeizeIT2 Preliminary Single-Subject Forecasting Evidence Package
+version: sub125-local-check-2026-05-24
+license: dataset-license-to-be-verified-before-publication
+source:
+  url_or_doi: https://www.nature.com/articles/s41597-025-05580-x
+  access_date: "2026-05-24"
+  official_source: true
+provenance: Local sub-125 pipeline verification summarized in reports/seizeit2_sub125_real_check/dataset_report.md.
+sensors:
+  - modality: wearable_multimodal
+    sampling_rate_hz: null
+    placement: wearable placements described by source dataset; local extraction audit pending
+    calibration: not verified in preliminary package
+    synchronization: local timestamp alignment not independently reviewed
+population:
+  n_patients: 1
+  n_seizures: 2
+  monitoring_hours: 77.73333333333333
+  setting: hospital
+  age_summary: not included in preliminary local package
+  sex_summary: not included in preliminary local package
+  seizure_types:
+    - focal_epilepsy_dataset_context
+labels:
+  label_source: expert_adjudicated
+  onset_available: true
+  offset_available: true
+  temporal_uncertainty_seconds: null
+  audit_status: unaudited_or_unknown
+mts:
+  source_official:
+    score: 3
+    evidence: official Scientific Data dataset article exists
+    review_status: self_reviewed
+  local_cohort_completeness:
+    score: 0
+    evidence: local package covers one subject only and is for pipeline verification
+    review_status: self_reviewed
+  label_quality:
+    score: 1
+    evidence: labels exist but local manual audit is incomplete
+    review_status: self_reviewed
+  raw_to_processed_trace:
+    score: 1
+    evidence: local transformation exists; full public reproduction and checksums pending
+    review_status: self_reviewed
+  missingness:
+    score: 1
+    evidence: local missingness and modality coverage audit incomplete
+    review_status: self_reviewed
+dsi:
+  patient_diversity:
+    score: 0
+    evidence: one patient only
+    review_status: self_reviewed
+  seizure_type_diversity:
+    score: 0
+    evidence: two events only
+    review_status: self_reviewed
+  setting_diversity:
+    score: 1
+    evidence: hospital monitoring only in this local check
+    review_status: self_reviewed
+  wearable_stress:
+    score: 1
+    evidence: wearable modality present but artifact stress not audited
+    review_status: self_reviewed
+  external_validation:
+    score: 0
+    evidence: no external validation
+    review_status: self_reviewed
+tier:
+  declared: T3
+  rationale: Official source is strong, but this local package is a one-subject pipeline check and cannot support an operational claim.
+limitations:
+  - Single-subject local check only.
+  - Manual label audit incomplete.
+  - Not paper-table-ready.
+  - No patient-independent evidence.
+raw_to_processed_trace:
+  available: true
+  description: Local pipeline verification exists; release-grade reproduction pending.
+  checksums_available: false

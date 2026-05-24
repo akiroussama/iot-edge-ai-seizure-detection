@@ -1,0 +1,34 @@
+schema_version: bsebench.repository_manifest.v1
+description: >
+  Fill this manifest with the exact seven BSEBench repositories, URLs, and commit SHAs
+  before building a publication-grade reproduction image. The current workspace does
+  not contain the BSEBench repositories, so placeholder values intentionally fail.
+repositories:
+  - name: bsebench-core
+    url: null
+    ref: null
+    local_path: null
+  - name: bsebench-datasets
+    url: null
+    ref: null
+    local_path: null
+  - name: bsebench-metrics
+    url: null
+    ref: null
+    local_path: null
+  - name: bsebench-baselines
+    url: null
+    ref: null
+    local_path: null
+  - name: bsebench-protocol
+    url: null
+    ref: null
+    local_path: null
+  - name: bsebench-reports
+    url: null
+    ref: null
+    local_path: null
+  - name: bsebench-runner
+    url: null
+    ref: null
+    local_path: null

@@ -1,0 +1,38 @@
+schema_version: epibench.failure_trace.v1
+run_id: chbmit_always_negative_patient_independent
+failure_policy: preserve_all
+sentinels:
+- code: HARDWARE_UNMEASURED
+  present: true
+  severity: warning
+  count: 1
+  scope: run
+  evidence: metadata-only package; no embedded hardware latency or energy measurement
+- code: PREDICTION_MISSING
+  present: false
+  severity: none
+  count: 0
+  scope: none
+  evidence: always-negative predictions are defined for all test recording time
+- code: PATIENT_LEAKAGE
+  present: false
+  severity: none
+  count: 0
+  scope: none
+  evidence: test cases are disjoint by subject group; chb01 and chb21 are kept together
+- code: TEMPORAL_LEAKAGE
+  present: false
+  severity: none
+  count: 0
+  scope: none
+  evidence: fixed patient-independent split; no threshold uses test labels
+- code: LABEL_UNAUDITED
+  present: false
+  severity: none
+  count: 0
+  scope: none
+  evidence: official CHB-MIT summaries provide onset and end annotations
+summary:
+  critical_failure_present: false
+  blocking_failure_present: false
+  failure_rate: 0.0

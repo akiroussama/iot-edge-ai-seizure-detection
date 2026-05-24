@@ -1,0 +1,89 @@
+schema_version: epibench.dataset_card.v1
+dataset_id: pilot_t1_eeg
+name: Pilot T1 EEG Evidence Package
+version: "0.1-demo"
+license: research-use-demo
+source:
+  url_or_doi: https://example.org/epibench/pilot_t1_eeg
+  access_date: "2026-05-24"
+  official_source: true
+provenance: Demonstration evidence card modeled after a clinically annotated EEG corpus; not a real dataset claim.
+sensors:
+  - modality: scalp_eeg
+    sampling_rate_hz: 256
+    placement: international_10_20
+    calibration: acquisition-system calibration documented
+    synchronization: single acquisition clock
+population:
+  n_patients: 24
+  n_seizures: 96
+  monitoring_hours: 1200
+  setting: hospital
+  age_summary: adult and adolescent mixed cohort
+  sex_summary: documented but omitted from public demo
+  seizure_types:
+    - focal_onset
+    - generalized_onset
+labels:
+  label_source: expert_adjudicated
+  onset_available: true
+  offset_available: true
+  temporal_uncertainty_seconds: 2
+  audit_status: expert_adjudicated_onset_offset
+mts:
+  source_official:
+    score: 3
+    evidence: official institutional archive or DOI with access date
+    review_status: independent_reviewed
+  acquisition_protocol:
+    score: 3
+    evidence: acquisition protocol, sensor montage, and monitoring context documented
+    review_status: independent_reviewed
+  label_quality:
+    score: 3
+    evidence: expert onset and offset adjudication available
+    review_status: independent_reviewed
+  synchronization:
+    score: 3
+    evidence: single acquisition clock; no cross-device drift relevant to demo
+    review_status: independent_reviewed
+  raw_to_processed_trace:
+    score: 3
+    evidence: deterministic transformation manifest with checksums
+    review_status: independent_reviewed
+  missingness:
+    score: 2
+    evidence: missing segments documented; no imputation used in scoring
+    review_status: self_reviewed
+dsi:
+  patient_diversity:
+    score: 2
+    evidence: multi-patient but not population-representative
+    review_status: independent_reviewed
+  seizure_type_diversity:
+    score: 2
+    evidence: multiple seizure onset categories represented
+    review_status: independent_reviewed
+  setting_diversity:
+    score: 1
+    evidence: hospital-only monitoring
+    review_status: self_reviewed
+  artifact_stress:
+    score: 2
+    evidence: motion and electrode artifacts retained in scoring windows
+    review_status: self_reviewed
+  external_validation:
+    score: 0
+    evidence: no external site in this demo package
+    review_status: self_reviewed
+tier:
+  declared: T1
+  rationale: Strong label and traceability evidence, but hospital-only DSI blocks broad generalization.
+limitations:
+  - Demonstration card only; it must not be cited as a real dataset result.
+  - Hospital monitoring does not establish home wearable performance.
+  - External validation is absent, so E3 is blocked.
+raw_to_processed_trace:
+  available: true
+  description: Checksummed raw files mapped to canonical events, recordings, windows, and predictions.
+  checksums_available: true

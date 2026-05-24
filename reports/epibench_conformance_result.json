@@ -1,0 +1,128 @@
+{
+  "schema_version": "epibench.conformance_result.v1",
+  "suite_id": "epibench_v1_core_claim_gates",
+  "epibench_version": "v1.0-draft",
+  "status": "passed",
+  "cases": [
+    {
+      "id": "clean_loso_t1_reaches_e2_pi",
+      "passed": true,
+      "expected_final_claim": "E2-PI",
+      "actual_final_claim": "E2-PI",
+      "missing_badges": [],
+      "missing_forbidden_phrases": [],
+      "expected_effective_tier": null,
+      "actual_effective_tier": "T1"
+    },
+    {
+      "id": "patient_dependent_requested_e2_pi_downgrades_to_e2_pd",
+      "passed": true,
+      "expected_final_claim": "E2-PD",
+      "actual_final_claim": "E2-PD",
+      "missing_badges": [],
+      "missing_forbidden_phrases": [],
+      "expected_effective_tier": null,
+      "actual_effective_tier": "T1"
+    },
+    {
+      "id": "leakage_high_metric_downgrades_to_e1",
+      "passed": true,
+      "expected_final_claim": "E1",
+      "actual_final_claim": "E1",
+      "missing_badges": [],
+      "missing_forbidden_phrases": [],
+      "expected_effective_tier": null,
+      "actual_effective_tier": "T1"
+    },
+    {
+      "id": "preliminary_msg_is_claim_limited_to_e1",
+      "passed": true,
+      "expected_final_claim": "E1",
+      "actual_final_claim": "E1",
+      "missing_badges": [],
+      "missing_forbidden_phrases": [],
+      "expected_effective_tier": null,
+      "actual_effective_tier": "T3"
+    },
+    {
+      "id": "msg_gate_c_frozen_temporal_forecasting_reaches_e2_pd",
+      "passed": true,
+      "expected_final_claim": "E2-PD",
+      "actual_final_claim": "E2-PD",
+      "missing_badges": [],
+      "missing_forbidden_phrases": [],
+      "expected_effective_tier": "T2",
+      "actual_effective_tier": "T2"
+    },
+    {
+      "id": "chbmit_metadata_patient_independent_null_baseline_reaches_e2_pi",
+      "passed": true,
+      "expected_final_claim": "E2-PI",
+      "actual_final_claim": "E2-PI",
+      "missing_badges": [],
+      "missing_forbidden_phrases": [],
+      "expected_effective_tier": "T1",
+      "actual_effective_tier": "T1"
+    },
+    {
+      "id": "preliminary_seizeit2_single_subject_is_e1",
+      "passed": true,
+      "expected_final_claim": "E1",
+      "actual_final_claim": "E1",
+      "missing_badges": [],
+      "missing_forbidden_phrases": [],
+      "expected_effective_tier": "T3",
+      "actual_effective_tier": "T3"
+    },
+    {
+      "id": "external_validation_can_reach_e3",
+      "passed": true,
+      "expected_final_claim": "E3",
+      "actual_final_claim": "E3",
+      "missing_badges": [],
+      "missing_forbidden_phrases": [],
+      "expected_effective_tier": "T1",
+      "actual_effective_tier": "T1"
+    },
+    {
+      "id": "szcore_style_event_metrics_map_into_epibench",
+      "passed": true,
+      "expected_final_claim": "E2-PI",
+      "actual_final_claim": "E2-PI",
+      "missing_badges": [],
+      "missing_forbidden_phrases": [],
+      "expected_effective_tier": "T1",
+      "actual_effective_tier": "T1"
+    },
+    {
+      "id": "external_validation_requested_e4_downgrades_to_e3",
+      "passed": true,
+      "expected_final_claim": "E3",
+      "actual_final_claim": "E3",
+      "missing_badges": [],
+      "missing_forbidden_phrases": [],
+      "expected_effective_tier": "T1",
+      "actual_effective_tier": "T1"
+    },
+    {
+      "id": "prospective_multisite_can_reach_e4_in_protocol_demo",
+      "passed": true,
+      "expected_final_claim": "E4",
+      "actual_final_claim": "E4",
+      "missing_badges": [],
+      "missing_forbidden_phrases": [],
+      "expected_effective_tier": "T1",
+      "actual_effective_tier": "T1"
+    },
+    {
+      "id": "embedded_viability_without_hardware_blocks_realtime_wording",
+      "passed": true,
+      "expected_final_claim": "E1",
+      "actual_final_claim": "E1",
+      "missing_badges": [],
+      "missing_forbidden_phrases": [],
+      "expected_effective_tier": "T1",
+      "actual_effective_tier": "T1"
+    }
+  ]
+}

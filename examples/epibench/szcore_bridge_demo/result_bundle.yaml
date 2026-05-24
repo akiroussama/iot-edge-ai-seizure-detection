@@ -1,0 +1,60 @@
+schema_version: epibench.result_bundle.v1
+run_id: pilot_t1_eeg_edge_cnn_demo
+track: D
+requested_claim: E2-PI
+dataset_card_path: C:\doctorat\iot\iot-edge-ai-seizure-detection\examples\epibench\pilot_t1_eeg\dataset_card.yaml
+split_manifest_path: C:\doctorat\iot\iot-edge-ai-seizure-detection\examples\epibench\pilot_t1_eeg\split_manifest.yaml
+failure_trace_path: C:\doctorat\iot\iot-edge-ai-seizure-detection\examples\epibench\pilot_t1_eeg\failure_trace.yaml
+model:
+  name: edge_cnn_demo
+  family: small_cnn
+  commit_sha: demo-not-a-real-result
+environment:
+  python: '3.11'
+  platform: windows-demo
+  dependencies:
+  - numpy
+  - pandas
+  - pyyaml
+inputs:
+- path: canonical/events.parquet
+  sha256: null
+- path: canonical/predictions.parquet
+  sha256: null
+outputs:
+- path: reports/event_metrics.json
+  sha256: null
+- path: reports/latency_report.json
+  sha256: null
+metrics:
+  event_sensitivity: 0.81
+  event_precision: 0.73
+  event_f1: 0.77
+  false_alarms_per_24h: 1.25
+  detection_latency_seconds_median: 6.5
+  detection_latency_seconds_p95: 19.0
+  worst_patient_event_sensitivity: 0.67
+  missing_prediction_rate: 0.0
+  event_matching_rule: overlap_with_refractory_period_demo
+  event_scoring_source: SzCORE-compatible event scorer demo export
+  external_event_scoring_mapped: true
+  external_event_scoring_relationship: MAP
+  external_event_scoring_mapped_fields: detection_delay_seconds_median->detection_latency_seconds_median,detection_delay_seconds_p95->detection_latency_seconds_p95,f1_score->event_f1,false_positives_per_day->false_alarms_per_24h,precision->event_precision,sensitivity->event_sensitivity
+score_inputs:
+  subscores:
+    performance: 0.78
+    clinical_safety: 0.74
+    robustness: 0.68
+    stability: 0.7
+    latency: 0.82
+    embedded_viability: 0.76
+    calibration: 0.66
+hardware:
+  target: cortex-m7-demo
+  latency_ms_p95: 42.0
+  ram_kb: 192.0
+  energy_mj_per_inference: 0.8
+reproduction:
+  command: python scripts/epibench.py certify examples/epibench/pilot_t1_eeg/result_bundle.yaml
+  container_or_env: local-demo
+  checksums: []

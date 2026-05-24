@@ -1,0 +1,45 @@
+schema_version: epibench.result_bundle.v1
+run_id: msg_cycle_preserving_random_preliminary
+track: F
+requested_claim: E2-PD
+dataset_card_path: dataset_card.yaml
+split_manifest_path: split_manifest.yaml
+failure_trace_path: failure_trace.yaml
+model:
+  name: cycle_preserving_random
+  family: null_baseline
+  commit_sha: local-gate-c-freeze-2026-05-23
+environment:
+  python: "3.11"
+  platform: local-freeze
+  dependencies:
+    - numpy
+    - pandas
+    - pyyaml
+inputs:
+  - path: reports/gate_c_frozen_benchmark_2026-05-23/frozen_benchmark_manifest.json
+    sha256: null
+outputs:
+  - path: reports/gate_c_frozen_benchmark_2026-05-23/frozen_benchmark_audit.md
+    sha256: null
+metrics:
+  event_sensitivity: 0.7407407407407407
+  false_alarms_per_24h: 0.5923836389280677
+  time_in_warning: 0.09732016925246827
+  brier_score: 0.22237042583524766
+  brier_skill_score: 0.06953434996389507
+  expected_calibration_error: 0.19091797503053086
+  events_used_for_metrics: 54
+score_inputs:
+  subscores:
+    performance: 0.65
+    clinical_safety: 0.70
+    robustness: 0.35
+    stability: 0.45
+    latency: 0.50
+    calibration: 0.55
+hardware: null
+reproduction:
+  command: python scripts/epibench.py certify examples/epibench/msg_preliminary_f/result_bundle.yaml
+  container_or_env: local-freeze
+  checksums: []

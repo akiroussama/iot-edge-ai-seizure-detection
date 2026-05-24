@@ -1,0 +1,110 @@
+schema_version: epibench.dataset_card.v1
+dataset_id: msg_gate_c_frozen_f
+name: My Seizure Gauge Gate C Frozen Forecasting Evidence Package
+version: 2026-05-23-gate-c-frozen
+license: restricted-public-research-pending-verification
+source:
+  url_or_doi: doi:10.5281/zenodo.17380899
+  access_date: '2026-05-24'
+  official_source: true
+provenance: Local Gate C frozen benchmark artefacts generated from the MSG source
+  package, with registry verification, frozen split materialization, null-baseline
+  predictions, calibration artefacts, and benchmark manifest stored under reports/gate_c_frozen_benchmark_2026-05-23/.
+sensors:
+- modality: wearable_hr_steps
+  sampling_rate_hz: null
+  placement: wrist_or_consumer_wearable_reported
+  calibration: consumer-device calibration not independently verified
+  synchronization: recording timestamps parsed locally and frozen in the Gate C registry;
+    absolute device-clock synchronization remains a documented limitation.
+population:
+  n_patients: 11
+  n_seizures: 768
+  monitoring_hours: 49577.0
+  setting: home
+  age_summary: not verified in the local Gate C evidence package
+  sex_summary: not verified in the local Gate C evidence package
+  seizure_types: []
+labels:
+  label_source: clinical_record
+  onset_available: true
+  offset_available: false
+  temporal_uncertainty_seconds: null
+  audit_status: clinical_record_verified_no_precise_timing
+mts:
+  source_official:
+    score: 3
+    evidence: source package is identified by DOI and Gate C artefacts retain source
+      registry references
+    review_status: self_reviewed
+  acquisition_protocol:
+    score: 2
+    evidence: longitudinal wearable acquisition context is documented, but device
+      placement and calibration are not independently audited
+    review_status: self_reviewed
+  label_quality:
+    score: 2
+    evidence: seizure onsets are available from source records and sampled human attestation
+      is reported; offsets and exact clinical timing precision are not established
+    review_status: self_reviewed
+  synchronization:
+    score: 1
+    evidence: local timestamp parsing is frozen, but device-clock synchronization
+      to an external clinical clock is not independently verified
+    review_status: self_reviewed
+  raw_to_processed_trace:
+    score: 3
+    evidence: Gate C registry verification passed and frozen artefact paths are listed
+      in frozen_benchmark_manifest.json
+    review_status: self_reviewed
+  missingness:
+    score: 1
+    evidence: unmatched events and partially evaluable patients are explicitly reported;
+      the benchmark restricts evaluation to matched prediction-coverable events
+    review_status: self_reviewed
+  leakage_audit:
+    score: 3
+    evidence: Gate C frozen-only guard passed and leakage_status is clean in the benchmark
+      manifest
+    review_status: self_reviewed
+dsi:
+  patient_diversity:
+    score: 1
+    evidence: eleven local patients are represented, without demographic representativeness
+      audit
+    review_status: self_reviewed
+  monitoring_duration:
+    score: 3
+    evidence: long-term home wearable monitoring totals 49577 hours before matched
+      prediction-coverable filtering
+    review_status: self_reviewed
+  setting_diversity:
+    score: 1
+    evidence: home wearable setting only; no hospital/home paired validation
+    review_status: self_reviewed
+  forecasting_relevance:
+    score: 3
+    evidence: frozen SPH60/SOP1440 forecasting benchmark is materialized and citable
+      after Gate C
+    review_status: self_reviewed
+  external_validation:
+    score: 0
+    evidence: no external dataset validation is included in this package
+    review_status: self_reviewed
+tier:
+  declared: T2
+  rationale: The evidence is useful, frozen, traceable, and longitudinal, but incomplete
+    label timing, unmatched events, missingness, and device metadata prevent T1.
+limitations:
+- Null-baseline forecasting evidence, not a learned seizure forecasting model.
+- Event metrics are computed on a matched prediction-coverable test subset, not on
+  the full source event denominator.
+- Three patients remain non-evaluable without source review and seven are partially
+  evaluable matched-only in the local gap triage.
+- Seizure offset times are unavailable; exact clinical timing uncertainty is not quantified.
+- No external validation, no prospective validation, and no claim of clinical readiness.
+raw_to_processed_trace:
+  available: true
+  description: Frozen Gate C registry, split artefacts, prediction files, calibration
+    outputs, leaderboard rows, and manifest are recorded in reports/gate_c_*.
+  checksums_available: true

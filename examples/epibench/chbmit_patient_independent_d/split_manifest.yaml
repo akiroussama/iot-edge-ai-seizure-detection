@@ -1,0 +1,28 @@
+schema_version: epibench.split_manifest.v1
+split_id: chbmit_fixed_patient_independent_2026-05-24
+dataset_id: chbmit_patient_independent_d
+track: D
+split_policy: patient_independent
+train_units:
+  n_patients: 12
+  n_recordings: 405
+  n_events: 54
+  monitoring_hours: 613.381
+validation_units:
+  n_patients: 5
+  n_recordings: 114
+  n_events: 38
+  monitoring_hours: 204.951
+test_units:
+  n_patients: 6
+  n_recordings: 157
+  n_events: 106
+  monitoring_hours: 155.306
+leakage_checks:
+  patient_overlap: false
+  temporal_overlap: false
+  normalization_scope: train_only
+  status: passed
+threshold_selection_policy:
+  selection_split: validation
+  uses_test_labels: false

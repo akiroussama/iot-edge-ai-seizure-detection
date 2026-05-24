@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/akiroussama/iot-edge-ai-seizure-detection/schemas/epibench/dataset_evidence_card.schema.json",
+  "title": "EpiBench Dataset Evidence Card",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dataset_id",
+    "name",
+    "version",
+    "license",
+    "source",
+    "provenance",
+    "sensors",
+    "population",
+    "labels",
+    "mts",
+    "dsi",
+    "tier",
+    "limitations",
+    "raw_to_processed_trace"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "epibench.dataset_card.v1" },
+    "dataset_id": { "type": "string", "minLength": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "minLength": 1 },
+    "license": { "type": "string", "minLength": 1 },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url_or_doi", "access_date", "official_source"],
+      "properties": {
+        "url_or_doi": { "type": "string", "minLength": 1 },
+        "access_date": { "type": "string", "minLength": 1 },
+        "official_source": { "type": "boolean" }
+      }
+    },
+    "provenance": { "type": "string", "minLength": 1 },
+    "sensors": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["modality", "sampling_rate_hz", "placement"],
+        "properties": {
+          "modality": { "type": "string", "minLength": 1 },
+          "sampling_rate_hz": { "type": ["number", "null"], "minimum": 0 },
+          "placement": { "type": "string", "minLength": 1 },
+          "calibration": { "type": ["string", "null"] },
+          "synchronization": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "population": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["n_patients", "n_seizures", "monitoring_hours", "setting"],
+      "properties": {
+        "n_patients": { "type": "integer", "minimum": 0 },
+        "n_seizures": { "type": "integer", "minimum": 0 },
+        "monitoring_hours": { "type": "number", "minimum": 0 },
+        "setting": { "type": "string", "enum": ["hospital", "home", "mixed", "unknown"] },
+        "age_summary": { "type": ["string", "null"] },
+        "sex_summary": { "type": ["string", "null"] },
+        "seizure_types": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "labels": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label_source", "onset_available", "offset_available", "temporal_uncertainty_seconds", "audit_status"],
+      "properties": {
+        "label_source": {
+          "type": "string",
+          "enum": [
+            "expert_neurologist",
+            "expert_adjudicated",
+            "clinical_record",
+            "device_proxy",
+            "self_report",
+            "automatic",
+            "unknown"
+          ]
+        },
+        "onset_available": { "type": "boolean" },
+        "offset_available": { "type": "boolean" },
+        "temporal_uncertainty_seconds": { "type": ["number", "null"], "minimum": 0 },
+        "audit_status": {
+          "type": "string",
+          "enum": [
+            "expert_adjudicated_onset_offset",
+            "expert_adjudicated_onset_only",
+            "clinical_record_verified_no_precise_timing",
+            "proxy_or_device_label",
+            "unaudited_or_unknown"
+          ]
+        }
+      }
+    },
+    "mts": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/rubric_item" },
+      "minProperties": 1
+    },
+    "dsi": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/rubric_item" },
+      "minProperties": 1
+    },
+    "tier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["declared", "rationale"],
+      "properties": {
+        "declared": { "type": "string", "enum": ["T1", "T2", "T3"] },
+        "rationale": { "type": "string", "minLength": 1 }
+      }
+    },
+    "limitations": { "type": "array", "items": { "type": "string" } },
+    "raw_to_processed_trace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["available", "description", "checksums_available"],
+      "properties": {
+        "available": { "type": "boolean" },
+        "description": { "type": "string", "minLength": 1 },
+        "checksums_available": { "type": "boolean" }
+      }
+    }
+  },
+  "$defs": {
+    "rubric_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["score", "evidence", "review_status"],
+      "properties": {
+        "score": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "evidence": { "type": "string", "minLength": 1 },
+        "review_status": { "type": "string", "enum": ["unreviewed", "self_reviewed", "independent_reviewed"] }
+      }
+    }
+  }
+}

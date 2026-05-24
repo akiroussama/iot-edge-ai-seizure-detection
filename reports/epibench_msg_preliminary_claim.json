@@ -1,0 +1,52 @@
+{
+  "schema_version": "epibench.claim_eligibility.v1",
+  "run_id": "msg_cycle_preserving_random_preliminary",
+  "epibench_version": "v1.0-draft",
+  "requested_claim": "E2-PD",
+  "final_claim": "E1",
+  "ceilings": {
+    "dataset_tier": "E1",
+    "split_policy": "E2-PD",
+    "label_audit": "E1",
+    "leakage_audit": "E4",
+    "threshold_policy": "E4",
+    "failure_status": "E1",
+    "hardware_evidence": "E4",
+    "track_consistency": "E4"
+  },
+  "score": {
+    "epi_score": 50.024,
+    "axis_scores": {
+      "performance": 0.65,
+      "clinical_safety": 0.7,
+      "robustness": 0.35,
+      "stability": 0.45,
+      "latency": 0.5,
+      "calibration": 0.55
+    },
+    "floor_penalty_applied": true
+  },
+  "dataset_tier_evaluation": {
+    "declared_tier": "T2",
+    "effective_tier": "T3",
+    "mts_mean": 1.143,
+    "mts_item_floor": 0,
+    "missing_core_mts_items": [
+      "synchronization",
+      "missingness"
+    ],
+    "downgraded": true
+  },
+  "badges": [
+    "EpiBench-Dataset-T3",
+    "EpiBench-Run-Complete",
+    "EpiBench-Failure-Transparent",
+    "EpiBench-Claim-E1",
+    "EpiBench-Leakage-Checked"
+  ],
+  "blocking_reasons": [
+    "Blocking sentinel present: LABEL_UNAUDITED.",
+    "Declared dataset tier exceeded effective MTS-derived tier; certification used effective tier."
+  ],
+  "forbidden_phrases": []
+}

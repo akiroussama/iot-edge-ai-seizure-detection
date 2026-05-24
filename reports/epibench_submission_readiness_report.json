@@ -1,0 +1,160 @@
+{
+  "schema_version": "epibench.submission_readiness_report.v1",
+  "gate_id": "q1_minimum_real_evidence_packages",
+  "epibench_version": "v1.0-draft",
+  "status": "failed",
+  "package_count": 2,
+  "submission_grade_count": 0,
+  "operational_package_count": 0,
+  "blockers": [
+    "Only 0 submission-grade package(s); 2 required.",
+    "Only 0 operational package(s) at E2-PI or higher; 1 required."
+  ],
+  "packages": [
+    {
+      "bundle_path": "examples\\epibench\\msg_preliminary_f\\result_bundle.yaml",
+      "run_id": "msg_cycle_preserving_random_preliminary",
+      "track": "F",
+      "dataset_id": "msg_preliminary_f",
+      "final_claim": "E1",
+      "effective_tier": "T3",
+      "submission_grade": false,
+      "blockers": [
+        "Certification blocker: Blocking sentinel present: LABEL_UNAUDITED.",
+        "Certification blocker: Declared dataset tier exceeded effective MTS-derived tier; certification used effective tier.",
+        "Dataset tier was downgraded by MTS effective-tier calculation.",
+        "Final claim is E1; package is useful but not operational submission-grade evidence.",
+        "Label audit is not submission-grade: proxy_or_device_label."
+      ],
+      "warnings": [
+        "Package may be valid but cannot support patient-independent claims."
+      ],
+      "claim_report": {
+        "schema_version": "epibench.claim_eligibility.v1",
+        "run_id": "msg_cycle_preserving_random_preliminary",
+        "epibench_version": "v1.0-draft",
+        "requested_claim": "E2-PD",
+        "final_claim": "E1",
+        "ceilings": {
+          "dataset_tier": "E1",
+          "split_policy": "E2-PD",
+          "label_audit": "E1",
+          "leakage_audit": "E4",
+          "threshold_policy": "E4",
+          "failure_status": "E1",
+          "hardware_evidence": "E4",
+          "track_consistency": "E4"
+        },
+        "score": {
+          "epi_score": 50.024,
+          "axis_scores": {
+            "performance": 0.65,
+            "clinical_safety": 0.7,
+            "robustness": 0.35,
+            "stability": 0.45,
+            "latency": 0.5,
+            "calibration": 0.55
+          },
+          "floor_penalty_applied": true
+        },
+        "dataset_tier_evaluation": {
+          "declared_tier": "T2",
+          "effective_tier": "T3",
+          "mts_mean": 1.143,
+          "mts_item_floor": 0,
+          "missing_core_mts_items": [
+            "synchronization",
+            "missingness"
+          ],
+          "downgraded": true
+        },
+        "badges": [
+          "EpiBench-Dataset-T3",
+          "EpiBench-Run-Complete",
+          "EpiBench-Failure-Transparent",
+          "EpiBench-Claim-E1",
+          "EpiBench-Leakage-Checked"
+        ],
+        "blocking_reasons": [
+          "Blocking sentinel present: LABEL_UNAUDITED.",
+          "Declared dataset tier exceeded effective MTS-derived tier; certification used effective tier."
+        ],
+        "forbidden_phrases": []
+      }
+    },
+    {
+      "bundle_path": "examples\\epibench\\seizeit2_preliminary_f\\result_bundle.yaml",
+      "run_id": "seizeit2_sub125_random_preliminary",
+      "track": "F",
+      "dataset_id": "seizeit2_preliminary_f",
+      "final_claim": "E1",
+      "effective_tier": "T3",
+      "submission_grade": false,
+      "blockers": [
+        "Certification blocker: Blocking sentinel present: LABEL_UNAUDITED.",
+        "Certification blocker: Blocking sentinel present: SPLIT_NONCOMPLIANT.",
+        "Certification blocker: Split leakage audit did not pass.",
+        "Final claim is E1; package is useful but not operational submission-grade evidence.",
+        "Insufficient events for track F: 2 < 50.",
+        "Insufficient patients for track F: 1 < 8.",
+        "Label audit is not submission-grade: unaudited_or_unknown.",
+        "Split policy is not submission-grade: synthetic_or_demo."
+      ],
+      "warnings": [
+        "Hospital evidence must not be generalized to home IoT without external support."
+      ],
+      "claim_report": {
+        "schema_version": "epibench.claim_eligibility.v1",
+        "run_id": "seizeit2_sub125_random_preliminary",
+        "epibench_version": "v1.0-draft",
+        "requested_claim": "E2-PI",
+        "final_claim": "E1",
+        "ceilings": {
+          "dataset_tier": "E1",
+          "split_policy": "E1",
+          "label_audit": "E1",
+          "leakage_audit": "E1",
+          "threshold_policy": "E4",
+          "failure_status": "E1",
+          "hardware_evidence": "E4",
+          "track_consistency": "E4"
+        },
+        "score": {
+          "epi_score": 6.294,
+          "axis_scores": {
+            "performance": 0.3,
+            "clinical_safety": 0.05,
+            "robustness": 0.05,
+            "stability": 0.1,
+            "latency": 0.5,
+            "calibration": 0.3
+          },
+          "floor_penalty_applied": true
+        },
+        "dataset_tier_evaluation": {
+          "declared_tier": "T3",
+          "effective_tier": "T3",
+          "mts_mean": 0.857,
+          "mts_item_floor": 0,
+          "missing_core_mts_items": [
+            "acquisition_protocol",
+            "synchronization"
+          ],
+          "downgraded": false
+        },
+        "badges": [
+          "EpiBench-Dataset-T3",
+          "EpiBench-Run-Complete",
+          "EpiBench-Failure-Transparent",
+          "EpiBench-Claim-E1"
+        ],
+        "blocking_reasons": [
+          "Blocking sentinel present: LABEL_UNAUDITED.",
+          "Blocking sentinel present: SPLIT_NONCOMPLIANT.",
+          "Split leakage audit did not pass."
+        ],
+        "forbidden_phrases": []
+      }
+    }
+  ]
+}

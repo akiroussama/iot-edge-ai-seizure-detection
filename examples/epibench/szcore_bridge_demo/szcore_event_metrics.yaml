@@ -1,0 +1,9 @@
+scoring_tool: SzCORE-compatible event scorer demo export
+event_matching_rule: overlap_with_refractory_period_demo
+metrics:
+  sensitivity: 0.81
+  precision: 0.73
+  f1_score: 0.77
+  false_positives_per_day: 1.25
+  detection_delay_seconds_median: 6.5
+  detection_delay_seconds_p95: 19.0

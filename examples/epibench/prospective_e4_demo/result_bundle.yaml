@@ -1,0 +1,41 @@
+schema_version: epibench.result_bundle.v1
+run_id: prospective_e4_claim_demo
+track: D
+requested_claim: E4
+dataset_card_path: ../pilot_t1_eeg/dataset_card.yaml
+split_manifest_path: split_manifest.yaml
+failure_trace_path: failure_trace.yaml
+model:
+  name: prospective_e4_demo_model
+  family: locked_protocol_detector
+  commit_sha: demo-not-a-real-result
+environment:
+  python: "3.11"
+  platform: demo
+  dependencies:
+    - numpy
+    - pandas
+    - pyyaml
+inputs:
+  - path: canonical/events.parquet
+    sha256: null
+outputs:
+  - path: reports/event_metrics.json
+    sha256: null
+metrics:
+  event_sensitivity: 0.78
+  event_precision: 0.70
+  event_f1: 0.74
+  false_alarms_per_24h: 1.8
+score_inputs:
+  subscores:
+    performance: 0.74
+    clinical_safety: 0.70
+    robustness: 0.72
+    stability: 0.70
+    latency: 0.78
+hardware: null
+reproduction:
+  command: python scripts/epibench.py certify examples/epibench/prospective_e4_demo/result_bundle.yaml
+  container_or_env: local-demo
+  checksums: []

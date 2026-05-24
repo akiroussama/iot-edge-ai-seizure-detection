@@ -1,0 +1,80 @@
+schema_version: epibench.sota_registry.v1
+verified_on: "2026-05-24"
+entries:
+  - source_title: ILAE 2017 operational classification of seizure types
+    url_or_doi: https://www.ilae.org/guidelines/definition-and-classification/operational-classification-2017
+    year: 2017
+    category: clinical_standard
+    relationship: ADOPT
+    epibench_field_or_rule: dataset_card.population.seizure_types
+    citation_integrity_status: verified
+  - source_title: SzCORE seizure community open-source research evaluation framework
+    url_or_doi: https://arxiv.org/abs/2402.13005
+    year: 2024
+    category: scoring_framework
+    relationship: MAP
+    epibench_field_or_rule: track_D.event_based_metrics
+    citation_integrity_status: verified
+  - source_title: SzCORE challenge benchmark report
+    url_or_doi: https://arxiv.org/abs/2505.18191
+    year: 2025
+    category: scoring_framework
+    relationship: MAP
+    epibench_field_or_rule: track_D.false_positives_per_day_and_event_metrics
+    citation_integrity_status: verified
+  - source_title: SeizeIT2 wearable dataset of patients with focal epilepsy
+    url_or_doi: https://www.nature.com/articles/s41597-025-05580-x
+    year: 2025
+    category: dataset
+    relationship: MAP
+    epibench_field_or_rule: pilot_dataset_evidence_cards
+    citation_integrity_status: verified
+  - source_title: Temple University Hospital Seizure Detection Corpus
+    url_or_doi: https://pmc.ncbi.nlm.nih.gov/articles/PMC6246677/
+    year: 2018
+    category: dataset
+    relationship: MAP
+    epibench_field_or_rule: pilot_dataset_evidence_cards
+    citation_integrity_status: verified
+  - source_title: TRIPOD+AI reporting guideline for AI prediction models
+    url_or_doi: https://www.bmj.com/content/385/bmj-2023-078378
+    year: 2024
+    category: reporting_guideline
+    relationship: ADOPT
+    epibench_field_or_rule: result_bundle.model_and_validation_reporting
+    citation_integrity_status: verified
+  - source_title: STARD-AI reporting guideline for diagnostic accuracy studies using AI
+    url_or_doi: https://www.nature.com/articles/s41591-025-03953-8
+    year: 2025
+    category: reporting_guideline
+    relationship: ADOPT
+    epibench_field_or_rule: detection_accuracy_reporting
+    citation_integrity_status: verified
+  - source_title: DECIDE-AI reporting guideline for early-stage clinical evaluation of AI decision support
+    url_or_doi: https://www.nature.com/articles/s41591-022-01772-9
+    year: 2022
+    category: reporting_guideline
+    relationship: MAP
+    epibench_field_or_rule: prospective_or_live_clinical_workflow_language
+    citation_integrity_status: verified
+  - source_title: CONSORT-AI reporting guideline extension
+    url_or_doi: https://www.nature.com/articles/s41591-020-1034-x
+    year: 2020
+    category: reporting_guideline
+    relationship: MAP
+    epibench_field_or_rule: E4_prospective_trial_reporting
+    citation_integrity_status: verified
+  - source_title: FUTURE-AI trustworthy and deployable AI guideline
+    url_or_doi: https://www.bmj.com/content/388/bmj-2024-081554
+    year: 2025
+    category: reporting_guideline
+    relationship: MAP
+    epibench_field_or_rule: governance_and_trustworthiness_principles
+    citation_integrity_status: verified
+  - source_title: FDA Clinical Decision Support Software guidance
+    url_or_doi: https://www.fda.gov/medical-devices/software-medical-device-samd/clinical-decision-support-software-frequently-asked-questions-faqs
+    year: 2022
+    category: regulatory_guidance
+    relationship: MAP
+    epibench_field_or_rule: certification_boundary_and_anti_overclaim_language
+    citation_integrity_status: verified

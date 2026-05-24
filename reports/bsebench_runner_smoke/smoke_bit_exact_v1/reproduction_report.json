@@ -1,0 +1,15 @@
+{
+  "schema_version": "bsebench.reproduction_report.v1",
+  "bundle_id": "smoke_bit_exact_v1",
+  "status": "bit_exact",
+  "reference_manifest": "bsebench-runner\\bundles\\smoke_bit_exact_v1\\reference_manifest.json",
+  "output_root": "reports\\bsebench_runner_smoke\\smoke_bit_exact_v1\\outputs",
+  "comparison": {
+    "bit_exact": true,
+    "missing_files": [],
+    "unexpected_files": [],
+    "changed_files": [],
+    "reference_file_count": 1,
+    "actual_file_count": 1
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "schema_version": "chbmit.null_metrics.v1",
+  "model_name": "always_negative",
+  "task_type": "seizure_detection",
+  "split_policy": "patient_independent",
+  "test_cases": [
+    "chb12",
+    "chb13",
+    "chb15",
+    "chb16",
+    "chb20",
+    "chb24"
+  ],
+  "test_subjects": [
+    "chb12_subject",
+    "chb13_subject",
+    "chb15_subject",
+    "chb16_subject",
+    "chb20_subject",
+    "chb24_subject"
+  ],
+  "events_used_for_metrics": 106,
+  "monitored_hours_test": 155.306,
+  "event_sensitivity": 0.0,
+  "false_alarms_per_24h": 0.0,
+  "precision": null,
+  "event_f1": 0.0,
+  "median_detection_latency_seconds": null,
+  "p95_detection_latency_seconds": null,
+  "missing_prediction_rate": 0.0,
+  "per_case": [
+    {
+      "case_id": "chb12",
+      "subject_id": "chb12_subject",
+      "n_events": 40,
+      "monitoring_hours": 23.694,
+      "event_sensitivity": 0.0,
+      "false_alarms_per_24h": 0.0
+    },
+    {
+      "case_id": "chb13",
+      "subject_id": "chb13_subject",
+      "n_events": 12,
+      "monitoring_hours": 33.0,
+      "event_sensitivity": 0.0,
+      "false_alarms_per_24h": 0.0
+    },
+    {
+      "case_id": "chb15",
+      "subject_id": "chb15_subject",
+      "n_events": 20,
+      "monitoring_hours": 40.01,
+      "event_sensitivity": 0.0,
+      "false_alarms_per_24h": 0.0
+    },
+    {
+      "case_id": "chb16",
+      "subject_id": "chb16_subject",
+      "n_events": 10,
+      "monitoring_hours": 19.0,
+      "event_sensitivity": 0.0,
+      "false_alarms_per_24h": 0.0
+    },
+    {
+      "case_id": "chb20",
+      "subject_id": "chb20_subject",
+      "n_events": 8,
+      "monitoring_hours": 27.602,
+      "event_sensitivity": 0.0,
+      "false_alarms_per_24h": 0.0
+    },
+    {
+      "case_id": "chb24",
+      "subject_id": "chb24_subject",
+      "n_events": 16,
+      "monitoring_hours": 12.0,
+      "event_sensitivity": 0.0,
+      "false_alarms_per_24h": 0.0
+    }
+  ],
+  "interpretation": "Always-negative patient-independent baseline. It is a denominator and claim-gate control, not a clinically useful detector."
+}

@@ -1,0 +1,42 @@
+schema_version: epibench.result_bundle.v1
+run_id: leakage_high_metric_demo
+track: D
+requested_claim: E3
+dataset_card_path: ../pilot_t1_eeg/dataset_card.yaml
+split_manifest_path: split_manifest.yaml
+failure_trace_path: failure_trace.yaml
+model:
+  name: leakage_high_metric_model
+  family: invalid_demo
+  commit_sha: demo-not-a-real-result
+environment:
+  python: "3.11"
+  platform: windows-demo
+  dependencies:
+    - numpy
+    - pandas
+    - pyyaml
+inputs:
+  - path: canonical/events.parquet
+    sha256: null
+outputs:
+  - path: reports/event_metrics.json
+    sha256: null
+metrics:
+  event_sensitivity: 0.99
+  event_precision: 0.95
+  event_f1: 0.97
+  false_alarms_per_24h: 0.1
+  detection_latency_seconds_p95: 3.0
+score_inputs:
+  subscores:
+    performance: 0.98
+    clinical_safety: 0.95
+    robustness: 0.92
+    stability: 0.90
+    latency: 0.95
+hardware: null
+reproduction:
+  command: python scripts/epibench.py certify examples/epibench/failure_leakage/result_bundle.yaml
+  container_or_env: local-demo
+  checksums: []

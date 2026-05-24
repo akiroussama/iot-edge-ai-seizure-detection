@@ -1,0 +1,32 @@
+schema_version: epibench.failure_trace.v1
+run_id: msg_cycle_preserving_random_preliminary
+failure_policy: preserve_all
+sentinels:
+  - code: LABEL_UNAUDITED
+    present: true
+    severity: major
+    count: 1
+    scope: dataset
+    evidence: clinical adjudication and seizure offset verification are not established in this preliminary package
+  - code: DEVICE_MISSINGNESS
+    present: true
+    severity: warning
+    count: 1
+    scope: dataset
+    evidence: device metadata and complete observability audit remain incomplete for submission use
+  - code: PATIENT_LEAKAGE
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: Gate C frozen-only benchmark guard passed
+  - code: TEMPORAL_LEAKAGE
+    present: false
+    severity: none
+    count: 0
+    scope: none
+    evidence: no temporal leakage reported in frozen benchmark guard
+summary:
+  critical_failure_present: false
+  blocking_failure_present: true
+  failure_rate: 0.0

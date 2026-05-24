@@ -1,0 +1,52 @@
+{
+  "schema_version": "epibench.claim_eligibility.v1",
+  "run_id": "seizeit2_sub125_random_preliminary",
+  "epibench_version": "v1.0-draft",
+  "requested_claim": "E2-PI",
+  "final_claim": "E1",
+  "ceilings": {
+    "dataset_tier": "E1",
+    "split_policy": "E1",
+    "label_audit": "E1",
+    "leakage_audit": "E1",
+    "threshold_policy": "E4",
+    "failure_status": "E1",
+    "hardware_evidence": "E4",
+    "track_consistency": "E4"
+  },
+  "score": {
+    "epi_score": 6.294,
+    "axis_scores": {
+      "performance": 0.3,
+      "clinical_safety": 0.05,
+      "robustness": 0.05,
+      "stability": 0.1,
+      "latency": 0.5,
+      "calibration": 0.3
+    },
+    "floor_penalty_applied": true
+  },
+  "dataset_tier_evaluation": {
+    "declared_tier": "T3",
+    "effective_tier": "T3",
+    "mts_mean": 0.857,
+    "mts_item_floor": 0,
+    "missing_core_mts_items": [
+      "acquisition_protocol",
+      "synchronization"
+    ],
+    "downgraded": false
+  },
+  "badges": [
+    "EpiBench-Dataset-T3",
+    "EpiBench-Run-Complete",
+    "EpiBench-Failure-Transparent",
+    "EpiBench-Claim-E1"
+  ],
+  "blocking_reasons": [
+    "Blocking sentinel present: LABEL_UNAUDITED.",
+    "Blocking sentinel present: SPLIT_NONCOMPLIANT.",
+    "Split leakage audit did not pass."
+  ],
+  "forbidden_phrases": []
+}

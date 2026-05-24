@@ -1,0 +1,50 @@
+{
+  "schema_version": "epibench.inter_reviewer_report.v1",
+  "review_id": "epibench_demo_two_dataset_review",
+  "status": "passed",
+  "dataset_count": 2,
+  "datasets": [
+    {
+      "dataset_id": "pilot_t1_eeg",
+      "status": "passed",
+      "reviewer_count": 2,
+      "dataset_tier_agreement": true,
+      "claim_ceiling_agreement": true,
+      "agreed_dataset_tier": "T1",
+      "agreed_claim_ceiling": "E2-PI",
+      "pairwise": [
+        {
+          "reviewer_a": "technical_reviewer",
+          "reviewer_b": "clinical_reviewer",
+          "same_dataset_tier": true,
+          "same_claim_ceiling": true,
+          "mts_mean_absolute_difference": 0.167,
+          "dsi_mean_absolute_difference": 0.2,
+          "items_with_difference_gt_one": []
+        }
+      ],
+      "blockers": []
+    },
+    {
+      "dataset_id": "msg_preliminary_f",
+      "status": "passed",
+      "reviewer_count": 2,
+      "dataset_tier_agreement": true,
+      "claim_ceiling_agreement": true,
+      "agreed_dataset_tier": "T3",
+      "agreed_claim_ceiling": "E1",
+      "pairwise": [
+        {
+          "reviewer_a": "technical_reviewer",
+          "reviewer_b": "clinical_reviewer",
+          "same_dataset_tier": true,
+          "same_claim_ceiling": true,
+          "mts_mean_absolute_difference": 0.143,
+          "dsi_mean_absolute_difference": 0.2,
+          "items_with_difference_gt_one": []
+        }
+      ],
+      "blockers": []
+    }
+  ]
+}

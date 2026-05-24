@@ -1,0 +1,100 @@
+schema_version: epibench.conformance_suite.v1
+suite_id: epibench_v1_core_claim_gates
+epibench_version: v1.0-draft
+cases:
+  - id: clean_loso_t1_reaches_e2_pi
+    result_bundle: examples/epibench/pilot_t1_eeg/result_bundle.yaml
+    expected_final_claim: E2-PI
+    expected_badges:
+      - EpiBench-Dataset-T1
+      - EpiBench-Claim-E2-PI
+      - EpiBench-Leakage-Checked
+      - EpiBench-Edge-Measured
+  - id: patient_dependent_requested_e2_pi_downgrades_to_e2_pd
+    result_bundle: examples/epibench/patient_dependent_demo/result_bundle.yaml
+    expected_final_claim: E2-PD
+    expected_badges:
+      - EpiBench-Dataset-T1
+      - EpiBench-Claim-E2-PD
+      - EpiBench-Leakage-Checked
+  - id: leakage_high_metric_downgrades_to_e1
+    result_bundle: examples/epibench/failure_leakage/result_bundle.yaml
+    expected_final_claim: E1
+    expected_badges:
+      - EpiBench-Dataset-T1
+      - EpiBench-Claim-E1
+  - id: preliminary_msg_is_claim_limited_to_e1
+    result_bundle: examples/epibench/msg_preliminary_f/result_bundle.yaml
+    expected_final_claim: E1
+    expected_badges:
+      - EpiBench-Dataset-T3
+      - EpiBench-Claim-E1
+  - id: msg_gate_c_frozen_temporal_forecasting_reaches_e2_pd
+    result_bundle: examples/epibench/msg_gate_c_frozen_f/result_bundle.yaml
+    expected_final_claim: E2-PD
+    expected_badges:
+      - EpiBench-Dataset-T2
+      - EpiBench-Claim-E2-PD
+      - EpiBench-Leakage-Checked
+    expected_effective_tier: T2
+  - id: chbmit_metadata_patient_independent_null_baseline_reaches_e2_pi
+    result_bundle: examples/epibench/chbmit_patient_independent_d/result_bundle.yaml
+    expected_final_claim: E2-PI
+    expected_badges:
+      - EpiBench-Dataset-T1
+      - EpiBench-Claim-E2-PI
+      - EpiBench-Leakage-Checked
+    expected_forbidden_phrases:
+      - real-time
+      - on-device
+      - edge-ready
+    expected_effective_tier: T1
+  - id: preliminary_seizeit2_single_subject_is_e1
+    result_bundle: examples/epibench/seizeit2_preliminary_f/result_bundle.yaml
+    expected_final_claim: E1
+    expected_badges:
+      - EpiBench-Dataset-T3
+      - EpiBench-Claim-E1
+    expected_effective_tier: T3
+  - id: external_validation_can_reach_e3
+    result_bundle: examples/epibench/external_validation_demo/result_bundle.yaml
+    expected_final_claim: E3
+    expected_badges:
+      - EpiBench-Dataset-T1
+      - EpiBench-Claim-E3
+      - EpiBench-Leakage-Checked
+    expected_effective_tier: T1
+  - id: szcore_style_event_metrics_map_into_epibench
+    result_bundle: examples/epibench/szcore_bridge_demo/result_bundle.yaml
+    expected_final_claim: E2-PI
+    expected_badges:
+      - EpiBench-Dataset-T1
+      - EpiBench-Claim-E2-PI
+      - EpiBench-Leakage-Checked
+    expected_effective_tier: T1
+  - id: external_validation_requested_e4_downgrades_to_e3
+    result_bundle: examples/epibench/external_requested_e4_demo/result_bundle.yaml
+    expected_final_claim: E3
+    expected_badges:
+      - EpiBench-Dataset-T1
+      - EpiBench-Claim-E3
+    expected_effective_tier: T1
+  - id: prospective_multisite_can_reach_e4_in_protocol_demo
+    result_bundle: examples/epibench/prospective_e4_demo/result_bundle.yaml
+    expected_final_claim: E4
+    expected_badges:
+      - EpiBench-Dataset-T1
+      - EpiBench-Claim-E4
+      - EpiBench-Leakage-Checked
+    expected_effective_tier: T1
+  - id: embedded_viability_without_hardware_blocks_realtime_wording
+    result_bundle: examples/epibench/embedded_no_hardware_demo/result_bundle.yaml
+    expected_final_claim: E1
+    expected_badges:
+      - EpiBench-Dataset-T1
+      - EpiBench-Claim-E1
+    expected_forbidden_phrases:
+      - real-time
+      - on-device
+      - edge-ready
+    expected_effective_tier: T1

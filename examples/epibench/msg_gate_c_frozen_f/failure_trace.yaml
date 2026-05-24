@@ -1,0 +1,42 @@
+schema_version: epibench.failure_trace.v1
+run_id: msg_cycle_preserving_random_gate_c_frozen
+failure_policy: preserve_all
+sentinels:
+- code: DEVICE_MISSINGNESS
+  present: true
+  severity: warning
+  count: 1
+  scope: dataset
+  evidence: device metadata, calibration, and absolute synchronization are incomplete,
+    but missingness is explicitly reported and evaluation is restricted to matched
+    prediction-coverable events
+- code: DENOMINATOR_RESTRICTION
+  present: true
+  severity: warning
+  count: 1
+  scope: dataset
+  evidence: metrics use 54 matched prediction-coverable test events from 768 source
+    events and 510 matched events
+- code: PATIENT_LEAKAGE
+  present: false
+  severity: none
+  count: 0
+  scope: none
+  evidence: Gate C frozen-only benchmark guard passed
+- code: TEMPORAL_LEAKAGE
+  present: false
+  severity: none
+  count: 0
+  scope: none
+  evidence: no temporal leakage reported in frozen benchmark guard
+- code: LABEL_UNAUDITED
+  present: false
+  severity: none
+  count: 0
+  scope: none
+  evidence: label audit status in the frozen benchmark row is sampled_human_attested;
+    EpiBench maps this conservatively to clinical_record_verified_no_precise_timing
+summary:
+  critical_failure_present: false
+  blocking_failure_present: false
+  failure_rate: 0.0

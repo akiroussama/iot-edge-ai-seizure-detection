@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/akiroussama/iot-edge-ai-seizure-detection/schemas/epibench/split_manifest.schema.json",
+  "title": "EpiBench Split Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "split_id",
+    "dataset_id",
+    "track",
+    "split_policy",
+    "train_units",
+    "validation_units",
+    "test_units",
+    "leakage_checks",
+    "threshold_selection_policy"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "epibench.split_manifest.v1" },
+    "split_id": { "type": "string", "minLength": 1 },
+    "dataset_id": { "type": "string", "minLength": 1 },
+    "track": { "type": "string", "enum": ["D", "W", "F", "E"] },
+    "split_policy": {
+      "type": "string",
+      "enum": [
+        "patient_dependent",
+        "temporal_within_patient",
+        "recording_wise_same_patient",
+        "patient_independent",
+        "leave_one_subject_out",
+        "external_dataset",
+        "leave_one_site_out",
+        "prospective_multisite",
+        "synthetic_or_demo",
+        "noncompliant_or_unknown"
+      ]
+    },
+    "train_units": { "$ref": "#/$defs/unit_summary" },
+    "validation_units": { "$ref": "#/$defs/unit_summary" },
+    "test_units": { "$ref": "#/$defs/unit_summary" },
+    "leakage_checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["patient_overlap", "temporal_overlap", "normalization_scope", "status"],
+      "properties": {
+        "patient_overlap": { "type": "boolean" },
+        "temporal_overlap": { "type": "boolean" },
+        "normalization_scope": { "type": "string", "enum": ["train_only", "train_validation_only", "all_data", "unknown"] },
+        "status": { "type": "string", "enum": ["passed", "failed", "not_audited"] }
+      }
+    },
+    "threshold_selection_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selection_split", "uses_test_labels"],
+      "properties": {
+        "selection_split": { "type": "string", "enum": ["train", "validation", "train_validation", "external", "test", "none"] },
+        "uses_test_labels": { "type": "boolean" }
+      }
+    }
+  },
+  "$defs": {
+    "unit_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["n_patients", "n_recordings", "n_events", "monitoring_hours"],
+      "properties": {
+        "n_patients": { "type": "integer", "minimum": 0 },
+        "n_recordings": { "type": "integer", "minimum": 0 },
+        "n_events": { "type": "integer", "minimum": 0 },
+        "monitoring_hours": { "type": "number", "minimum": 0 }
+      }
+    }
+  }
+}

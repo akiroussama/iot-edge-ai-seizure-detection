@@ -1,0 +1,10 @@
+{
+  "schema_version": "bsebench.sha256_manifest.v1",
+  "files": [
+    {
+      "path": "result.txt",
+      "sha256": "097d0f209662f31217f60d8dccb20a3210e500043a3dfe3bfe5923482e052628",
+      "size_bytes": 15
+    }
+  ]
+}

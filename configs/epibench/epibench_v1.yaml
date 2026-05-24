@@ -1,0 +1,357 @@
+epibench_version: v1.0-draft
+normative_status: release-candidate-source-of-truth
+date: 2026-05-24
+authority:
+  markdown_spec: docs/EPIBENCH_SPEC_V1.md
+  normative_yaml: configs/epibench/epibench_v1.yaml
+  schemas_root: schemas/epibench
+  certification_boundary: scientific_evidence_certification_not_clinical_or_regulatory_approval
+
+normative_language:
+  must: mandatory_for_certification
+  must_not: prohibited_for_certification
+  should: strong_recommendation_with_documented_deviation
+  fail_closed: missing_or_unauditable_evidence_lowers_or_blocks_claim
+
+tracks:
+  D:
+    name: seizure_detection
+    unit: seizure_event
+    required_outputs:
+      - event_detections
+      - alarm_episodes
+      - latency_report
+      - false_alarm_rate_per_24h
+    primary_metrics:
+      - event_sensitivity
+      - false_alarms_per_24h
+      - event_precision
+      - event_f1
+      - detection_latency_seconds_median
+      - detection_latency_seconds_p95
+      - per_patient_distribution
+  W:
+    name: early_warning
+    unit: warning_episode
+    required_outputs:
+      - warning_episodes
+      - useful_lead_time_report
+      - warning_burden_report
+    primary_metrics:
+      - useful_warning_sensitivity
+      - false_warnings_per_24h
+      - useful_lead_time_seconds_median
+      - useful_lead_time_seconds_p95
+      - time_in_warning
+      - per_patient_distribution
+  F:
+    name: seizure_forecasting
+    unit: risk_window
+    required_outputs:
+      - calibrated_risk_scores
+      - sph_minutes
+      - sop_minutes
+      - alarm_policy
+      - calibration_report
+    primary_metrics:
+      - event_sensitivity
+      - false_alarms_per_24h
+      - time_in_warning
+      - brier_score
+      - expected_calibration_error
+      - lead_time_seconds_median
+      - right_censoring_rate
+  E:
+    name: embedded_viability
+    unit: deployment_profile
+    required_outputs:
+      - target_hardware
+      - measured_runtime_latency
+      - ram_report
+      - energy_or_power_report
+      - connectivity_dependency
+    primary_metrics:
+      - latency_ms_median
+      - latency_ms_p95
+      - ram_kb
+      - flash_kb
+      - energy_mj_per_inference
+      - offline_fraction
+
+claims:
+  E0:
+    rank: 0
+    label: no_scientific_claim
+    meaning: result is invalid, incomplete, exploratory only, or blocked by critical evidence failure
+  E1:
+    rank: 1
+    label: structural_protocol_validity
+    meaning: artifact structure is auditable but no operational performance claim is authorized
+  E2-PD:
+    rank: 2
+    label: patient_dependent_operational_claim
+    meaning: narrow claim within patients represented in training or calibration, under the declared sensor and protocol
+  E2-PI:
+    rank: 3
+    label: patient_independent_operational_claim
+    meaning: narrow claim on held-out patients under the declared sensor, dataset, and protocol
+  E3:
+    rank: 4
+    label: external_or_multisite_generalization
+    meaning: external dataset, multisite, or leave-site-out evidence supports a bounded generalization claim
+  E4:
+    rank: 5
+    label: prospective_clinical_grade_evidence
+    meaning: prospective protocol evidence exists, but still is not regulatory or clinical approval
+
+dataset_tiers:
+  T1:
+    label: strong_clinical_dataset_evidence
+    minimum_mts_mean: 2.50
+    minimum_mts_item_floor: 2
+    allowed_claim_ceiling_without_external_validation: E2-PI
+    allowed_claim_ceiling_with_external_validation: E3
+    allowed_claim_ceiling_with_prospective_validation: E4
+  T2:
+    label: useful_but_incomplete_dataset_evidence
+    minimum_mts_mean: 1.75
+    minimum_mts_item_floor: 1
+    allowed_claim_ceiling_without_external_validation: E2-PI
+    allowed_claim_ceiling_with_external_validation: E3
+    allowed_claim_ceiling_with_prospective_validation: E3
+  T3:
+    label: exploratory_inventory_or_weak_dataset_evidence
+    minimum_mts_mean: 0.00
+    minimum_mts_item_floor: 0
+    allowed_claim_ceiling_without_external_validation: E1
+    allowed_claim_ceiling_with_external_validation: E1
+    allowed_claim_ceiling_with_prospective_validation: E1
+
+dataset_tier_assignment:
+  method: effective_tier_from_mts_rubric_scores
+  declared_tier_is_author_input_only: true
+  effective_tier_controls_claims_and_badges: true
+  missing_core_mts_item_score: 0
+  core_mts_items:
+    - source_official
+    - acquisition_protocol
+    - label_quality
+    - synchronization
+    - raw_to_processed_trace
+    - missingness
+  fail_closed_rules:
+    - if declared tier is higher than effective tier, use effective tier
+    - if any core MTS item is missing, score it as 0 for tier assignment
+    - if MTS mean and item floor disagree, use the lower supported tier
+    - DSI cannot raise a dataset tier; it only describes domain stress and claim scope
+
+split_claim_ceilings:
+  patient_dependent: E2-PD
+  temporal_within_patient: E2-PD
+  recording_wise_same_patient: E2-PD
+  patient_independent: E2-PI
+  leave_one_subject_out: E2-PI
+  external_dataset: E3
+  leave_one_site_out: E3
+  prospective_multisite: E4
+  synthetic_or_demo: E1
+  noncompliant_or_unknown: E1
+
+label_audit_claim_ceilings:
+  expert_adjudicated_onset_offset: E4
+  expert_adjudicated_onset_only: E3
+  clinical_record_verified_no_precise_timing: E2-PI
+  proxy_or_device_label: E1
+  unaudited_or_unknown: E1
+
+score:
+  formula: "100 * prod(axis_score ** weight) * exp(-lambda * max(0, floor - min_axis_score))"
+  floor: 0.40
+  lambda: 2.00
+  axes:
+    performance:
+      weight: 0.25
+      required: true
+      interpretation: event-level seizure or warning detection performance under the declared track
+    clinical_safety:
+      weight: 0.25
+      required: true
+      interpretation: missed-event and false-alarm burden, with false alarms per 24h as a primary constraint
+    robustness:
+      weight: 0.15
+      required: true
+      interpretation: inter-patient, cross-seizure-type, artifact, and cross-dataset behavior
+    stability:
+      weight: 0.10
+      required: true
+      interpretation: variance across folds, patients, and time; worst-patient behavior
+    latency:
+      weight: 0.10
+      required: true
+      interpretation: detection delay, streaming feasibility, and hardware runtime where claimed
+    embedded_viability:
+      weight: 0.10
+      required: false
+      interpretation: CPU, RAM, flash, energy, connectivity, and on-device feasibility
+    calibration:
+      weight: 0.05
+      required: false
+      interpretation: probability calibration, threshold validity, and risk reliability
+
+metric_budgets:
+  false_alarms_per_24h:
+    excellent: 0.5
+    acceptable: 2.0
+    warning: 10.0
+    blocking: 50.0
+  detection_latency_seconds:
+    excellent_p95: 10.0
+    acceptable_p95: 30.0
+    warning_p95: 120.0
+  time_in_warning:
+    acceptable_max: 0.20
+    warning_max: 0.50
+  missing_prediction_rate:
+    acceptable_max: 0.01
+    warning_max: 0.05
+    blocking: 0.20
+
+failure_consequences:
+  PREDICTION_MISSING:
+    max_claim_if_systematic: E1
+    blocks_run_complete: false
+    requires_failure_trace: true
+  SEGMENT_CRASH:
+    max_claim_if_systematic: E1
+    blocks_run_complete: false
+    requires_failure_trace: true
+  NAN_OR_INF_OUTPUT:
+    max_claim_if_present: E1
+    blocks_run_complete: false
+    requires_failure_trace: true
+  LATENCY_BUDGET_EXCEEDED:
+    blocks_badges:
+      - EpiBench-Edge-Measured
+    blocks_claim_phrases:
+      - real-time
+      - edge-ready
+  POST_EVENT_ALARM:
+    max_claim_for_early_warning_track: E1
+    requires_failure_trace: true
+  FAR_EXPLOSION:
+    max_claim_if_above_blocking_budget: E1
+    requires_failure_trace: true
+  PATIENT_LEAKAGE:
+    max_claim_if_present: E1
+    blocks_badges:
+      - EpiBench-Leakage-Checked
+  TEMPORAL_LEAKAGE:
+    max_claim_if_present: E1
+    blocks_badges:
+      - EpiBench-Leakage-Checked
+  SPLIT_NONCOMPLIANT:
+    max_claim_if_present: E1
+    blocks_badges:
+      - EpiBench-Run-Complete
+  LABEL_UNAUDITED:
+    max_claim_if_present: E1
+  DEVICE_MISSINGNESS:
+    max_claim_if_unmodeled: E1
+    requires_failure_trace: true
+  DENOMINATOR_RESTRICTION:
+    max_claim_if_unreported: E1
+    requires_failure_trace: true
+    interpretation: >
+      Evaluation denominator is restricted relative to the source event or time
+      denominator. If explicitly reported as a warning with rationale, it does
+      not automatically block E2-PD/E2-PI, but it must constrain wording and
+      appear in the claim report.
+  HARDWARE_UNMEASURED:
+    blocks_badges:
+      - EpiBench-Edge-Measured
+    blocks_claim_phrases:
+      - real-time
+      - on-device
+      - edge-ready
+
+badges:
+  EpiBench-Dataset-T1:
+    condition: dataset_tier == T1
+  EpiBench-Dataset-T2:
+    condition: dataset_tier == T2
+  EpiBench-Dataset-T3:
+    condition: dataset_tier == T3
+  EpiBench-Run-Complete:
+    condition: result_bundle_valid and failure_trace_present and split_manifest_valid
+  EpiBench-Claim-E1:
+    condition: final_claim == E1
+  EpiBench-Claim-E2-PD:
+    condition: final_claim == E2-PD
+  EpiBench-Claim-E2-PI:
+    condition: final_claim == E2-PI
+  EpiBench-Claim-E3:
+    condition: final_claim == E3
+  EpiBench-Claim-E4:
+    condition: final_claim == E4
+  EpiBench-Failure-Transparent:
+    condition: failure_trace_present
+  EpiBench-Leakage-Checked:
+    condition: no_patient_leakage and no_temporal_leakage and split_manifest_valid
+  EpiBench-Edge-Measured:
+    condition: hardware_report_present and measured_latency_present
+
+claim_gates:
+  - id: no_e2_pi_without_patient_independent
+    rule: split_claim_ceiling must be at least E2-PI for E2-PI or higher
+    failure_claim: E2-PD
+  - id: no_e3_without_external_or_site_validation
+    rule: E3 requires external_dataset or leave_one_site_out split evidence
+    failure_claim: E2-PI
+  - id: no_e4_without_prospective_protocol
+    rule: E4 requires prospective_multisite split evidence and clinical-grade prospective protocol documentation
+    failure_claim: E3
+  - id: leakage_blocks_e2_plus
+    rule: patient or temporal leakage sentinel lowers max claim to E1
+    failure_claim: E1
+  - id: no_realtime_without_hardware
+    rule: real-time, edge-ready, or on-device wording requires EpiBench-Edge-Measured
+    failure_claim: unchanged_but_phrase_forbidden
+  - id: failure_trace_required
+    rule: absence of a failure trace blocks EpiBench-Run-Complete and lowers final claim to E1
+    failure_claim: E1
+
+sota_registry_minimum:
+  - category: seizure_taxonomy
+    preferred_source: ILAE seizure classification
+    relationship: ADOPT
+  - category: event_scoring
+    preferred_source: SzCORE or task-compatible event scoring framework
+    relationship: ADOPT_OR_MAP
+  - category: ai_reporting
+    preferred_source: TRIPOD+AI and STARD-AI
+    relationship: ADOPT
+  - category: early_clinical_ai_evaluation
+    preferred_source: DECIDE-AI
+    relationship: MAP
+  - category: prospective_ai_trial_reporting
+    preferred_source: SPIRIT-AI and CONSORT-AI
+    relationship: MAP
+  - category: trustworthy_ai
+    preferred_source: FUTURE-AI
+    relationship: MAP
+
+anti_overclaim:
+  forbidden:
+    - clinically certified
+    - clinically approved
+    - detects epilepsy
+    - ready for clinical deployment
+    - generalizable without external validation
+    - real-time without hardware latency measurement
+    - low false positives without false alarms per 24h
+  preferred:
+    - scientifically certified under EpiBench v1.0
+    - claim limited by dataset, track, sensor stack, split, failures, and hardware evidence
+    - retrospective evidence only
+    - external validation required for E3
+    - prospective evidence required for E4
