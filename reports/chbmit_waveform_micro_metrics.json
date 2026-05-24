@@ -1,0 +1,37 @@
+{
+  "schema_version": "chbmit.waveform_micro_metrics.v1",
+  "model_name": "line_length_robust_threshold",
+  "task_type": "seizure_detection",
+  "split_policy": "patient_independent",
+  "window_seconds": 5,
+  "threshold": 3.028913,
+  "threshold_selection": {
+    "threshold": 3.028912949369741,
+    "event_f1": 0.6153846153846154,
+    "precision": 0.5,
+    "sensitivity": 0.8
+  },
+  "train_recordings": [
+    "chb01_03",
+    "chb03_01"
+  ],
+  "test_recordings": [
+    "chb12_06"
+  ],
+  "test_subjects": [
+    "chb12_subject"
+  ],
+  "events_used_for_metrics": 2,
+  "detected_events": 0,
+  "false_alarm_episodes": 13,
+  "alarm_episodes": 13,
+  "monitored_hours_test": 1.002,
+  "event_sensitivity": 0.0,
+  "false_alarms_per_24h": 311.480865,
+  "precision": 0.0,
+  "event_f1": 0.0,
+  "median_detection_latency_seconds": null,
+  "p95_detection_latency_seconds": null,
+  "missing_prediction_rate": 0.0,
+  "clinical_utility_statement": "not clinically useful; micro-subset waveform baseline only"
+}

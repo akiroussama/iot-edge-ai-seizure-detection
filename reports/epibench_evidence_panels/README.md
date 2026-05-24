@@ -21,12 +21,12 @@ and claim eligibility.
 
 ## Audit Highlights
 
-- Bundle count: `15`.
+- Bundle count: `16`.
 - Highest naive Epi-Score: `leakage_high_metric_demo` with score `94.727` and final claim `E1`.
 - Highest claim-gated result: `prospective_e4_claim_demo` with final claim `E4` and score `72.424`.
-- Claim distribution: `E1=6, E2-PD=2, E2-PI=4, E3=2, E4=1`.
-- Dataset tier distribution: `T1=12, T2=1, T3=2`.
-- Rank interpretation distribution: `claim_gate_promotes_more_defensible_evidence=5, claim_structure_valid_but_performance_poor=1, high_or_mid_score_claim_limited_by_evidence_gate=6, rank_stable_under_claim_gate=3`.
+- Claim distribution: `E1=7, E2-PD=2, E2-PI=4, E3=2, E4=1`.
+- Dataset tier distribution: `T1=13, T2=1, T3=2`.
+- Rank interpretation distribution: `claim_gate_promotes_more_defensible_evidence=5, claim_structure_valid_but_performance_poor=1, high_or_mid_score_claim_limited_by_evidence_gate=6, rank_stable_under_claim_gate=4`.
 
 ## Scientific Boundary
 

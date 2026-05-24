@@ -108,6 +108,11 @@ def _collect_metrics(
     warning_failures = [row for row in present_failures if row.get("sentinel_code") == "POST_EVENT_ALARM"]
     far_failures = [row for row in present_failures if row.get("sentinel_code") == "FAR_EXPLOSION"]
     szcore_bundles = [row for row in bundles if "szcore_bridge" in row.get("bundle_path", "")]
+    waveform_bundles = [
+        row
+        for row in bundles
+        if "waveform" in row.get("dataset_id", "") or "signal_threshold" in row.get("model_family", "")
+    ]
     patient_dependent = [row for row in bundles if row.get("split_policy") == "patient_dependent"]
     real_packages = [row for row in bundles if "demo-not-a-real-result" not in row.get("model_family", "")]
     operational_packages = [row for row in bundles if row.get("final_claim") in {"E2-PI", "E3", "E4"}]
@@ -131,6 +136,8 @@ def _collect_metrics(
         "warning_failure_count": len(warning_failures),
         "far_failure_count": len(far_failures),
         "szcore_bundle_count": len(szcore_bundles),
+        "waveform_bundle_count": len(waveform_bundles),
+        "waveform_claims": _counts(row.get("final_claim", "") for row in waveform_bundles),
         "patient_dependent_count": len(patient_dependent),
         "real_package_count": len(real_packages),
         "operational_package_count": len(operational_packages),
@@ -206,7 +213,9 @@ def _build_attack_matrix(metrics: dict[str, Any]) -> list[dict[str, Any]]:
             "reports/epibench_submission_readiness_result.json",
             (
                 f"Submission gate {metrics['readiness_status']} with "
-                f"{metrics['readiness_submission_grade_count']} submission-grade packages."
+                f"{metrics['readiness_submission_grade_count']} submission-grade packages; "
+                f"{metrics['waveform_bundle_count']} waveform-derived package(s) with claims "
+                f"{metrics['waveform_claims']}."
             ),
             "Upgrade CHB-MIT from metadata/null baseline to waveform-derived patient-independent result.",
         ),

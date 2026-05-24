@@ -34,6 +34,7 @@ This index lists the current v1.0-draft artefacts created from phase 1 through p
 - `scripts/epibench.py`
 - `scripts/epibench_build_msg_gate_c_package.py`
 - `scripts/epibench_build_chbmit_package.py`
+- `scripts/epibench_build_chbmit_waveform_micro_package.py`
 - `scripts/epibench_build_evidence_panels.py`
 - `scripts/epibench_build_coverage_audit.py`
 - `scripts/epibench_build_reviewer_packet.py`
@@ -48,6 +49,10 @@ This index lists the current v1.0-draft artefacts created from phase 1 through p
 - `examples/epibench/msg_preliminary_f/result_bundle.yaml`
 - `examples/epibench/msg_gate_c_frozen_f/result_bundle.yaml`
 - `examples/epibench/chbmit_patient_independent_d/result_bundle.yaml`
+- `examples/epibench/chbmit_waveform_micro_d/dataset_card.yaml`
+- `examples/epibench/chbmit_waveform_micro_d/split_manifest.yaml`
+- `examples/epibench/chbmit_waveform_micro_d/failure_trace.yaml`
+- `examples/epibench/chbmit_waveform_micro_d/result_bundle.yaml`
 - `examples/epibench/early_warning_valid_w/result_bundle.yaml`
 - `examples/epibench/early_warning_post_event_failure_w/result_bundle.yaml`
 - `examples/epibench/far_explosion_failure_d/result_bundle.yaml`
@@ -69,6 +74,10 @@ This index lists the current v1.0-draft artefacts created from phase 1 through p
 - `reports/epibench_chbmit_patient_independent_claim.md`
 - `reports/chbmit_patient_independent_null_metrics.json`
 - `reports/epibench_chbmit_e2pi_package_report.md`
+- `reports/chbmit_waveform_micro_metrics.json`
+- `reports/epibench_chbmit_waveform_micro_claim.json`
+- `reports/epibench_chbmit_waveform_micro_claim.md`
+- `reports/epibench_chbmit_waveform_micro_report.md`
 - `reports/epibench_early_warning_valid_claim.json`
 - `reports/epibench_early_warning_valid_claim.md`
 - `reports/epibench_early_warning_post_event_failure_claim.json`
@@ -148,6 +157,8 @@ python scripts\epibench_build_msg_gate_c_package.py
 python scripts\epibench.py certify examples\epibench\msg_gate_c_frozen_f\result_bundle.yaml --out reports\epibench_msg_gate_c_frozen_claim.json --report reports\epibench_msg_gate_c_frozen_claim.md
 python scripts\epibench_build_chbmit_package.py
 python scripts\epibench.py certify examples\epibench\chbmit_patient_independent_d\result_bundle.yaml --out reports\epibench_chbmit_patient_independent_claim.json --report reports\epibench_chbmit_patient_independent_claim.md
+python scripts\epibench_build_chbmit_waveform_micro_package.py
+python scripts\epibench.py certify examples\epibench\chbmit_waveform_micro_d\result_bundle.yaml --out reports\epibench_chbmit_waveform_micro_claim.json --report reports\epibench_chbmit_waveform_micro_claim.md
 python scripts\epibench.py certify examples\epibench\early_warning_valid_w\result_bundle.yaml --out reports\epibench_early_warning_valid_claim.json --report reports\epibench_early_warning_valid_claim.md
 python scripts\epibench.py certify examples\epibench\early_warning_post_event_failure_w\result_bundle.yaml --out reports\epibench_early_warning_post_event_failure_claim.json --report reports\epibench_early_warning_post_event_failure_claim.md
 python scripts\epibench.py certify examples\epibench\far_explosion_failure_d\result_bundle.yaml --out reports\epibench_far_explosion_claim.json --report reports\epibench_far_explosion_claim.md

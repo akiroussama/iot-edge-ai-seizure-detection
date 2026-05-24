@@ -1,0 +1,28 @@
+schema_version: epibench.split_manifest.v1
+split_id: chbmit_waveform_micro_patient_independent_v1
+dataset_id: chbmit_waveform_micro_d
+track: D
+split_policy: patient_independent
+train_units:
+  n_patients: 2
+  n_recordings: 2
+  n_events: 2
+  monitoring_hours: 2.0
+validation_units:
+  n_patients: 0
+  n_recordings: 0
+  n_events: 0
+  monitoring_hours: 0.0
+test_units:
+  n_patients: 1
+  n_recordings: 1
+  n_events: 2
+  monitoring_hours: 1.002
+leakage_checks:
+  patient_overlap: false
+  temporal_overlap: false
+  normalization_scope: train_only
+  status: passed
+threshold_selection_policy:
+  selection_split: train
+  uses_test_labels: false

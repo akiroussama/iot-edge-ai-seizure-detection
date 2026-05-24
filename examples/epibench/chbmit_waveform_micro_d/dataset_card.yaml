@@ -1,0 +1,110 @@
+schema_version: epibench.dataset_card.v1
+dataset_id: chbmit_waveform_micro_d
+name: CHB-MIT PhysioNet Waveform Micro-Subset Detection Evidence Package
+version: 1.0.0-waveform-micro-2026-05-24
+license: Open Data Commons Attribution License v1.0
+source:
+  url_or_doi: https://doi.org/10.13026/C2K01R
+  access_date: '2026-05-24'
+  official_source: true
+provenance: Selected public CHB-MIT EDF waveform files downloaded from PhysioNet v1.0.0,
+  processed with a deterministic EDF reader, 5-second line-length windows, and train-only
+  threshold selection.
+sensors:
+- modality: scalp_eeg
+  sampling_rate_hz: 256
+  placement: international_10_20_scalp_eeg_montage
+  calibration: EDF digital signals used directly for line-length features
+  synchronization: official per-recording onset and offset seconds
+population:
+  n_patients: 3
+  n_seizures: 4
+  monitoring_hours: 3.002
+  setting: hospital
+  age_summary: pediatric CHB-MIT subset; see PhysioNet SUBJECT-INFO for source demographics
+  sex_summary: mixed subset; demographics not used for threshold selection
+  seizure_types: []
+labels:
+  label_source: expert_adjudicated
+  onset_available: true
+  offset_available: true
+  temporal_uncertainty_seconds: null
+  audit_status: expert_adjudicated_onset_offset
+mts:
+  source_official:
+    score: 3
+    evidence: Official PhysioNet CHB-MIT release.
+    review_status: self_reviewed
+  acquisition_protocol:
+    score: 2
+    evidence: Hospital scalp EEG protocol documented by dataset.
+    review_status: self_reviewed
+  label_quality:
+    score: 3
+    evidence: Official seizure onset/offset annotations.
+    review_status: self_reviewed
+  synchronization:
+    score: 2
+    evidence: Per-recording onset/offset seconds.
+    review_status: self_reviewed
+  raw_to_processed_trace:
+    score: 3
+    evidence: EDF to features to predictions script.
+    review_status: self_reviewed
+  missingness:
+    score: 2
+    evidence: Only selected EDF files are processed; subset is explicit.
+    review_status: self_reviewed
+  license:
+    score: 3
+    evidence: Open Data Commons Attribution License v1.0.
+    review_status: self_reviewed
+dsi:
+  patient_diversity:
+    score: 1
+    evidence: 3 selected subject groups.
+    review_status: self_reviewed
+  seizure_type_diversity:
+    score: 0
+    evidence: Seizure types not stratified.
+    review_status: self_reviewed
+  setting_diversity:
+    score: 0
+    evidence: Hospital-only.
+    review_status: self_reviewed
+  sensor_diversity:
+    score: 0
+    evidence: Scalp EEG only.
+    review_status: self_reviewed
+  artifact_stress:
+    score: 1
+    evidence: Real EEG artifacts present but not annotated.
+    review_status: self_reviewed
+  longitudinal_duration:
+    score: 1
+    evidence: 3 selected recordings.
+    review_status: self_reviewed
+  patient_independent_split:
+    score: 2
+    evidence: Train and test subjects are disjoint.
+    review_status: self_reviewed
+  external_validation:
+    score: 0
+    evidence: No external dataset.
+    review_status: self_reviewed
+tier:
+  declared: T1
+  rationale: Official PhysioNet provenance and expert onset/offset annotations support
+    strong metrological traceability. The micro-subset has low domain stress and must
+    not be used as submission-grade evidence by itself.
+limitations:
+- Only 3 EDF recordings are processed; this is a waveform-method smoke result, not
+  a full CHB-MIT benchmark.
+- Only a simple line-length threshold baseline is evaluated.
+- No hardware latency or energy measurement is performed.
+- The result is patient-independent across selected subjects but not externally validated.
+raw_to_processed_trace:
+  available: true
+  description: EDF waveform files -> line-length windows -> train-only threshold ->
+    event-level detections.
+  checksums_available: true

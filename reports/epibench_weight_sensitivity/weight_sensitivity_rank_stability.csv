@@ -1,5 +1,6 @@
 bundle_id,run_id,dataset_id,final_claim,normative_epi_score,min_epi_score,max_epi_score,normative_score_rank,min_score_rank,max_score_rank,score_rank_range,normative_claim_gated_rank,min_claim_gated_rank,max_claim_gated_rank,claim_gated_rank_range,claim_invariant
-chbmit_patient_independent_d:chbmit_always_negative_patient_independent,chbmit_always_negative_patient_independent,chbmit_patient_independent_d,E2-PI,3.186,2.744,4.677,15,15,15,0,7,7,7,0,True
+chbmit_patient_independent_d:chbmit_always_negative_patient_independent,chbmit_always_negative_patient_independent,chbmit_patient_independent_d,E2-PI,3.186,2.744,4.677,15,15,16,1,7,7,7,0,True
+chbmit_waveform_micro_d:chbmit_waveform_micro_line_length,chbmit_waveform_micro_line_length,chbmit_waveform_micro_d,E1,3.079,2.663,5.353,16,15,16,1,16,16,16,0,True
 early_warning_post_event_failure_w:early_warning_post_event_failure_demo,early_warning_post_event_failure_demo,pilot_t1_eeg,E1,81.86,79.824,82.585,2,2,2,0,11,11,11,0,True
 early_warning_valid_w:early_warning_valid_demo,early_warning_valid_demo,pilot_t1_eeg,E2-PI,66.504,65.719,67.064,10,10,10,0,6,6,6,0,True
 embedded_no_hardware_demo:embedded_no_hardware_demo,embedded_no_hardware_demo,pilot_t1_eeg,E1,68.733,66.55,69.386,9,9,9,0,12,12,12,0,True

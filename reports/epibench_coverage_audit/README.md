@@ -17,8 +17,8 @@ rubrics to support a serious methods paper.
 
 ## Summary
 
-- Result bundles audited: `15`.
-- Unique Dataset Evidence Cards audited: `14`.
+- Result bundles audited: `16`.
+- Unique Dataset Evidence Cards audited: `15`.
 - Covered tracks: `D, E, F, W`.
 - Covered final claims: `E1, E2-PD, E2-PI, E3, E4`.
 - Total coverage gaps: `4`.

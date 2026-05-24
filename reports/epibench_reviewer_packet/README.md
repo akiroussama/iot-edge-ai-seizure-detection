@@ -14,7 +14,7 @@ specific artefact, quantitative indicator, and required action.
 - Reviewer attacks tracked: `12`.
 - Defense status: `partial=5, strong=7`.
 - Severity distribution: `critical=5, high=7`.
-- Result bundles represented in evidence panels: `15`.
+- Result bundles represented in evidence panels: `16`.
 - Protocol tracks represented: `D, E, F, W`.
 - Submission-readiness gate: `passed`.
 - Open or partial action count: `5`.

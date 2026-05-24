@@ -29,6 +29,7 @@ FAR_EXPLOSION = REPO_ROOT / "examples" / "epibench" / "far_explosion_failure_d"
 MSG_PRELIMINARY = REPO_ROOT / "examples" / "epibench" / "msg_preliminary_f"
 MSG_GATE_C_FROZEN = REPO_ROOT / "examples" / "epibench" / "msg_gate_c_frozen_f"
 CHBMIT_E2PI = REPO_ROOT / "examples" / "epibench" / "chbmit_patient_independent_d"
+CHBMIT_WAVEFORM_MICRO = REPO_ROOT / "examples" / "epibench" / "chbmit_waveform_micro_d"
 SEIZEIT2_PRELIMINARY = REPO_ROOT / "examples" / "epibench" / "seizeit2_preliminary_f"
 
 
@@ -37,6 +38,10 @@ def test_epibench_example_artifacts_validate() -> None:
     assert validate_artifact("split", PILOT / "split_manifest.yaml")["split_policy"] == "leave_one_subject_out"
     assert validate_artifact("failure-trace", PILOT / "failure_trace.yaml")["run_id"] == "pilot_t1_eeg_edge_cnn_demo"
     assert validate_artifact("result-bundle", PILOT / "result_bundle.yaml")["requested_claim"] == "E2-PI"
+    assert (
+        validate_artifact("result-bundle", CHBMIT_WAVEFORM_MICRO / "result_bundle.yaml")["model"]["family"]
+        == "signal_threshold_baseline"
+    )
     assert validate_artifact("sota-registry", REPO_ROOT / "configs" / "epibench" / "sota_registry_v1.yaml")
 
 
@@ -99,6 +104,16 @@ def test_epibench_chbmit_patient_independent_null_baseline_reaches_e2_pi_but_low
     assert report["score"]["floor_penalty_applied"] is True
     assert "EpiBench-Claim-E2-PI" in report["badges"]
     assert "real-time" in report["forbidden_phrases"]
+
+
+def test_epibench_chbmit_waveform_micro_preserves_far_failure() -> None:
+    report = certify_result_bundle(CHBMIT_WAVEFORM_MICRO / "result_bundle.yaml")
+
+    assert report["requested_claim"] == "E2-PI"
+    assert report["final_claim"] == "E1"
+    assert report["ceilings"]["failure_status"] == "E1"
+    assert any("False alarm burden" in reason for reason in report["blocking_reasons"])
+    assert report["score"]["floor_penalty_applied"] is True
 
 
 def test_epibench_early_warning_track_distinguishes_warning_from_post_event_detection() -> None:

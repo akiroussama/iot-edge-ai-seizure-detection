@@ -1,5 +1,5 @@
 evidence_family,path,summary
-evidence_panels,reports/epibench_evidence_panels/README.md,"15 bundles across claims {'E2-PI': 4, 'E1': 6, 'E3': 2, 'E2-PD': 2, 'E4': 1}."
+evidence_panels,reports/epibench_evidence_panels/README.md,"16 bundles across claims {'E2-PI': 4, 'E1': 7, 'E3': 2, 'E2-PD': 2, 'E4': 1}."
 coverage_audit,reports/epibench_coverage_audit/README.md,"4 gaps, 4 major."
 overclaim_audit,reports/epibench_overclaim_audit/README.md,76 wording findings require review; 0 critical.
 weight_sensitivity,reports/epibench_weight_sensitivity/README.md,11 scenarios; max_score_rank_range=5; max_claim_gated_rank_range=0.

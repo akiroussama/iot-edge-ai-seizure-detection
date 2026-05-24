@@ -11,7 +11,7 @@ evidence, split policy, label audit, failures, and hardware evidence rather than
 
 ## Summary
 
-- Bundles evaluated: `15`.
+- Bundles evaluated: `16`.
 - Weight scenarios: `11`.
 - Maximum score-only rank range across scenarios: `5`.
 - Maximum claim-gated rank range across scenarios: `0`.
