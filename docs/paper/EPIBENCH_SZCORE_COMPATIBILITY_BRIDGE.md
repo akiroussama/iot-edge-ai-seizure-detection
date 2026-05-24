@@ -18,10 +18,10 @@ It does not automatically apply to:
 
 | External event-scoring concept | EpiBench field | Relationship |
 | --- | --- | --- |
-| Event sensitivity | `metrics.event_sensitivity` | MAP |
-| Precision | `metrics.event_precision` or `metrics.precision` | MAP |
-| F1 score | `metrics.event_f1` or `metrics.f1_score` | MAP |
-| False positives per day | `metrics.false_alarms_per_24h` | MAP |
+| `event_results.sensitivity` | `metrics.event_sensitivity` | MAP |
+| `event_results.precision` | `metrics.event_precision` | MAP |
+| `event_results.f1` | `metrics.event_f1` | MAP |
+| `event_results.fpRate` | `metrics.false_alarms_per_24h` | MAP |
 | Detection delay | `metrics.detection_latency_seconds_*` | MAP if delay definition matches |
 | Event matching rule | `result_bundle.track` + split/report metadata | MAP with explicit compatibility note |
 | Per-patient performance | `metrics.per_patient_distribution` or supplemental table | EXTEND if not exported |
@@ -52,11 +52,23 @@ Forbidden:
 
 > EpiBench replaces SzCORE.
 
+## Current Official-Contract Demonstration
+
+The repository now includes an official-contract smoke fixture generated with `szcore-evaluation==0.0.7`:
+
+- `examples/epibench/szcore_official_smoke/reference/`
+- `examples/epibench/szcore_official_smoke/hypothesis/`
+- `examples/epibench/szcore_official_smoke/szcore_evaluation_result.json`
+- `reports/epibench_szcore_official_contract_report.md`
+
+This closes the reinvention risk at the API-contract level. It does not prove algorithmic performance
+on a real EEG benchmark.
+
 ## Required Demonstration Before npj Submission
 
-Before submission, add one small Track D example:
+Before submission, preferably add one full real Track D example:
 
-1. produce or import event-level detection metrics using a compatible scoring method;
+1. produce event-level detection metrics using the official SzCORE tool or import its raw JSON output;
 2. map those metrics into an EpiBench result bundle;
 3. certify the bundle;
 4. show what EpiBench adds: dataset tier, split claim ceiling, failure trace, badges, and anti-overclaim report.
@@ -68,7 +80,8 @@ python scripts\epibench.py map-szcore --metrics examples\epibench\szcore_bridge_
 python scripts\epibench.py certify examples\epibench\szcore_bridge_demo\result_bundle.yaml --out reports\epibench_szcore_bridge_claim.json --report reports\epibench_szcore_bridge_claim.md
 ```
 
-The demo uses a SzCORE-style export, not the SzCORE package itself. Before publication, this should be replaced by a real output emitted by the official scoring tool or by a documented compatible export.
+The legacy demo uses a SzCORE-style export. The official smoke fixture uses the public `szcore-evaluation`
+package. Before publication, the strongest version would add a real EEG output emitted by the official scoring tool.
 
 ## Reviewer Defense
 

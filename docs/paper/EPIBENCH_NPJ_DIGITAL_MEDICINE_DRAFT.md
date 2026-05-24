@@ -41,7 +41,7 @@ Machine learning systems for seizure detection, early warning, and forecasting a
 
 We introduce EpiBench, an open evidence and claim-certification framework for seizure AI. EpiBench separates dataset evidence from algorithm behavior through Epilepsy Dataset Evidence Cards, metrological trustworthiness and domain stress rubrics, task-specific tracks for detection, early warning, forecasting, and embedded viability, failure-preserving result bundles, and deterministic claim gates. Instead of asking which model is best, EpiBench asks what a result is allowed to prove. The framework maps existing seizure event-scoring and clinical AI reporting standards where compatible, including ILAE seizure vocabulary, event-based scoring frameworks such as SzCORE, and reporting guidance for prediction and diagnostic AI.
 
-We provide a machine-readable specification, JSON Schemas, a reference command-line implementation, certification badges, and worked examples. In a demonstration, a model with superior naive metrics is downgraded to a structural-only claim because leakage and threshold-selection failures are preserved, whereas a lower-scoring but auditable run receives a bounded patient-independent operational claim. EpiBench certification is scientific certification of an evidence package, not clinical approval or regulatory clearance. The framework is intended to make seizure AI results auditable, reproducible, comparable, and resistant to leaderboard-driven overclaim.
+We provide a machine-readable specification, JSON Schemas, a reference command-line implementation, certification badges, release-candidate reproduction artefacts, and worked examples. In a demonstration, a model with superior naive metrics is downgraded to a structural-only claim because leakage and threshold-selection failures are preserved, whereas a lower-scoring but auditable run receives a bounded patient-independent operational claim. EpiBench certification is scientific certification of an evidence package, not clinical approval or regulatory clearance. The framework is intended to make seizure AI results auditable, reproducible, comparable, and resistant to leaderboard-driven overclaim.
 
 ## Main
 
@@ -195,13 +195,13 @@ The canonical output is a JSON claim eligibility report. A Markdown report is ge
 
 We constructed two demonstration result bundles to show the difference between leaderboard interpretation and evidence interpretation. These examples are not intended as clinical performance results. They are protocol demonstrations.
 
-The first bundle represents an auditable patient-independent detection run on a T1-like EEG evidence package. It uses leave-one-subject-out splitting, expert-adjudicated labels, complete failure tracing, no leakage, and measured edge latency. Its Epi-Score is 74.158 and its final claim is `E2-PI`.
+The first bundle represents an auditable patient-independent detection run on a T1-like EEG evidence package. It uses leave-one-subject-out splitting, expert-adjudicated labels, complete failure tracing, and no leakage. It includes demonstration hardware fields only to exercise the schema; these fields are not treated as citable target-device evidence and do not authorize edge-ready or real-time wording. Its Epi-Score is 74.158 and its final claim is `E2-PI`.
 
 The second bundle represents a model with stronger naive metrics: sensitivity 0.99, precision 0.95, F1 0.97, and false alarms per 24 hours of 0.1. Its Epi-Score is 94.727. However, the bundle preserves patient leakage, split noncompliance, and threshold selection on test labels. EpiBench downgrades the final claim to `E1`.
 
 A third bundle requests a patient-independent claim while using a declared patient-dependent split. EpiBench downgrades this request from `E2-PI` to `E2-PD`, preserving the value of patient-specific evaluation while preventing generalization overclaim.
 
-We also drafted two preliminary real-data evidence packages derived from existing local reports: a longitudinal MSG forecasting null baseline and a SeizeIT2 single-subject local pipeline check. Both are intentionally claim-limited to `E1`. The MSG package is limited by unaudited or proxy labels and incomplete device metadata. The SeizeIT2 local package is limited by single-subject scope, unaudited local labels, and a non-submission-ready split. These packages demonstrate that EpiBench can represent weak or preliminary evidence without promoting it to an operational claim.
+We also drafted real and preliminary evidence packages derived from existing local reports and public resources: a CHB-MIT patient-independent detection package, a CHB-MIT waveform micro-subset threshold baseline, a longitudinal MSG forecasting package, and a SeizeIT2 single-subject local pipeline check. These packages are deliberately heterogeneous in strength. The CHB-MIT packages demonstrate patient-independent EEG packaging but remain limited by scale and baseline simplicity. The MSG and SeizeIT2 packages are intentionally claim-limited where labels, split readiness, or local scope are insufficient. These packages demonstrate that EpiBench can represent weak, partial, and stronger evidence without promoting all real data to an operational claim.
 
 These results illustrate the central point. The higher-scoring model is not necessarily the stronger scientific result, and real data are not automatically strong evidence. The protocol prevents the leaderboard from defining what the evidence cannot support.
 
@@ -251,7 +251,7 @@ The blocking reasons were:
 
 The patient-dependent demonstration bundle requested `E2-PI` and received `E2-PD`, because patient-dependent evaluation cannot support new-patient operational claims even when leakage checks and thresholds are valid.
 
-Two preliminary real-data packages received `E1`. The MSG forecasting baseline requested `E2-PD` but was limited by label-audit and failure sentinels. The SeizeIT2 local single-subject check requested `E2-PI` but was limited by dataset tier, split policy, label audit, leakage-audit status, and failure sentinels.
+Real and preliminary packages span several evidence states. The CHB-MIT patient-independent detection package and the CHB-MIT waveform micro-subset package demonstrate EEG Track D packaging, but the waveform result remains a small baseline smoke test. The MSG forecasting baseline requested `E2-PD` but was limited by label-audit and failure sentinels. The SeizeIT2 local single-subject check requested `E2-PI` but was limited by dataset tier, split policy, label audit, leakage-audit status, and failure sentinels.
 
 #### Badge generation
 
@@ -263,7 +263,6 @@ EpiBench-Run-Complete
 EpiBench-Failure-Transparent
 EpiBench-Claim-E2-PI
 EpiBench-Leakage-Checked
-EpiBench-Edge-Measured
 ```
 
 The leakage demonstration bundle received:
@@ -303,7 +302,7 @@ The current reference implementation validates structure and applies claim gates
 
 MTS and DSI rubrics reduce subjectivity but do not eliminate it. Inter-reviewer agreement studies are required before claiming that evidence card scoring is stable across institutions.
 
-The demonstration examples show protocol mechanics, not clinical performance. Real evidence packages on datasets such as TUSZ, CHB-MIT, SeizeIT2, and longitudinal wearable resources are required before publication.
+The demonstration examples show protocol mechanics, not clinical performance. The current release-candidate evidence packages include real-data and public-resource packages, but full-scale EEG detection evidence, external reproduction, and independent clinical review remain required before a high-confidence submission.
 
 The Epi-Score weights are preregistered in the v1.0-draft YAML, but they require sensitivity analyses. A standard should not hide the influence of weights.
 
@@ -394,7 +393,7 @@ Automated tests verify that:
 
 ## Data availability
 
-This draft uses demonstration evidence packages and does not report new clinical performance results. Public dataset integrations should be added before submission using appropriate dataset access terms. Candidate datasets include TUSZ or CHB-MIT for clinical EEG detection, SeizeIT2 for multimodal wearable detection, and longitudinal wearable resources for forecasting where licensing permits.
+This draft uses release-candidate evidence packages to demonstrate protocol behavior and does not report new clinical performance results. Public dataset integrations should be strengthened before submission using appropriate dataset access terms. Candidate next packages include full-scale CHB-MIT or TUSZ for clinical EEG detection, SeizeIT2 for multimodal wearable detection, and longitudinal wearable resources for forecasting where licensing permits.
 
 ## Code availability
 
@@ -439,10 +438,12 @@ To be completed.
 
 This manuscript is not yet submission-ready. The following are blocking:
 
-- Upgrade preliminary MSG and SeizeIT2 packages into submission-grade real evidence packages, or replace them with stronger TUSZ/CHB-MIT and SeizeIT2 packages.
-- Add one clinician-reviewed dataset card.
-- Add integration or explicit mapping to an event-scoring tool such as SzCORE for detection.
-- Add inter-reviewer agreement for MTS/DSI on at least two datasets.
-- Add sensitivity analysis of Epi-Score weights.
-- Add DOI archive and public repository release.
+- Scale the CHB-MIT waveform evidence beyond the micro-subset or add a stronger TUSZ/CHB-MIT signal-derived package.
+- Upgrade preliminary MSG and SeizeIT2 packages into submission-grade real evidence packages, or keep them only as negative/readiness examples.
+- Complete the independent clinical and methods review packet with signed forms and adjudicated MTS/DSI changes.
+- Add a full real EEG output scored by the official SzCORE tool if feasible; the current official smoke fixture closes only the API-contract non-reinvention risk.
+- Measure the final model on declared target IoT hardware before any edge-ready, on-device, or real-time wording.
+- Mint DOI archive and obtain at least one independent external clean-checkout reproduction run.
 - Add complete author list, ethics/data statements, and supplementary material.
+
+The manuscript must not claim universal community adoption, clinical validation, prospective clinical-grade evidence, target-device edge readiness, or regulatory certification unless the corresponding external evidence is added before submission.

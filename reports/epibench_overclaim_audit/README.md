@@ -9,21 +9,21 @@ generalization, or SOTA overclaim. It is a review aid, not a scientific certific
 
 ## Summary
 
-- Findings: `378`.
-- Bounded/anti-overclaim context: `308`.
-- Requires wording review: `70`.
+- Findings: `404`.
+- Bounded/anti-overclaim context: `333`.
+- Requires wording review: `71`.
 
 ## Category Counts
 
 - `clinical_or_regulatory`: `101`
-- `edge_or_realtime`: `109`
-- `scope_or_generality`: `24`
-- `sota_or_leaderboard`: `144`
+- `edge_or_realtime`: `135`
+- `scope_or_generality`: `25`
+- `sota_or_leaderboard`: `143`
 
 ## Severity Counts
 
-- `bounded`: `308`
-- `major`: `21`
+- `bounded`: `333`
+- `major`: `22`
 - `moderate`: `49`
 
 ## Files With Most Review Findings

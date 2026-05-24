@@ -13,14 +13,14 @@ No rigorous team can guarantee an acceptance probability above 80 percent at a s
 | Domain | Current status | Risk | Required action |
 | --- | --- | --- | --- |
 | Conceptual novelty | Strong | Medium | Phrase as evidence infrastructure, not benchmark-only |
-| SOTA alignment | Good v1 registry exists | Medium | Add more direct SzCORE compatibility proof |
-| Reference implementation | Working draft | Medium | Package as installable CLI and archive DOI |
-| Worked example | Strong pedagogical demo plus one frozen real package | Medium | Add patient-independent real dataset packages |
-| Clinical credibility | Insufficient | High | Add neurologist review or co-author |
-| Dataset evidence | CHB-MIT metadata `E2-PI` null baseline plus MSG Gate C `E2-PD` forecasting package | Medium | Upgrade CHB-MIT to waveform-derived baseline and complete SeizeIT2 |
+| SOTA alignment | Official SzCORE API-contract smoke fixture plus bridge report | Low to medium | Add full real EEG official SzCORE output if feasible |
+| Reference implementation | Working CLI, schemas, tests, release-candidate reproduction packet | Medium | Package as installable CLI and archive DOI |
+| Worked example | Strong pedagogical demos plus real/provisional evidence packages | Medium | Scale patient-independent signal-derived EEG evidence |
+| Clinical credibility | External review packet prepared but not completed | High | Add neurologist or clinical neurophysiologist review/co-author |
+| Dataset evidence | CHB-MIT `E2-PI` packages plus MSG Gate C `E2-PD`; waveform evidence remains micro-scale | Medium | Scale CHB-MIT/TUSZ and complete SeizeIT2 |
 | MTS/DSI reproducibility | Rubrics exist | High | Run inter-reviewer agreement |
 | Claim gates | Strong | Low | E2-PD and E3-block tests added; add E4 prospective-block test later |
-| Hardware/IoT evidence | Demo only | Medium | Add actual edge benchmark or remove edge claims |
+| Hardware/IoT evidence | Local CPU timing measured; target edge claim explicitly unauthorized | Medium | Add actual target-device benchmark or avoid edge claims |
 | Paper draft | Created | Medium | Convert from Markdown to journal manuscript format |
 
 ## Readiness Score
@@ -45,7 +45,7 @@ Interpretation:
 - `0.75-0.85`: plausible Q1 submission if clinical and SOTA gaps are closed.
 - `>0.85`: no obvious avoidable rejection reason remains.
 
-Current estimate: `0.697`. The paper is stronger after adding a generated CHB-MIT patient-independent package certified as `E2-PI` and a generated MSG Gate C package certified as `E2-PD`. It is still not ready for the most selective target because the `E2-PI` package is an always-negative metadata baseline, not a signal-derived detector, and no clinical reviewer has signed off the claim language.
+Current estimate: not recomputed as an acceptance probability. The paper is stronger after adding CHB-MIT patient-independent evidence, a CHB-MIT waveform micro package, an official SzCORE smoke fixture, local hardware measurement with edge claims blocked, a release-candidate reproduction packet, and an external clinical review packet. It is still not ready for the most selective target because the strongest signal-derived EEG package is micro-scale, no independent clinical reviewer has signed off the claim language, no DOI has been minted, and no external lab has reproduced the package.
 
 Updated protocol note:
 
@@ -93,9 +93,11 @@ Acceptance impact: high, because it directly addresses subjectivity.
 
 For Track D:
 
-- take a compatible event-level output;
+- take official `szcore-evaluation` output where possible;
 - map sensitivity, precision, F1, false positives/day into EpiBench;
 - show that EpiBench adds claims/failures without replacing event scoring.
+
+Current status: official-contract smoke fixture complete; full real EEG official run still preferred.
 
 Acceptance impact: high, because it prevents "you reinvented the wheel" rejection.
 
@@ -127,10 +129,10 @@ Acceptance impact: medium to high.
 | Risk | Present now? | Fix |
 | --- | --- | --- |
 | Manuscript sounds like a software project | Partly | Emphasize clinical AI evidence and reproducibility |
-| No real dataset result | Yes | Add real evidence packages |
+| No real dataset result | Partly controlled | Scale real packages beyond current micro/preliminary scope |
 | Claims too broad | Controlled | Keep anti-overclaim language |
 | Not aligned with journal scope | Low for npj | Connect digital/mobile health and AI implementation |
-| Ignores existing seizure scoring | Partly | Add SzCORE compatibility example |
+| Ignores existing seizure scoring | Mostly controlled | Use official SzCORE contract report and add full real run if feasible |
 | No clinician | Yes | Add clinical reviewer/co-author |
 | Tool not reproducible | Mostly fixed | DOI release and install instructions |
 | Too many acronyms | Medium | Add glossary and simplify main narrative |
@@ -194,7 +196,7 @@ Do not state a numerical acceptance probability in the paper or cover letter. In
 Do not submit to npj Digital Medicine until:
 
 - at least two real evidence packages are complete;
-- one seizure scoring compatibility demonstration exists;
+- one seizure scoring compatibility demonstration exists, preferably on real EEG outputs;
 - clinical review is complete;
 - inter-reviewer agreement is measured;
 - code archive DOI exists;

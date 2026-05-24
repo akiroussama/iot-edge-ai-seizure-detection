@@ -39,6 +39,7 @@ REFERENCE_CLAIMS = [
 CHECKSUM_PATHS = [
     REPO_ROOT / "docs" / "EPIBENCH_SPEC_V1.md",
     REPO_ROOT / "configs" / "epibench" / "epibench_v1.yaml",
+    REPO_ROOT / "configs" / "epibench" / "conformance_suite_v1.yaml",
     REPO_ROOT / "schemas" / "epibench" / "dataset_evidence_card.schema.json",
     REPO_ROOT / "schemas" / "epibench" / "split_manifest.schema.json",
     REPO_ROOT / "schemas" / "epibench" / "failure_trace.schema.json",
@@ -48,12 +49,14 @@ CHECKSUM_PATHS = [
     REPO_ROOT / "src" / "epibench" / "scoring.py",
     REPO_ROOT / "src" / "epibench" / "szcore_bridge.py",
     REPO_ROOT / "scripts" / "epibench.py",
+    REPO_ROOT / "scripts" / "epibench_build_q1_hardening_register.py",
     REPO_ROOT / "scripts" / "epibench_build_reviewer_packet.py",
     REPO_ROOT / "scripts" / "epibench_measure_local_hardware.py",
     REPO_ROOT / "scripts" / "epibench_overclaim_audit.py",
     REPO_ROOT / "scripts" / "epibench_reproduce_release_candidate.py",
     REPO_ROOT / "tests" / "test_epibench_standard.py",
     REPO_ROOT / "docs" / "EPIBENCH_IMPLEMENTATION_INDEX.md",
+    REPO_ROOT / "docs" / "paper" / "EPIBENCH_NPJ_DIGITAL_MEDICINE_DRAFT.md",
     REPO_ROOT / "reports" / "epibench_reviewer_packet" / "README.md",
 ]
 

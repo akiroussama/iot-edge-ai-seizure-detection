@@ -9,7 +9,10 @@ cases:
       - EpiBench-Dataset-T1
       - EpiBench-Claim-E2-PI
       - EpiBench-Leakage-Checked
-      - EpiBench-Edge-Measured
+    expected_forbidden_phrases:
+      - real-time
+      - on-device
+      - edge-ready
   - id: patient_dependent_requested_e2_pi_downgrades_to_e2_pd
     result_bundle: examples/epibench/patient_dependent_demo/result_bundle.yaml
     expected_final_claim: E2-PD

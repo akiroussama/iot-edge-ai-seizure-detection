@@ -8,7 +8,7 @@ Epi-Score: `74.158`
 
 ## Badges
 
-`EpiBench-Dataset-T1` `EpiBench-Run-Complete` `EpiBench-Failure-Transparent` `EpiBench-Claim-E2-PI` `EpiBench-Leakage-Checked` `EpiBench-Edge-Measured`
+`EpiBench-Dataset-T1` `EpiBench-Run-Complete` `EpiBench-Failure-Transparent` `EpiBench-Claim-E2-PI` `EpiBench-Leakage-Checked`
 
 ## Claim Ceilings
 
@@ -48,7 +48,9 @@ Floor penalty applied: `False`
 
 ## Forbidden Phrases
 
-- None
+- edge-ready
+- on-device
+- real-time
 
 ## Certification Boundary
 

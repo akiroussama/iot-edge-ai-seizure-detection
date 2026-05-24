@@ -38,6 +38,7 @@ This index lists the current v1.0-draft artefacts created from phase 1 through p
 - `scripts/epibench_build_evidence_panels.py`
 - `scripts/epibench_build_coverage_audit.py`
 - `scripts/epibench_build_reviewer_packet.py`
+- `scripts/epibench_build_q1_hardening_register.py`
 - `scripts/epibench_build_weight_sensitivity.py`
 - `scripts/epibench_build_real_evidence_progression.py`
 - `scripts/epibench_measure_local_hardware.py`
@@ -109,6 +110,9 @@ This index lists the current v1.0-draft artefacts created from phase 1 through p
 - `reports/epibench_reviewer_packet/reviewer_attack_matrix.csv`
 - `reports/epibench_reviewer_packet/pre_submission_action_register.csv`
 - `reports/epibench_reviewer_packet/evidence_index.csv`
+- `reports/epibench_q1_hardening_register/README.md`
+- `reports/epibench_q1_hardening_register/q1_hardening_matrix.csv`
+- `reports/epibench_q1_hardening_register/external_dependency_action_register.csv`
 - `reports/epibench_szcore_official_contract_report.md`
 - `reports/epibench_clinical_review_packet/README.md`
 - `reports/epibench_hardware_measurement/README.md`
@@ -183,6 +187,7 @@ python scripts\epibench_build_weight_sensitivity.py
 python scripts\epibench_build_real_evidence_progression.py
 python scripts\epibench_measure_local_hardware.py
 python scripts\epibench_reproduce_release_candidate.py
+python scripts\epibench_build_q1_hardening_register.py
 python scripts\epibench_overclaim_audit.py
 python scripts\epibench_build_reviewer_packet.py
 python scripts\epibench.py certify examples\epibench\msg_preliminary_f\result_bundle.yaml --out reports\epibench_msg_preliminary_claim.json --report reports\epibench_msg_preliminary_claim.md

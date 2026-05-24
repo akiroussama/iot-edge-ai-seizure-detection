@@ -2,7 +2,7 @@
   "schema_version": "epibench.release_candidate_reproduction.v1",
   "release_candidate": "v1.0-rc-local",
   "status": "passed",
-  "generation_base_commit": "417fd082ac9b03c37c884e7e6526df309ed736fc",
+  "generation_base_commit": "ef0cdbb5f75090b402e8dc47f39c9ce6a04b9400",
   "git_commit_boundary": "The report cannot embed the final commit that contains itself. The final archive or Git tag is the authoritative source commit.",
   "claim_count": 4,
   "matched_count": 4,
@@ -13,8 +13,8 @@
       "reference_path": "reports/epibench_pilot_claim.json",
       "reproduced_path": "reports/epibench_release_candidate/reproduced_claims/pilot_t1_eeg.json",
       "matched": true,
-      "reference_sha256": "91ffce4d64723e442318e24c93bde342369ee10b174dbf92e9ea306d13a387ed",
-      "reproduced_sha256": "91ffce4d64723e442318e24c93bde342369ee10b174dbf92e9ea306d13a387ed",
+      "reference_sha256": "6ff369aab275105cfb24593a9cb7eb0b3563c4bf0dba1c51a90de197b5f7481d",
+      "reproduced_sha256": "6ff369aab275105cfb24593a9cb7eb0b3563c4bf0dba1c51a90de197b5f7481d",
       "final_claim": "E2-PI",
       "epi_score": 74.158
     },
@@ -64,6 +64,11 @@
       "exists": true
     },
     {
+      "path": "configs/epibench/conformance_suite_v1.yaml",
+      "sha256": "25b551fa270ffe8ff0ee6050339dc5f5e8d7db46d7bbc3bcee175b75303649b1",
+      "exists": true
+    },
+    {
       "path": "schemas/epibench/dataset_evidence_card.schema.json",
       "sha256": "19120a771a71026f6e661f2dcea4f2f9b091742502de1474e3f4a9bd69633cda",
       "exists": true
@@ -90,7 +95,7 @@
     },
     {
       "path": "src/epibench/certification.py",
-      "sha256": "41ca4e45db8bf3ba5b55e3fccd542304cdd19bd84c3cea40402facaa14076f5a",
+      "sha256": "7a83c63065a3dc3320c7d1c066d46b37a575b96dec6fdd3066e0f63f9b4cb22c",
       "exists": true
     },
     {
@@ -109,8 +114,13 @@
       "exists": true
     },
     {
+      "path": "scripts/epibench_build_q1_hardening_register.py",
+      "sha256": "692228359896aabf07201397beb17073eae1e18aa060a825a59fa871bb56beaf",
+      "exists": true
+    },
+    {
       "path": "scripts/epibench_build_reviewer_packet.py",
-      "sha256": "3504e221b0a2985557975fa68f1ea898f0e133bbcba0595b8f5af665de68e9a3",
+      "sha256": "242a741ee34925910f7e3fa53137f10aa4be0ac2a0b042f616a479907e82e39e",
       "exists": true
     },
     {
@@ -125,22 +135,27 @@
     },
     {
       "path": "scripts/epibench_reproduce_release_candidate.py",
-      "sha256": "ee33051d58b4e4492c16e5525ead57ae693a4061277d6e7106216cd296c0f036",
+      "sha256": "b67d4558078610dc20a8436b63e799b0893165ba9444c972825b225390f97736",
       "exists": true
     },
     {
       "path": "tests/test_epibench_standard.py",
-      "sha256": "f87c45ea73cb81cbd2fc317f011d43650bc27cd5d9db838cc366403a0e0561e2",
+      "sha256": "beacc299f85c3458f73c227a129a829538990a70c8aae183bce9d2a8c605aaf7",
       "exists": true
     },
     {
       "path": "docs/EPIBENCH_IMPLEMENTATION_INDEX.md",
-      "sha256": "cd85aa60783fcbed0686a55a822a6f887ee4907c79dd78d546d942f5cbc2d35f",
+      "sha256": "ba196b78bb7b2b856ddf18c644323011286b28cebcec313754d9cf45862fff56",
+      "exists": true
+    },
+    {
+      "path": "docs/paper/EPIBENCH_NPJ_DIGITAL_MEDICINE_DRAFT.md",
+      "sha256": "2d8fa7c0a452d8cd5f09cb61cf3bc83a1166196c93db39842396f33d2e3e5eb0",
       "exists": true
     },
     {
       "path": "reports/epibench_reviewer_packet/README.md",
-      "sha256": "62c3de84753761f2ef6e7ca66cdb71e6ca0dc1f9f01beffe3d4936ea2a5b0f80",
+      "sha256": "6b24dab690e0afd009414e505a37a89c116feef73030b275cdaf454d4ed5ef65",
       "exists": true
     }
   ],

@@ -11,6 +11,7 @@ Machine-generated companion packet:
 - `reports/epibench_reviewer_packet/pre_submission_action_register.csv`
 - `reports/epibench_reviewer_packet/evidence_index.csv`
 - `reports/epibench_weight_sensitivity/README.md`
+- `reports/epibench_q1_hardening_register/README.md`
 
 The generated packet is the review-control source for current artefact coverage; this document remains the narrative version for manuscript planning.
 
@@ -20,13 +21,13 @@ The generated packet is the review-control source for current artefact coverage;
 | --- | --- | --- | --- | --- |
 | This is not a clinical validation study | High | Explicit certification boundary | Stronger wording in abstract/cover letter | State that EpiBench certifies evidence packages, not clinical safety |
 | This is just another benchmark | High | Claim gates and failure traces | Stronger comparison to existing benchmarks | Add table: metric benchmark vs evidence certification |
-| You reinvent SzCORE | High | SOTA registry says MAP and executable import exists | Replace demo export with official tool output | Add real Track D compatibility example from official output |
-| MTS/DSI are subjective | High | Rubrics exist and inter-reviewer report generator exists | True independent clinical review missing | Run real two-reviewer card scoring |
-| Demonstration examples are synthetic | High | Labeled as protocol demos | Real datasets missing | Add TUSZ/CHB-MIT and SeizeIT2 packages |
-| Epi-Score weights are arbitrary | Medium | YAML preregistration | Sensitivity analysis missing | Add weight perturbation supplement |
+| You reinvent SzCORE | High | Official `szcore-evaluation` smoke output and mapping contract exist | Full real EEG official SzCORE run missing | Add real Track D official SzCORE output when available |
+| MTS/DSI are subjective | High | Rubrics, demo inter-reviewer report, and external review packet exist | True independent clinical review missing | Run real two-reviewer card scoring |
+| Demonstration examples are synthetic | High | Real/provisional packages now exist, including CHB-MIT patient-independent and waveform micro packages | Full-scale signal-derived EEG package still needed | Scale CHB-MIT/TUSZ and keep weak packages claim-limited |
+| Epi-Score weights are arbitrary | Medium | YAML preregistration and weight sensitivity report exist | Community governance of future weights | Keep claim gates dominant and preregister weight changes |
 | Claims may be misused as clinical approval | High | Strong anti-overclaim language | Badge wording may still be risky | Use "scientific claim eligibility" consistently |
 | Patient-dependent claim is still ambiguous | Medium | E2-PD/E2-PI split | More examples needed | Add one E2-PD test case |
-| Edge readiness not proven | Medium | Hardware gate exists | Real hardware result missing | Measure hardware or avoid edge demonstration claim |
+| Edge readiness not proven | Medium | Hardware gate exists; local CPU timing is measured but explicitly not edge-authorizing | Real target-device result missing | Measure target hardware or avoid edge/on-device/real-time wording |
 | Too much software, not enough science | High | Epistemic thesis strong | Manuscript must lead with evidence problem | Rewrite introduction around scientific validity |
 | No external validation | High | E3 gated | Real E3 example missing | Either add external example or state E3 is supported by framework only |
 | Dataset tiering may penalize useful small datasets | Medium | T2/T3 allow exploratory use | Discussion missing nuance | Add section on exploratory science without overclaim |
@@ -45,7 +46,7 @@ SzCORE-style outputs and TRIPOD+AI reporting are necessary but not sufficient. T
 
 Required evidence:
 
-- one example where SzCORE-compatible metrics are mapped into EpiBench;
+- one example where official SzCORE output or SzCORE-compatible metrics are mapped into EpiBench;
 - one example where metrics alone and claim-gated interpretation diverge.
 
 ### Question 2

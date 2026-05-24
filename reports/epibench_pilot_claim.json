@@ -40,9 +40,12 @@
     "EpiBench-Run-Complete",
     "EpiBench-Failure-Transparent",
     "EpiBench-Claim-E2-PI",
-    "EpiBench-Leakage-Checked",
-    "EpiBench-Edge-Measured"
+    "EpiBench-Leakage-Checked"
   ],
   "blocking_reasons": [],
-  "forbidden_phrases": []
+  "forbidden_phrases": [
+    "edge-ready",
+    "on-device",
+    "real-time"
+  ]
 }

@@ -23,6 +23,9 @@ SZCORE_OFFICIAL_RESULT_PATH = (
 )
 LOCAL_HARDWARE_REPORT_PATH = REPO_ROOT / "reports" / "epibench_hardware_measurement" / "local_hardware_report.json"
 RELEASE_REPRODUCTION_PATH = REPO_ROOT / "reports" / "epibench_release_candidate" / "reproduction_result.json"
+Q1_HARDENING_SUMMARY_PATH = (
+    REPO_ROOT / "reports" / "epibench_q1_hardening_register" / "q1_hardening_summary.json"
+)
 
 
 def main() -> int:
@@ -102,6 +105,7 @@ def _collect_metrics(
     inter_reviewer = _read_json(inter_reviewer_path)
     local_hardware = _read_json(LOCAL_HARDWARE_REPORT_PATH)
     release_reproduction = _read_json(RELEASE_REPRODUCTION_PATH)
+    q1_hardening = _read_json(Q1_HARDENING_SUMMARY_PATH)
 
     final_claims = _counts(row.get("final_claim", "") for row in bundles)
     tracks = sorted({row.get("track", "") for row in bundles if row.get("track")})
@@ -183,6 +187,9 @@ def _collect_metrics(
         "release_reproduction_claim_count": release_reproduction.get("claim_count", 0),
         "release_doi_status": release_reproduction.get("doi_status", "missing"),
         "release_external_status": release_reproduction.get("external_reproduction_status", "missing"),
+        "q1_hardening_status": q1_hardening.get("status", "missing"),
+        "q1_hardening_uncontrolled_count": q1_hardening.get("uncontrolled_count", 0),
+        "q1_hardening_external_dependency_count": q1_hardening.get("external_dependency_count", 0),
     }
 
 
@@ -460,6 +467,15 @@ def _build_evidence_index(metrics: dict[str, Any]) -> list[dict[str, str]]:
                 f"external={metrics['release_external_status']}."
             ),
         },
+        {
+            "evidence_family": "q1_hardening_register",
+            "path": "reports/epibench_q1_hardening_register/README.md",
+            "summary": (
+                f"status={metrics['q1_hardening_status']}; "
+                f"uncontrolled={metrics['q1_hardening_uncontrolled_count']}; "
+                f"external_dependencies={metrics['q1_hardening_external_dependency_count']}."
+            ),
+        },
     ]
 
 
@@ -492,6 +508,8 @@ specific artefact, quantitative indicator, and required action.
 - Result bundles represented in evidence panels: `{metrics['bundle_count']}`.
 - Protocol tracks represented: `{', '.join(metrics['tracks'])}`.
 - Submission-readiness gate: `{metrics['readiness_status']}`.
+- Q1 hardening register: `{metrics['q1_hardening_status']}` with
+  `{metrics['q1_hardening_uncontrolled_count']}` uncontrolled angle(s).
 - Open or partial action count: `{len(actions)}`.
 
 ## Files Generated

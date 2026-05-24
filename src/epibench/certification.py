@@ -269,6 +269,10 @@ def _compute_ceilings(
             ceilings["hardware_evidence"] = "E4"
     elif _hardware_unmeasured(failure_trace):
         ceilings["hardware_evidence"] = "E4"
+        forbidden_phrases.extend(["real-time", "on-device", "edge-ready"])
+    elif _hardware_evidence_non_citable(bundle):
+        ceilings["hardware_evidence"] = "E4"
+        forbidden_phrases.extend(["real-time", "on-device", "edge-ready"])
     else:
         ceilings["hardware_evidence"] = "E4"
 
@@ -299,7 +303,12 @@ def _compute_badges(
     if _leakage_checked(split_manifest, failure_trace):
         badges.append("EpiBench-Leakage-Checked")
     hardware = bundle.get("hardware")
-    if hardware and hardware.get("latency_ms_p95") is not None and not _sentinel_present(failure_trace, "HARDWARE_UNMEASURED"):
+    if (
+        hardware
+        and hardware.get("latency_ms_p95") is not None
+        and not _sentinel_present(failure_trace, "HARDWARE_UNMEASURED")
+        and not _hardware_evidence_non_citable(bundle)
+    ):
         badges.append("EpiBench-Edge-Measured")
     return badges
 
@@ -321,6 +330,16 @@ def _sentinel_present(failure_trace: dict[str, Any], code: str) -> bool:
 
 def _hardware_unmeasured(failure_trace: dict[str, Any]) -> bool:
     return _sentinel_present(failure_trace, "HARDWARE_UNMEASURED")
+
+
+def _hardware_evidence_non_citable(bundle: dict[str, Any]) -> bool:
+    hardware = bundle.get("hardware")
+    if not hardware:
+        return False
+    target = str(hardware.get("target", "")).casefold()
+    commit = str(bundle.get("model", {}).get("commit_sha", "")).casefold()
+    platform = str(bundle.get("environment", {}).get("platform", "")).casefold()
+    return "demo" in target or commit.startswith("demo-") or "demo" in commit or "demo" in platform
 
 
 def _track_consistency(bundle: dict[str, Any], split_manifest: dict[str, Any]) -> bool:

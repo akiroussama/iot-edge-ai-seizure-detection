@@ -1,0 +1,10 @@
+{
+  "schema_version": "epibench.q1_hardening_summary.v1",
+  "angle_count": 10,
+  "closed_by_evidence_count": 3,
+  "neutralized_by_scope_count": 3,
+  "external_dependency_count": 4,
+  "uncontrolled_count": 0,
+  "status": "controlled_with_external_dependencies",
+  "boundary": "A controlled register does not mean the paper is guaranteed acceptable. It means every major rejection angle is either answered by evidence, neutralized by bounded scope, or made explicit as an external pre-submission dependency."
+}

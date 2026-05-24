@@ -25,7 +25,7 @@ python scripts\epibench_reproduce_release_candidate.py
 
 - DOI status: `pending_zenodo_deposition`;
 - external reproduction status: `pending_external_lab_run`;
-- generation base commit: `417fd082ac9b03c37c884e7e6526df309ed736fc`;
+- generation base commit: `ef0cdbb5f75090b402e8dc47f39c9ce6a04b9400`;
 - git commit boundary: The report cannot embed the final commit that contains itself. The final archive or Git tag is the authoritative source commit.
 - boundary: This package verifies scientific reproducibility of EpiBench artefacts from the checkout. It is not clinical validation, regulatory clearance, or a DOI minting event.
 

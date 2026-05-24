@@ -15,6 +15,7 @@ from src.epibench.szcore_bridge import import_szcore_metrics_as_result_bundle, m
 from src.epibench.validation import SchemaValidationError, validate_artifact
 from scripts.epibench_build_coverage_audit import build_coverage_audit
 from scripts.epibench_build_evidence_panels import build_evidence_panels
+from scripts.epibench_build_q1_hardening_register import build_q1_hardening_register
 from scripts.epibench_build_real_evidence_progression import build_real_evidence_progression
 from scripts.epibench_build_reviewer_packet import build_reviewer_packet
 from scripts.epibench_build_weight_sensitivity import build_weight_sensitivity
@@ -55,6 +56,8 @@ def test_epibench_clean_example_certifies_e2_pi() -> None:
     assert report["final_claim"] == "E2-PI"
     assert "EpiBench-Claim-E2-PI" in report["badges"]
     assert "EpiBench-Leakage-Checked" in report["badges"]
+    assert "EpiBench-Edge-Measured" not in report["badges"]
+    assert "edge-ready" in report["forbidden_phrases"]
     assert report["blocking_reasons"] == []
 
 
@@ -305,6 +308,9 @@ def test_epibench_reviewer_packet_links_attacks_to_evidence(tmp_path: Path) -> N
     assert "A11" not in actions
     assert "reports/epibench_weight_sensitivity/README.md" in matrix
     assert "Protocol tracks represented: `D, E, F, W`" in readme
+    assert "q1_hardening_register" in (tmp_path / "reviewer_packet" / "evidence_index.csv").read_text(
+        encoding="utf-8"
+    )
 
 
 def test_epibench_weight_sensitivity_preserves_claim_gate_dominance(tmp_path: Path) -> None:
@@ -334,6 +340,21 @@ def test_epibench_real_evidence_progression_tracks_real_packages(tmp_path: Path)
     assert "chbmit_waveform_micro_d" in matrix
     assert "real_eeg_waveform_far_budgeted_poor_detector" in matrix
     assert "chbmit_waveform_micro_d,highest" in actions
+
+
+def test_epibench_q1_hardening_register_has_no_uncontrolled_angles(tmp_path: Path) -> None:
+    result = build_q1_hardening_register(out_dir=tmp_path / "q1_hardening")
+    matrix = (tmp_path / "q1_hardening" / "q1_hardening_matrix.csv").read_text(encoding="utf-8")
+    actions = (tmp_path / "q1_hardening" / "external_dependency_action_register.csv").read_text(
+        encoding="utf-8"
+    )
+
+    assert result["angle_count"] == 10
+    assert result["uncontrolled_count"] == 0
+    assert result["external_dependency_count"] >= 3
+    assert "Q1-04,EpiBench reinvents SzCORE.,closed_by_evidence" in matrix
+    assert "Q1-08,No real target hardware evidence for edge or real-time claims.,neutralized_by_scope" in matrix
+    assert "clinical epilepsy" in actions
 
 
 def test_epibench_local_hardware_report_is_real_but_not_edge_authorizing(tmp_path: Path) -> None:

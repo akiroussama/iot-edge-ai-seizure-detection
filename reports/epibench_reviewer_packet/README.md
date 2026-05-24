@@ -17,6 +17,8 @@ specific artefact, quantitative indicator, and required action.
 - Result bundles represented in evidence panels: `16`.
 - Protocol tracks represented: `D, E, F, W`.
 - Submission-readiness gate: `passed`.
+- Q1 hardening register: `controlled_with_external_dependencies` with
+  `0` uncontrolled angle(s).
 - Open or partial action count: `4`.
 
 ## Files Generated

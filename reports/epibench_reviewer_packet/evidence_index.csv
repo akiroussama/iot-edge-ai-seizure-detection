@@ -1,7 +1,7 @@
 evidence_family,path,summary
 evidence_panels,reports/epibench_evidence_panels/README.md,"16 bundles across claims {'E2-PI': 5, 'E1': 6, 'E3': 2, 'E2-PD': 2, 'E4': 1}."
 coverage_audit,reports/epibench_coverage_audit/README.md,"4 gaps, 4 major."
-overclaim_audit,reports/epibench_overclaim_audit/README.md,70 wording findings require review; 0 critical.
+overclaim_audit,reports/epibench_overclaim_audit/README.md,71 wording findings require review; 0 critical.
 weight_sensitivity,reports/epibench_weight_sensitivity/README.md,11 scenarios; max_score_rank_range=5; max_claim_gated_rank_range=0.
 real_evidence_progression,reports/epibench_real_evidence_progression/README.md,"4 real/provisional packages; claims={'E2-PI': 2, 'E2-PD': 1, 'E1': 1}."
 szcore_official_contract,reports/epibench_szcore_official_contract_report.md,official_contract=True; official_smoke_output=True.
@@ -10,3 +10,4 @@ inter_reviewer,reports/epibench_inter_reviewer_report.json,status=passed; datase
 clinical_review_packet,reports/epibench_clinical_review_packet/README.md,external_review_packet=True.
 local_hardware_measurement,reports/epibench_hardware_measurement/README.md,present=True; scope=local_reference_cpu_threshold_inference_only; edge_authorized=False.
 release_candidate_reproduction,reports/epibench_release_candidate/README.md,status=passed; matched=4/4; doi=pending_zenodo_deposition; external=pending_external_lab_run.
+q1_hardening_register,reports/epibench_q1_hardening_register/README.md,status=controlled_with_external_dependencies; uncontrolled=0; external_dependencies=4.
