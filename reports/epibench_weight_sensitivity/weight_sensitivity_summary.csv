@@ -1,0 +1,12 @@
+scenario,top_score_run_id,top_score_final_claim,top_score_value,top_claim_gated_run_id,top_claim_gated_final_claim,e1_runs_in_top3_by_score
+normative,leakage_high_metric_demo,E1,94.727,prospective_e4_claim_demo,E4,2
+equal_available_axes,leakage_high_metric_demo,E1,93.96,prospective_e4_claim_demo,E4,2
+performance_plus50,leakage_high_metric_demo,E1,95.14,prospective_e4_claim_demo,E4,2
+clinical_safety_plus50,leakage_high_metric_demo,E1,94.762,prospective_e4_claim_demo,E4,2
+robustness_plus50,leakage_high_metric_demo,E1,94.503,prospective_e4_claim_demo,E4,2
+stability_plus50,leakage_high_metric_demo,E1,94.458,prospective_e4_claim_demo,E4,2
+latency_plus50,leakage_high_metric_demo,E1,94.742,prospective_e4_claim_demo,E4,2
+embedded_plus50,leakage_high_metric_demo,E1,94.727,prospective_e4_claim_demo,E4,2
+calibration_plus50,leakage_high_metric_demo,E1,94.727,prospective_e4_claim_demo,E4,2
+safety_and_performance_plus25,leakage_high_metric_demo,E1,94.951,prospective_e4_claim_demo,E4,2
+deployment_axes_plus50,leakage_high_metric_demo,E1,94.742,prospective_e4_claim_demo,E4,2

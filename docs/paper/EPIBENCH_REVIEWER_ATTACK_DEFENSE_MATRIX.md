@@ -10,6 +10,7 @@ Machine-generated companion packet:
 - `reports/epibench_reviewer_packet/reviewer_attack_matrix.csv`
 - `reports/epibench_reviewer_packet/pre_submission_action_register.csv`
 - `reports/epibench_reviewer_packet/evidence_index.csv`
+- `reports/epibench_weight_sensitivity/README.md`
 
 The generated packet is the review-control source for current artefact coverage; this document remains the narrative version for manuscript planning.
 

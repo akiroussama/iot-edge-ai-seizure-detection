@@ -12,6 +12,7 @@ DEFAULT_OUT_DIR = REPO_ROOT / "reports" / "epibench_reviewer_packet"
 EVIDENCE_DIR = REPO_ROOT / "reports" / "epibench_evidence_panels"
 COVERAGE_DIR = REPO_ROOT / "reports" / "epibench_coverage_audit"
 OVERCLAIM_DIR = REPO_ROOT / "reports" / "epibench_overclaim_audit"
+WEIGHT_SENSITIVITY_DIR = REPO_ROOT / "reports" / "epibench_weight_sensitivity"
 READINESS_PATH = REPO_ROOT / "reports" / "epibench_submission_readiness_result.json"
 INTER_REVIEWER_PATH = REPO_ROOT / "reports" / "epibench_inter_reviewer_report.json"
 
@@ -36,6 +37,7 @@ def build_reviewer_packet(
     evidence_dir: Path = EVIDENCE_DIR,
     coverage_dir: Path = COVERAGE_DIR,
     overclaim_dir: Path = OVERCLAIM_DIR,
+    weight_sensitivity_dir: Path = WEIGHT_SENSITIVITY_DIR,
     readiness_path: Path = READINESS_PATH,
     inter_reviewer_path: Path = INTER_REVIEWER_PATH,
 ) -> dict[str, Any]:
@@ -44,6 +46,7 @@ def build_reviewer_packet(
         evidence_dir=evidence_dir,
         coverage_dir=coverage_dir,
         overclaim_dir=overclaim_dir,
+        weight_sensitivity_dir=weight_sensitivity_dir,
         readiness_path=readiness_path,
         inter_reviewer_path=inter_reviewer_path,
     )
@@ -71,6 +74,7 @@ def _collect_metrics(
     evidence_dir: Path,
     coverage_dir: Path,
     overclaim_dir: Path,
+    weight_sensitivity_dir: Path,
     readiness_path: Path,
     inter_reviewer_path: Path,
 ) -> dict[str, Any]:
@@ -80,6 +84,8 @@ def _collect_metrics(
     failures = _read_csv(evidence_dir / "failure_matrix.csv")
     coverage_gaps = _read_csv(coverage_dir / "coverage_gaps.csv")
     overclaims = _read_csv(overclaim_dir / "overclaim_findings.csv")
+    weight_summary = _read_csv(weight_sensitivity_dir / "weight_sensitivity_summary.csv")
+    weight_stability = _read_csv(weight_sensitivity_dir / "weight_sensitivity_rank_stability.csv")
     readiness = _read_json(readiness_path)
     inter_reviewer = _read_json(inter_reviewer_path)
 
@@ -107,6 +113,9 @@ def _collect_metrics(
     operational_packages = [row for row in bundles if row.get("final_claim") in {"E2-PI", "E3", "E4"}]
     overclaim_review = [row for row in overclaims if row.get("classification") == "requires_review"]
     critical_overclaim_review = [row for row in overclaim_review if row.get("severity") == "critical"]
+    max_score_rank_range = max((_as_int(row.get("score_rank_range")) for row in weight_stability), default=0)
+    max_claim_rank_range = max((_as_int(row.get("claim_gated_rank_range")) for row in weight_stability), default=0)
+    scenarios_with_e1_top3 = sum(1 for row in weight_summary if _as_int(row.get("e1_runs_in_top3_by_score")) > 0)
 
     return {
         "bundle_count": len(bundles),
@@ -129,6 +138,11 @@ def _collect_metrics(
         "major_coverage_gap_count": sum(1 for row in coverage_gaps if row.get("severity") == "major"),
         "overclaim_review_count": len(overclaim_review),
         "critical_overclaim_review_count": len(critical_overclaim_review),
+        "weight_sensitivity_exists": bool(weight_summary and weight_stability),
+        "weight_sensitivity_scenario_count": len(weight_summary),
+        "weight_sensitivity_max_score_rank_range": max_score_rank_range,
+        "weight_sensitivity_max_claim_rank_range": max_claim_rank_range,
+        "weight_sensitivity_e1_top3_scenarios": scenarios_with_e1_top3,
         "readiness_status": readiness.get("status", "missing"),
         "readiness_submission_grade_count": readiness.get("submission_grade_count", 0),
         "readiness_operational_package_count": readiness.get("operational_package_count", 0),
@@ -239,10 +253,14 @@ def _build_attack_matrix(metrics: dict[str, Any]) -> list[dict[str, Any]]:
             "A11",
             "The Epi-Score weights are arbitrary and could change conclusions.",
             "high",
-            "open",
-            "configs/epibench/epibench_v1.yaml",
-            "Weights are preregistered, but perturbation sensitivity analysis is not yet generated.",
-            "Add a weight-perturbation panel showing claim gates dominate score-weight choices.",
+            "strong" if metrics["weight_sensitivity_exists"] else "open",
+            "reports/epibench_weight_sensitivity/README.md",
+            (
+                f"{metrics['weight_sensitivity_scenario_count']} scenarios; "
+                f"max score-rank range {metrics['weight_sensitivity_max_score_rank_range']}; "
+                f"max claim-gated rank range {metrics['weight_sensitivity_max_claim_rank_range']}."
+            ),
+            "Include the weight-sensitivity panel and keep claim-gated interpretation dominant.",
         ),
         _attack(
             "A12",
@@ -313,6 +331,15 @@ def _build_evidence_index(metrics: dict[str, Any]) -> list[dict[str, str]]:
             "summary": (
                 f"{metrics['overclaim_review_count']} wording findings require review; "
                 f"{metrics['critical_overclaim_review_count']} critical."
+            ),
+        },
+        {
+            "evidence_family": "weight_sensitivity",
+            "path": "reports/epibench_weight_sensitivity/README.md",
+            "summary": (
+                f"{metrics['weight_sensitivity_scenario_count']} scenarios; "
+                f"max_score_rank_range={metrics['weight_sensitivity_max_score_rank_range']}; "
+                f"max_claim_gated_rank_range={metrics['weight_sensitivity_max_claim_rank_range']}."
             ),
         },
         {
@@ -425,6 +452,13 @@ def _as_float(value: Any) -> float:
         return float(value)
     except (TypeError, ValueError):
         return 0.0
+
+
+def _as_int(value: Any) -> int:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return 0
 
 
 if __name__ == "__main__":

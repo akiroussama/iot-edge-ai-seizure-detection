@@ -12,12 +12,12 @@ specific artefact, quantitative indicator, and required action.
 ## Summary
 
 - Reviewer attacks tracked: `12`.
-- Defense status: `open=1, partial=6, strong=5`.
+- Defense status: `partial=6, strong=6`.
 - Severity distribution: `critical=5, high=7`.
 - Result bundles represented in evidence panels: `15`.
 - Protocol tracks represented: `D, E, F, W`.
 - Submission-readiness gate: `passed`.
-- Open or partial action count: `7`.
+- Open or partial action count: `6`.
 
 ## Files Generated
 
@@ -27,7 +27,6 @@ specific artefact, quantitative indicator, and required action.
 
 ## Highest-Priority Remaining Actions
 
-- `A11` open: Add a weight-perturbation panel showing claim gates dominate score-weight choices.
 - `A01` partial: Resolve or explicitly waive every critical overclaim finding before manuscript freeze.
 - `A04` partial: Replace or supplement the demonstration import with official external scorer output.
 - `A05` partial: Run independent clinical/methods reviewers and report adjudicated rubric changes.

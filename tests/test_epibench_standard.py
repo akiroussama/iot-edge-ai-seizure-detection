@@ -15,6 +15,7 @@ from src.epibench.validation import SchemaValidationError, validate_artifact
 from scripts.epibench_build_coverage_audit import build_coverage_audit
 from scripts.epibench_build_evidence_panels import build_evidence_panels
 from scripts.epibench_build_reviewer_packet import build_reviewer_packet
+from scripts.epibench_build_weight_sensitivity import build_weight_sensitivity
 from scripts.epibench_overclaim_audit import build_overclaim_audit
 
 
@@ -274,11 +275,27 @@ def test_epibench_reviewer_packet_links_attacks_to_evidence(tmp_path: Path) -> N
     readme = (tmp_path / "reviewer_packet" / "README.md").read_text(encoding="utf-8")
 
     assert result["attack_count"] == 12
-    assert result["open_count"] >= 1
+    assert result["open_count"] == 0
+    assert result["strong_count"] >= 6
     assert "This is just another leaderboard" in matrix
     assert "reports/epibench_evidence_panels/rank_comparison.csv" in matrix
-    assert "A11,open" in actions
+    assert "A11" not in actions
+    assert "reports/epibench_weight_sensitivity/README.md" in matrix
     assert "Protocol tracks represented: `D, E, F, W`" in readme
+
+
+def test_epibench_weight_sensitivity_preserves_claim_gate_dominance(tmp_path: Path) -> None:
+    result = build_weight_sensitivity(
+        axis_matrix_path=REPO_ROOT / "reports" / "epibench_evidence_panels" / "score_axis_matrix.csv",
+        out_dir=tmp_path / "weight_sensitivity",
+    )
+    summary = (tmp_path / "weight_sensitivity" / "weight_sensitivity_summary.csv").read_text(encoding="utf-8")
+    readme = (tmp_path / "weight_sensitivity" / "README.md").read_text(encoding="utf-8")
+
+    assert result["scenario_count"] == 11
+    assert result["max_claim_gated_rank_range"] == 0
+    assert "leakage_high_metric_demo,E1" in summary
+    assert "top claim-gated final claims observed across scenarios: `E4`".casefold() in readme.casefold()
 
 
 def test_epibench_maps_szcore_style_event_metrics(tmp_path: Path) -> None:

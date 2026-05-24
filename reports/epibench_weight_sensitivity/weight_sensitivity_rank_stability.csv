@@ -1,0 +1,16 @@
+bundle_id,run_id,dataset_id,final_claim,normative_epi_score,min_epi_score,max_epi_score,normative_score_rank,min_score_rank,max_score_rank,score_rank_range,normative_claim_gated_rank,min_claim_gated_rank,max_claim_gated_rank,claim_gated_rank_range,claim_invariant
+chbmit_patient_independent_d:chbmit_always_negative_patient_independent,chbmit_always_negative_patient_independent,chbmit_patient_independent_d,E2-PI,3.186,2.744,4.677,15,15,15,0,7,7,7,0,True
+early_warning_post_event_failure_w:early_warning_post_event_failure_demo,early_warning_post_event_failure_demo,pilot_t1_eeg,E1,81.86,79.824,82.585,2,2,2,0,11,11,11,0,True
+early_warning_valid_w:early_warning_valid_demo,early_warning_valid_demo,pilot_t1_eeg,E2-PI,66.504,65.719,67.064,10,10,10,0,6,6,6,0,True
+embedded_no_hardware_demo:embedded_no_hardware_demo,embedded_no_hardware_demo,pilot_t1_eeg,E1,68.733,66.55,69.386,9,9,9,0,12,12,12,0,True
+external_requested_e4_demo:external_requested_e4_demo,external_requested_e4_demo,pilot_t1_eeg,E3,72.652,72.138,73.072,6,5,6,1,2,2,2,0,True
+external_validation_demo:external_validation_claim_demo,external_validation_claim_demo,pilot_t1_eeg,E3,72.652,72.138,73.072,7,6,7,1,3,3,3,0,True
+failure_leakage:leakage_high_metric_demo,leakage_high_metric_demo,pilot_t1_eeg,E1,94.727,93.96,95.14,1,1,1,0,10,10,10,0,True
+far_explosion_failure_d:far_explosion_high_sensitivity_demo,far_explosion_high_sensitivity_demo,pilot_t1_eeg,E1,19.629,16.273,22.258,13,13,13,0,14,14,14,0,True
+msg_gate_c_frozen_f:msg_cycle_preserving_random_gate_c_frozen,msg_cycle_preserving_random_gate_c_frozen,msg_gate_c_frozen_f,E2-PD,58.984,56.7,60.229,11,11,11,0,9,9,9,0,True
+msg_preliminary_f:msg_cycle_preserving_random_preliminary,msg_cycle_preserving_random_preliminary,msg_preliminary_f,E1,50.024,47.026,51.485,12,12,12,0,13,13,13,0,True
+patient_dependent_demo:patient_dependent_claim_demo,patient_dependent_claim_demo,pilot_t1_eeg,E2-PD,73.908,72.082,75.131,5,3,8,5,8,8,8,0,True
+pilot_t1_eeg:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,74.158,73.237,74.581,3,3,4,1,4,4,4,0,True
+prospective_e4_demo:prospective_e4_claim_demo,prospective_e4_claim_demo,pilot_t1_eeg,E4,72.424,72.109,72.74,8,5,8,3,1,1,1,0,True
+seizeit2_preliminary_f:seizeit2_sub125_random_preliminary,seizeit2_sub125_random_preliminary,seizeit2_preliminary_f,E1,6.294,5.619,7.433,14,14,14,0,15,15,15,0,True
+szcore_bridge_demo:pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg_edge_cnn_demo,pilot_t1_eeg,E2-PI,74.158,73.237,74.581,4,4,5,1,5,5,5,0,True
